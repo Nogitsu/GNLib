@@ -2,6 +2,11 @@ function GNLib.GetFile(filename)
   return "data/downloaded/" .. filename
 end
 
+function GNLib.CreateMaterial( filename, args )
+  args = args or ""
+  return Material( GNLib.GetFile(filename), args )
+end
+
 function GNLib.DownloadFromURL(url, filename, callback)
   if not isstring(url) or #url < 1 then return GNLib.Error("Invalid URL !") end
   if not isstring(filename) or #filename < 1 then return GNLib.Error("Invalid filename !", 2) end

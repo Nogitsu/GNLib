@@ -57,6 +57,12 @@ end
 
 --  > Using
 
-if SERVER then IncludeSV("gnlib/server") end
-IncludeCL("gnlib/client")
-IncludeSH("gnlib/shared")
+local function load()
+    if SERVER then IncludeSV("gnlib/server") end
+    IncludeCL("gnlib/client")
+    IncludeSH("gnlib/shared")
+end
+concommand.Add( "gnlib_reload", load )
+
+load()
+

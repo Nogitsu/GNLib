@@ -16,7 +16,7 @@ if SERVER then
         GNLib.RefreshAddonsList( ply )
     end )
 
-    function GNLib.RegisterAddon( id, name, desc, author, lib_version, version, version_check, logoURL, workshop_link, github_link )
+    function GNLib.RegisterAddon( id, name, desc, author, wip, lib_version, version, version_check, logoURL, workshop_link, github_link, timeStamp )
         if not isstring( id ) then return GNLib.Error( "Invalid ID, should be a string and not empty !" ) end
 
         local newAddon = {
@@ -29,6 +29,8 @@ if SERVER then
             workshop_link = workshop_link,
             github_link = github_link,
             installed = true,
+            wip = wip or false,
+            timeStamp = timeStamp,
             logoURL = logoURL
         }
 
@@ -67,9 +69,9 @@ if SERVER then
     end
     concommand.Add( "gnlib_refreshaddons", GNLib.RefreshAddonsList )
 
-    GNLib.RegisterAddon( "gn_fake1", "GNLib's fake test #1", "Just to check if everything is working.", "Gluten <3", "v0.1" )
-    GNLib.RegisterAddon( "gn_fake2", "GNLib's fake test #2", "Just to check if everything is working.", "Bad things <>", "v0.2" )
-    GNLib.RegisterAddon( "gn_fake3", "GNLib's fake test #3", "Just to check if everything is working.", "Nuggets <3", "v0.1" )
+    GNLib.RegisterAddon( "gn_fake1", "GNLib's fake test #1", "Just to check if everything is working.", "Gluten <3", true, "v0.1", "v1" )
+    GNLib.RegisterAddon( "gn_fake2", "GNLib's fake test #2", "Just to check if everything is working.", "Bad things <>", false, "v0.2", "2.0" )
+    GNLib.RegisterAddon( "gn_fake3", "GNLib's fake test #3", "Just to check if everything is working.", "Nuggets <3", true, "v0.1", "v0.1-1.2b" )
 end
 
 --  > Getter Functions

@@ -1,11 +1,15 @@
-local mats = 
-{
-    Installed = Material( "icon16/accept.png" ),
-    NotInstalled = Material( "icon16/cancel.png" ),
+local mats = {
+    Accept = Material( "icon16/accept.png" ),
+    NotAccept = Material( "icon16/cancel.png" ),
     Update = Material( "icon16/wrench_orange.png" ),
     Certified = Material( "icon16/rosette.png", "smooth" ),
     DefaultPic = Material( "vgui/avatar_default", "smooth" ),
+    Bug = Material( "icon16/bug.png" ),
+    BugWarning = Material( "icon16/bug_error.png" )
 }
+
+GNLib.CreateFonts( "GNLFont", "Caviar Dreams", { 10, 15, 20 } )
+GNLib.CreateFonts( "GNLFontB", "Caviar Dreams Bold", { 15, 20, 40 } )
 
 function GNLib.OpenAddonsList()
     local W, H = ScrW() * .75, ScrH() * .75
@@ -17,7 +21,7 @@ function GNLib.OpenAddonsList()
     function main:Paint( w, h )
         GNLib.DrawRectGradient( 0, 0, w, h, GNLib.Colors.MidnightBlue, GNLib.Colors.WetAsphalt, true )
 
-        draw.SimpleText( "GNLib Addons List - " .. GNLib.Version, "DermaDefaultBold", 15, 15, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+        draw.SimpleText( "GNLib Addons List - " .. GNLib.Version, "GNLFontB20", 15, 15, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
     end
 
     local close = vgui.Create( "DButton", main )
@@ -37,6 +41,23 @@ function GNLib.OpenAddonsList()
         GNLib.DrawRectGradient( 0, 0, w, h, c1, GNLib.Colors.Pomegranate, true )
     end
 
+    local refresh = vgui.Create( "DButton", main )
+    refresh:SetPos( W - 55, 5 )
+    refresh:SetSize( 20, 20 )
+    refresh:SetText( "­­r" )
+    function refresh.DoClick()
+        main:Remove()
+        GNLib.OpenAddonsList()
+    end
+    function refresh:Paint( w, h )
+        local c1 = GNLib.Colors.Emerald
+        if self:IsHovered() then
+            local t = math.abs( math.sin( CurTime() ) / w ) * 100 * 2
+            c1 = GNLib.LerpColor( t, c1, GNLib.Colors.Nephritis )
+        end
+        GNLib.DrawRectGradient( 0, 0, w, h, c1, GNLib.Colors.Nephritis, true )
+    end
+
     local addons_list = vgui.Create( "DScrollPanel", main )
     addons_list:SetSize( W * 0.25, H - 40 )
     addons_list:SetPos( 10, 30 )
@@ -49,7 +70,11 @@ function GNLib.OpenAddonsList()
     local addon_infos = vgui.Create( "DPanel", main )
     addon_infos:SetSize( W * 0.75 - 30, H - 40 )
     addon_infos:SetPos( W * 0.25 + 20, 30 )
+
+    local bug_alpha = 0
+    local bug_target = 255
     function addon_infos:Paint( w, h )
+        
         GNLib.DrawRectGradient( 0, 0, w, h, GNLib.Colors.Concrete, GNLib.Colors.Silver, true )
 
         if selected_addon then
@@ -63,39 +88,66 @@ function GNLib.OpenAddonsList()
             end
             surface.DrawTexturedRect( 25, 25, iconSize, iconSize )
 
-            -- > Draw certification
-            surface.SetFont( "DermaLarge" )
+            --  > Draw name
+            draw.SimpleText( selected_addon.name ..  " - " .. ( selected_addon.version or "N/A" ), "GNLFontB40", 25 * 1.5 + iconSize, 25, color_white )
+
+            --  > Draw certification
+            surface.SetFont( "GNLFontB40" )
+            local name_w, name_h = surface.GetTextSize( selected_addon.name .. " - " .. ( selected_addon.version or "N/A" ) )
             surface.SetDrawColor( color_white )
             if selected_addon.certified then
                 surface.SetMaterial( mats.Certified )
-                surface.DrawTexturedRect( 25 * 1.5 + iconSize + surface.GetTextSize( selected_addon.name ) + 8, 30, 20, 20 )
+                surface.DrawTexturedRect( 25 * 1.5 + iconSize + name_w + 8, 25 + name_h/2 - 10, 20, 20 )
             end
             
-            --  > Draw name
-            draw.SimpleText( selected_addon.name, "DermaLarge", 25 * 1.5 + iconSize, 25, color_white )
-            
-            --  > Draw installed status
+            --  > Draw Install status
             surface.SetDrawColor( color_white )
-            surface.SetMaterial( selected_addon.installed and mats.Installed or mats.NotInstalled )
-            surface.DrawTexturedRect( 25 * 1.5 + iconSize, 25 + 35, 16, 16 )
+            surface.SetMaterial( selected_addon.installed and mats.Accept or mats.NotAccept )
+            surface.DrawTexturedRect( 25 * 1.5 + iconSize, 25 + name_h, 16, 16 )
 
-            draw.SimpleText( selected_addon.installed and "Installed" or "Not installed", "DermaDefaultBold", 25 * 1.5 + iconSize + 20, 25 + 35, selected_addon.installed and GNLib.Colors.Emerald or GNLib.Colors.Alizarin )
-            
+            draw.SimpleText( selected_addon.installed and "Installed" or "Not Installed", "GNLFontB15", 25 * 1.5 + iconSize + 20, 25 + name_h, selected_addon.installed and GNLib.Colors.Emerald or GNLib.Colors.Alizarin )
+                 
             --  > Draw lib update status
             surface.SetDrawColor( color_white )
-            surface.SetMaterial( not GNLib.IsOutdatedLib( selected_addon_id ) and mats.Installed or mats.Update )
-            surface.DrawTexturedRect( 25 * 1.5 + iconSize, 25 + 35 + 20, 16, 16 )
+            surface.SetMaterial( not GNLib.IsOutdatedLib( selected_addon_id ) and mats.Accept or mats.Update )
+            surface.DrawTexturedRect( 25 * 1.5 + iconSize, 25 + name_h + 20, 16, 16 )
 
-            draw.SimpleText( not GNLib.IsOutdatedLib( selected_addon_id ) and "Newest version of the library" or "Old version of the library", "DermaDefaultBold", 25 * 1.5 + iconSize + 20, 25 + 35 + 20, not GNLib.IsOutdatedLib( selected_addon_id ) and GNLib.Colors.Emerald or GNLib.Colors.Orange )
+            draw.SimpleText( not GNLib.IsOutdatedLib( selected_addon_id ) and "Similar version of the library" or "Different version of the library", "GNLFontB15", 25 * 1.5 + iconSize + 20, 25 + name_h + 20, not GNLib.IsOutdatedLib( selected_addon_id ) and GNLib.Colors.Emerald or GNLib.Colors.Orange )
+        
+            --  > Draw addon update status
+            surface.SetDrawColor( color_white )
+            surface.SetMaterial( not GNLib.IsOutdated( selected_addon_id ) and mats.Accept or mats.Update )
+            surface.DrawTexturedRect( 25 * 1.5 + iconSize, 25 + name_h + 40, 16, 16 )
+
+            draw.SimpleText( not GNLib.IsOutdated( selected_addon_id ) and "Similar version of this addon" or "Different version of this addon", "GNLFontB15", 25 * 1.5 + iconSize + 20, 25 + name_h + 40, not GNLib.IsOutdated( selected_addon_id ) and GNLib.Colors.Emerald or GNLib.Colors.Orange )
+            
+            --  > Draw WIP
+            surface.SetDrawColor( Color( 255, 255, 255, bug_alpha ) )
+            surface.SetMaterial( selected_addon.wip and mats.Bug or mats.Accept )
+            surface.DrawTexturedRect( 25 * 1.5 + iconSize, 25 + name_h + 60, 16, 16 )
+
+            surface.SetDrawColor( Color( 255, 255, 255, 255 - bug_alpha ) )
+            surface.SetMaterial( selected_addon.wip and mats.BugWarning or mats.Accept )
+            surface.DrawTexturedRect( 25 * 1.5 + iconSize, 25 + name_h + 60, 16, 16 )
+
+            if bug_alpha >= 250 then
+                bug_target = 0
+            elseif bug_alpha <= 5 then
+                bug_target = 255
+            end
+            bug_alpha = Lerp( FrameTime() * 3, bug_alpha, bug_target )
+
+            draw.SimpleText( selected_addon.wip and "Warning ! This addon may create errors or may not working properly !" or "This addon is currently stable.", "GNLFontB15", 25 * 1.5 + iconSize + 20, 25 + name_h + 60, selected_addon.wip and GNLib.Colors.SunFlower or GNLib.Colors.Emerald )
         end
     end
-
-    --  > Completing list
-    local function addAddon( k, v )
+            
+    function addAddon( k, v )
         local addon_line = addons_list:Add( "DButton" )
         addon_line:Dock( TOP )
-        addon_line:SetText( "" )
         addon_line:SetTall( 35 )
+        addon_line:SetText( "" )
+
+        local x = addon_line:GetWide()
         function addon_line:Paint( w, h )
             local second_col = GNLib.Colors.Pomegranate
 
@@ -108,11 +160,17 @@ function GNLib.OpenAddonsList()
             end
 
             surface.SetDrawColor( GNLib.Colors.MidnightBlue )
-            surface.DrawRect( 0, 0, w/2, h )
-            GNLib.DrawRectGradient( w/2, 0, w, h, GNLib.Colors.MidnightBlue, second_col )
+            surface.DrawRect( 0, 0, w, h )
+            if k == selected_addon_id then
+                x = Lerp( FrameTime() * 5, x, w * .25 )
+                GNLib.DrawRectGradient( x, 0, w, h, GNLib.Colors.MidnightBlue, second_col )
+            else
+                x = Lerp( FrameTime() * 5, x, w / 2 )
+                GNLib.DrawRectGradient( x, 0, w, h, GNLib.Colors.MidnightBlue, second_col )
+            end
             
-            draw.SimpleText( ( v.name or "N/A" ), "DermaDefaultBold", 5, 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
-            draw.SimpleText( ( v.author or "N/A" ) .. " | " .. ( v.lib_version or "N/A" ), "DermaDefault", 5, h - 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+            draw.SimpleText( ( v.name or "N/A" ), "GNLFontB15", 5, 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+            draw.SimpleText( ( v.author or "N/A" ) .. " | " .. ( v.lib_version or "N/A" ), "GNLFont15", 5, h - 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
         
             if v.certified then
                 surface.SetDrawColor( color_white )
@@ -130,7 +188,7 @@ function GNLib.OpenAddonsList()
                 GNLib.DownloadFromURL( v.logoURL, "gnlib_addons/" .. k .. ".jpg", function()
                     selected_addon = v
                     selected_addon_id = k
-                    selected_addon_mat = Material( "data/downloaded/gnlib_addons/" .. k .. ".jpg", "noclamp smooth" )
+                    selected_addon_mat = GNLib.CreateMaterial( "gnlib_addons/" .. k .. ".jpg", "noclamp smooth" )
                 end )
             else
                 selected_addon = v
