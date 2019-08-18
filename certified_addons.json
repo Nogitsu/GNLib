@@ -3,12 +3,14 @@
     "author": "Guthen & Nogitsu",
     "name": "Memes & Emotes",
     "desc": "Let's show your emotions through memes !",
+    "lib_version": "v0.1",
     "logoURL": "https://steamuserimages-a.akamaihd.net/ugc/850471752018360963/D2A87D42EC50FCA1F4A7CFA9785EFCD1D939D608/"
   },
   "gn_dermacreator": {
     "author": "Guthen & Nogitsu",
     "name": "Derma Creator",
     "desc": "Easy derma creation using Drag&Drop system",
+    "lib_version": "v0.1",
     "logoURL": "https://steamuserimages-a.akamaihd.net/ugc/776225644449605589/298904D6182DE86E5AC28E0FABEF9701B2248949/"
   }
 }
