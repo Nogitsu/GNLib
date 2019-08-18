@@ -123,13 +123,18 @@ function GNLib.OpenAddonsList()
         
         function addon_line:DoClick()
             sound.Play( "ui/buttonclick.wav", LocalPlayer():GetPos(), 75, 100, .80 )
-            selected_addon = v
-            selected_addon_id = k
+            
             if v.logoURL then
                 file.CreateDir( "downloaded/gnlib_addons" )
-                GNLib.DownloadFromURL( v.logoURL, "gnlib_addons/" .. k .. ".jpg" )
 
-                selected_addon_mat = Material( "data/downloaded/gnlib_addons/" .. k .. ".jpg", "noclamp smooth" )
+                GNLib.DownloadFromURL( v.logoURL, "gnlib_addons/" .. k .. ".jpg", function()
+                    selected_addon = v
+                    selected_addon_id = k
+                    selected_addon_mat = Material( "data/downloaded/gnlib_addons/" .. k .. ".jpg", "noclamp smooth" )
+                end )
+            else
+                selected_addon = v
+                selected_addon_id = k
             end
         end
         function addon_line:OnCursorEntered()

@@ -46,10 +46,24 @@ if SERVER then
     end
 
     function GNLib.RefreshAddonsList( ply )
-        local compressed = util.Compress( util.TableToJSON( GNLib.GetAddons() ) )
-        net.Start( "GNLib:RegisterAddons" )
-            net.WriteData( compressed, #compressed )
-        net.Send( ply )
+        for k, v in pairs( gn_addons ) do
+            if v.certified then
+                gn_addons[ k ] = nil
+            end
+        end
+
+        http.Fetch( "https://raw.githubusercontent.com/Nogitsu/GNLib/master/certified_addons.json", function( data )
+            local certified = util.JSONToTable( data )
+            for k, v in pairs( certified ) do
+                v.certified = true
+                gn_addons[ k ] = v
+            end
+
+            local compressed = util.Compress( util.TableToJSON( GNLib.GetAddons() ) )
+            net.Start( "GNLib:RegisterAddons" )
+                net.WriteData( compressed, #compressed )
+            net.Send( ply )
+        end )
     end
     concommand.Add( "gnlib_refreshaddons", GNLib.RefreshAddonsList )
 
