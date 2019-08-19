@@ -182,8 +182,7 @@ function GNLib.OpenAddonsList()
         
         function addon_line:DoClick()
             sound.Play( "ui/buttonclick.wav", LocalPlayer():GetPos(), 75, 100, .80 ) -- want to control the volume
-            
-            PrintTable( v )
+
             selected_addon = v
             selected_addon.id = k
 

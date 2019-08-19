@@ -68,10 +68,6 @@ if SERVER then
         end )
     end
     concommand.Add( "gnlib_refreshaddons", GNLib.RefreshAddonsList )
-
-    GNLib.RegisterAddon( "gn_fake1", "GNLib's fake test #1", "Just to check if everything is working.\nHEY MAN\n LOURD\nHOYO", "Gluten <3", true, "v0.1", "v1" )
-    GNLib.RegisterAddon( "gn_fake2", "GNLib's fake test #2", "Just to check if everything is working.", "Bad things <>", false, "v0.2", "2.0" )
-    GNLib.RegisterAddon( "gn_fake3", "GNLib's fake test #3", "Just to check if everything is working.", "Nuggets <3", true, "v0.1", "v0.1-1.2b", "https://raw.githubusercontent.com/Nogitsu/GNLib/master/test_update_checker.txt" )
 end
 
 --  > Getter Functions
@@ -123,7 +119,5 @@ if CLIENT then
     net.Receive( "GNLib:RegisterAddons", function( len )
         local decompressed = util.Decompress( net.ReadData( len ) )
         gn_addons = util.JSONToTable( decompressed )
-
-        PrintTable( gn_addons )
     end )
 end
