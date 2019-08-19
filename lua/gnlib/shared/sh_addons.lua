@@ -69,9 +69,9 @@ if SERVER then
     end
     concommand.Add( "gnlib_refreshaddons", GNLib.RefreshAddonsList )
 
-    GNLib.RegisterAddon( "gn_fake1", "GNLib's fake test #1", "Just to check if everything is working.", "Gluten <3", true, "v0.1", "v1" )
+    GNLib.RegisterAddon( "gn_fake1", "GNLib's fake test #1", "Just to check if everything is working.\nHEY MAN\n LOURD\nHOYO", "Gluten <3", true, "v0.1", "v1" )
     GNLib.RegisterAddon( "gn_fake2", "GNLib's fake test #2", "Just to check if everything is working.", "Bad things <>", false, "v0.2", "2.0" )
-    GNLib.RegisterAddon( "gn_fake3", "GNLib's fake test #3", "Just to check if everything is working.", "Nuggets <3", true, "v0.1", "v0.1-1.2b" )
+    GNLib.RegisterAddon( "gn_fake3", "GNLib's fake test #3", "Just to check if everything is working.", "Nuggets <3", true, "v0.1", "v0.1-1.2b", "https://raw.githubusercontent.com/Nogitsu/GNLib/master/test_update_checker.txt" )
 end
 
 --  > Getter Functions
@@ -84,16 +84,23 @@ function GNLib.IsInstalled( id )
     return GNLib.GetAddon( id ) and GNLib.GetAddon( id ).installed or false
 end
 
-function GNLib.IsOutdated( id )
+function GNLib.CheckVersion( id, callback )
     if not GNLib.GetAddon( id ) then return GNLib.Error( "Addon not installed or bad ID." ) end
-    if not GNLib.GetAddon( id ).version_check then return false end
+    if not GNLib.GetAddon( id ).version_check then
+        GNLib.GetAddon( id ).last_version = GNLib.GetAddon( id ).version
+    end
+  
+    http.Fetch( GNLib.GetAddon( id ).version_check, function( data )
+        GNLib.GetAddon( id ).last_version = data
 
-    local outdated = false
-    http.Fetch( GNLib.GetAddon( id ).version_check, function(data)
-        outdated = GNLib.GetAddon( id ).version == data
+        if callback then
+            callback( data, GNLib.GetAddon( id ).version_check )
+        end
     end )
+end
 
-    return outdated
+function GNLib.IsOutdated( id )
+    return (GNLib.GetAddon( id ) and GNLib.GetAddon( id ).last_version ~= GNLib.GetAddon( id ).version) or false
 end
 
 function GNLib.IsOutdatedLib( id )
@@ -116,5 +123,7 @@ if CLIENT then
     net.Receive( "GNLib:RegisterAddons", function( len )
         local decompressed = util.Decompress( net.ReadData( len ) )
         gn_addons = util.JSONToTable( decompressed )
+
+        PrintTable( gn_addons )
     end )
 end

@@ -1,13 +1,20 @@
 GNLib = GNLib or {}
-GNLib.Version = "v0.1"
+GNLib.Version = "v0.2"
 GNLib.Author = "Guthen & Nogitsu"
 GNLib.Desc = "Shared library for frequent uses."
+
+--  > Micro-Optimisation
+local file = file
+local concommand = concommand
+local error = error
+local include = include
+local AddCSLuaFile = AddCSLuaFile
+
+--  > Declaration
 
 function GNLib.Error(...)
   return error("[GNLib] " .. ..., 2)
 end
-
---  > Declaration
 
 local function IncludeSH(path)
   local search = path .. "/"

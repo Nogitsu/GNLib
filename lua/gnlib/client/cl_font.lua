@@ -1,8 +1,7 @@
-
 function GNLib.CreateFont( name, font, size, options )
     local name = ( name or "NewFont" ) .. size
     local options = options or {}
-    options.size = size
+    options.size = ScreenScale( size / 2.5 )
     options.font = font
     
     surface.CreateFont( name, options )
@@ -16,3 +15,6 @@ function GNLib.CreateFonts( name, font, sizes, options )
     end
     return names
 end
+
+GNLib.CreateFonts( "GNLFont", "Caviar Dreams", { 10, 15, 20 } )
+GNLib.CreateFonts( "GNLFontB", "Caviar Dreams Bold", { 15, 17, 20, 40 } )
