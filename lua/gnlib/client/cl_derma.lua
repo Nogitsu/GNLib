@@ -7,8 +7,10 @@ function GNLib.CreateFrame( title )
     main:SetSize( W, H )
     main:Center()
     main:MakePopup()
+    main.color = GNLib.Colors.MidnightBlue
+    main.color2 = GNLib.Colors.WetAsphalt
     function main:Paint( w, h )
-        GNLib.DrawRectGradient( 0, 0, w, h, GNLib.Colors.MidnightBlue, GNLib.Colors.WetAsphalt, true )
+        GNLib.DrawRectGradient( 0, 0, w, h, self.color, self.color2, true )
 
         draw.SimpleText( title, "GNLFontB20", 15, 15, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
     end

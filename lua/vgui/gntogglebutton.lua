@@ -6,6 +6,8 @@ AccessorFunc( PANEL, "color_off", "ColorOff" )
 AccessorFunc( PANEL, "color_back_on", "ColorBackOn" )
 AccessorFunc( PANEL, "color_back_off", "ColorBackOff" )
 
+AccessorFunc( PANEL, "color_back", "ColorBack" )
+
 AccessorFunc( PANEL, "toggled", "Toggled" )
 AccessorFunc( PANEL, "speed", "Speed" )
 AccessorFunc( PANEL, "circle_r", "CircleRadius" )

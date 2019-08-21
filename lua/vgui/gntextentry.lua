@@ -14,7 +14,7 @@ function PANEL:Init()
 
     self.title = "TextEntry"
     self.text = ""
-    self.font = "GNLFontB15"
+    self.font = "GNLFontB10"
 
     self.value_color = GNLib.Colors.Silver
     self.hovered_color = GNLib.Colors.Amethyst
@@ -31,10 +31,12 @@ function PANEL:Paint( w, h )
     draw.SimpleText( self.title, self.font, 12, text_height / 2, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
     draw.SimpleText( self:GetText(), self.font, 5, h / 2 + text_height / 4, self.value_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
 
-    local pos = surface.GetTextSize( string.sub( self:GetText(), 1, self:GetCaretPos() ) )
-    local x_pos, y_pos = 5 + pos, h / 2 + text_height / 4
+    if self:IsEditing() then
+        local pos = surface.GetTextSize( string.sub( self:GetText(), 1, self:GetCaretPos() ) )
+        local x_pos, y_pos = 5 + pos, h / 2 + text_height / 4
 
-    surface.DrawLine( x_pos, y_pos - 8, x_pos, y_pos + 8 )
+        surface.DrawLine( x_pos, y_pos - 8, x_pos, y_pos + 8 )
+    end
 
     --  > Style    
     surface.DrawLine( 4, text_height / 2, 8, text_height / 2 )

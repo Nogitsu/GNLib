@@ -1,7 +1,6 @@
 local PANEL = {}
 
 AccessorFunc( PANEL, "color", "Color" )
-AccessorFunc( PANEL, "enabled", "Enabled", FORCE_BOOL )
 AccessorFunc( PANEL, "default_cursor", "DefaultCursor", FORCE_STRING )
 
 function PANEL:Init()
@@ -32,10 +31,6 @@ function PANEL:IsEnabled()
 end
 
 --  > Events
-function PANEL:Paint( w, h )
-    GNLib.DrawElipse( 0, 0, w, h, self.color )
-end
-
 function PANEL:DoClick()
 end
 

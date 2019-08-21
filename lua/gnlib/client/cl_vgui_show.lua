@@ -5,8 +5,17 @@ function GNLib.OpenVGUIPanel()
     --  > Toggle credits mod
     local toggleButton = vgui.Create( "GNToggleButton", main )
     toggleButton:SetPos( 50, 50 )
+    toggleButton:SetColor( GNLib.Colors.MidnightBlue )
+    toggleButton:SetColorBack( GNLib.Colors.Asbestos )
     function toggleButton:OnToggled( toggled )
-        --if toggled then self:SetEnabled( false ) end
+        main.color = toggled and GNLib.Colors.Asbestos or GNLib.Colors.MidnightBlue
+        main.color2 = toggled and GNLib.Colors.Concrete or GNLib.Colors.WetAsphalt
+
+        self.color_on = GNLib.Colors.Asbestos
+        self.color_off = GNLib.Colors.MidnightBlue
+
+        self.color_back_on = GNLib.Colors.MidnightBlue
+        self.color_back_off = GNLib.Colors.Asbestos
     end
 
     local progress = vgui.Create( "GNProgress", main )
@@ -52,13 +61,15 @@ function GNLib.OpenVGUIPanel()
     iconbutton:SetPos( button.x + button:GetWide() + 50, 300 )
     iconbutton:SetRadius( 45 )
     iconbutton:SetIconRadius( 45 )
-    iconbutton:SetIcon( Material("games/16/hl2.png","smooth") )
+    iconbutton:SetIcon( Material("icon32/tool.png","smooth") )
+    function iconbutton:DoClick()
+        surface.PlaySound("garrysmod/save_load" .. math.random( 1, 4) .. ".wav")
+    end
 
     local textentry = vgui.Create( "GNTextEntry", main )
     textentry:SetPos( 50, 350 )
     textentry:SetSize( 250, 35  )
     textentry:SetTitle( "Your name" )
-    textentry:SetFont( "GNLFontB20" )
 
     local searchentry = vgui.Create( "GNIconTextEntry", main )
     searchentry:SetPos( 50, 400 )
