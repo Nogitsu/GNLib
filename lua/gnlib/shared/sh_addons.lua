@@ -41,10 +41,12 @@ if SERVER then
         end
     end
 
-    function GNLib.EnableAddon( id )
+    function GNLib.EnableAddon( id, lib_version, version )
         if not isstring( id ) or not gn_addons[ id ] then return GNLib.Error( "Invalid ID !" ) end
 
         gn_addons[ id ].installed = true
+        gn_addons[ id ].lib_version = lib_version
+        gn_addons[ id ].version = version
     end
 
     function GNLib.RefreshAddonsList( ply )

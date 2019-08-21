@@ -4,16 +4,13 @@
     "name": "[DarkRP] SCP HUD",
     "desc": "Inspiré de l'HUD d'origine de SCP Containment Breach.",
     "lib_version": "v0.1",
-    "logoURL": "https://steamuserimages-a.akamaihd.net/ugc/850471752018360963/D2A87D42EC50FCA1F4A7CFA9785EFCD1D939D608/",
-    "workshop_link": "https://steamcommunity.com/sharedfiles/filedetails/?id=1110261747"
+    "logoURL": "https://steamuserimages-a.akamaihd.net/ugc/850471752018360963/D2A87D42EC50FCA1F4A7CFA9785EFCD1D939D608/"
   },
   "g_scp": {
     "author": "Gluten",
     "name": "[SCP] HUD by Gluten",
     "desc": "Bienvenue à vous ! Voici un HUD pour les serveurs SCPs.\nVous pouvez l'utiliser pour n'importe quel serveur ou pour vous même (en solo).",
     "lib_version": "v0.2",
-    "logoURL": "https://steamuserimages-a.akamaihd.net/ugc/776225644449605589/298904D6182DE86E5AC28E0FABEF9701B2248949/",
-    "workshop_link": "https://steamcommunity.com/sharedfiles/filedetails/?id=1613150311",
-    "github_link": "https://steamcommunity.com/sharedfiles/filedetails/?id=1613150311"
+    "logoURL": "https://steamuserimages-a.akamaihd.net/ugc/776225644449605589/298904D6182DE86E5AC28E0FABEF9701B2248949/"
   }
 }

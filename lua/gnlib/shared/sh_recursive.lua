@@ -1,3 +1,4 @@
+
 function GNLib.RecursiveFind( path, filter ) --GNLib.RecursiveFind("models/weapons", "mdl")
 	filter = filter or ""
 	local search = path .. "/"
@@ -20,7 +21,35 @@ function GNLib.RecursiveFind( path, filter ) --GNLib.RecursiveFind("models/weapo
 	return tbl
 end
 
-PrintTable( GNLib.RecursiveFind( "resources/fonts", "ttf" ) )
+function GNLib.RequireFolder( path )
+	local files, folders = file.Find( path .. "/*", "LUA" )
+    for _, v in pairs( files ) do
+        if not v:EndsWith( ".lua" ) then continue end
+        if v:StartWith( "cl_" ) then
+            if SERVER then
+                AddCSLuaFile( path .. "/" .. v )
+                --print( "AddCSLuaFile : " .. path .. "/" .. v )
+            else
+                include( path .. "/" .. v )
+                --print( "include : " .. path .. "/" .. v )
+            end
+        elseif v:StartWith( "sv_" ) then
+            include( path .. "/" .. v )
+            --print( "include : " .. path .. "/" .. v )
+		elseif v:StartWith( "sh_" ) then
+            if SERVER then
+                AddCSLuaFile( path .. "/" .. v )
+                --print( "AddCSLuaFile : " .. path .. "/" .. v )
+            end
+            include( path .. "/" .. v )
+            --print( "include : " .. path .. "/" .. v )
+		end
+    end
+
+    for _, f in pairs( folders ) do table.Add( folders, GNLib.RequireFolder( path .. "/" .. f ) ) end
+
+    return files, folders
+end
 
 /*
 {
