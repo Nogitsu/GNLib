@@ -36,5 +36,101 @@ function GNLib.CreateFrame( title )
         surface.DrawTexturedRect( 2, 2, 16, 16 )
     end
 
-    return main
+    return main, close
+end
+
+function GNLib.DermaMessage( title, text, button_text, callback )
+    title = title or "Title"
+    text = text or "Text"
+    button_text = button_text or "OK"
+
+    local frame, close = GNLib.CreateFrame( title )
+    frame:SetSize( ScrW() / 7, ScrH() / 7 )
+    frame:Center()
+
+    local W, H = frame:GetSize()
+    close:SetPos( W - 30, 5 )
+
+    local label = vgui.Create( "DLabel", frame )
+    label:SetSize( W - 30, H - H / 4 )
+    label:SetPos( 15, 30 )
+    label:SetText( text )
+    label:SetFont( "GNLFontB15" )
+    label:SetAutoStretchVertical( true )
+    label:SetWrap( true )
+
+    local button = vgui.Create( "GNButton", frame )
+    button:SetPos( W / 2 - button:GetWide() / 2, H / 2 - button:GetTall() / 2 + H / 2.8 )
+    button:SetText( button_text )
+    button:SetColor( GNLib.Colors.Clouds )
+    button:SetHoveredColor( GNLib.Colors.Silver )
+    function button:DoClick()
+        frame:Remove()
+        if callback then callback() end
+    end
+
+    return frame
+end
+
+function GNLib.DermaStringRequest( title, confirm_text, cancel_text, callback, ... )
+    title = title or "Title"
+    text = text or "Text"
+    confirm_text = confirm_text or "OK"
+    cancel_text = cancel_text or "Cancel"
+
+    local frame, close = GNLib.CreateFrame( title )
+    frame:SetSize( ScrW() / 3, 50 * #{ ... } + 15 * (#{ ... } - 1) )
+    frame:Center()
+
+    local W, H = frame:GetSize()
+    close:SetPos( W - 30, 5 )
+
+    local textentries = {}
+    if ... then 
+        for k, v in pairs( { ... } ) do
+            local textentry = vgui.Create( "GNTextEntry", frame )
+            textentry:SetPos( 15, 30 * k + 15 * (k - 1) )
+            textentry:SetWide( W - 30 )
+            textentry:SetColor( GNLib.Colors.Silver )
+            textentry:SetHoveredColor( GNLib.Colors.Clouds )
+
+            if string.find( v:lower(), "url" ) then textentry.AllowInput = function() return false end end -- don't delete characters if you pass the size of the textentry
+            if string.find( v:lower(), "::" ) then
+                local args = string.Split( v, "::" )
+                local placeholder = args[2]
+                if placeholder then textentry:SetPlaceholder( placeholder ) end
+            end
+
+            local start = v:find( "::" )
+            textentry:SetTitle( start and v:sub( 1, start - 1 ) or v )
+
+            table.insert( textentries, textentry )
+        end
+    end
+
+    local button = vgui.Create( "GNButton", frame )
+    button:SetPos( W / 2 - button:GetWide() - 15, H / 2 - button:GetTall() / 2 + H / 2.45 )
+    button:SetText( confirm_text )
+    button:SetColor( GNLib.Colors.Clouds )
+    button:SetHoveredColor( GNLib.Colors.Silver )
+    function button:DoClick()
+        frame:Remove()
+        
+        local values = {}
+        for k, v in pairs( textentries ) do 
+            if #v:GetValue() > 0 then table.insert( values, v:GetValue() ) else table.insert( values, v:GetPlaceholder() ) end
+        end
+        if callback then callback( unpack( values ) ) end
+    end
+
+    local cancel_button = vgui.Create( "GNButton", frame )
+    cancel_button:SetPos( W / 2 + 15, H / 2 - cancel_button:GetTall() / 2 + H / 2.45 )
+    cancel_button:SetText( cancel_text )
+    cancel_button:SetColor( GNLib.Colors.Clouds )
+    cancel_button:SetHoveredColor( GNLib.Colors.Silver )
+    function cancel_button:DoClick()
+        frame:Remove()
+    end
+
+    return frame
 end

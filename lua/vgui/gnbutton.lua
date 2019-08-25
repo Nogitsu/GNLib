@@ -1,10 +1,10 @@
 local PANEL = {}
 
-AccessorFunc( PANEL, "hover_color", "HoverColor" )
+AccessorFunc( PANEL, "hovered_color", "HoveredColor" )
 AccessorFunc( PANEL, "clicked_color", "ClickedColor" )
 
 AccessorFunc( PANEL, "default_textcolor", "DefaultTextColor" )
-AccessorFunc( PANEL, "hover_textcolor", "HoverTextColor" )
+AccessorFunc( PANEL, "hovered_textcolor", "HoveredTextColor" )
 AccessorFunc( PANEL, "clicked_textcolor", "ClickedTextColor" )
 
 function PANEL:Init()

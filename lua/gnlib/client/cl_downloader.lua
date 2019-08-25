@@ -1,10 +1,13 @@
-function GNLib.GetFile(filename)
+function GNLib.GetFile( filename )
   return "data/downloaded/" .. filename
 end
 
 function GNLib.CreateMaterial( filename, args )
-  args = args or ""
-  return Material( GNLib.GetFile(filename), args )
+  return Material( GNLib.GetFile(filename), args or "" )
+end
+
+function GNLib.PlayFile( filename )
+  surface.PlaySound( "data/downloaded/" .. filename )
 end
 
 function GNLib.DownloadFromURL(url, filename, callback)

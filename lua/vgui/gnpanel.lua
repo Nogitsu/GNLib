@@ -34,14 +34,22 @@ end
 function PANEL:DoClick()
 end
 
+function PANEL:OnPressed()
+end
+
+function PANEL:OnReleased()
+end
+
 function PANEL:OnMousePressed( key_code )
     if not self.enabled then return end
+    self:OnPressed()
     if MOUSE_LEFT == key_code then
         self.clicking = true
     end
 end
 
 function PANEL:OnMouseReleased( key_code )
+    self:OnReleased()
     if self.clicking then
         self:DoClick()
 
@@ -49,8 +57,16 @@ function PANEL:OnMouseReleased( key_code )
     end
 end
 
+function PANEL:OnMousePassed( hovered )
+end
+
 function PANEL:OnCursorExited()
+    self:OnMousePassed( false )
     self.clicking = false
+end
+
+function PANEL:OnCursorEntered()
+    self:OnMousePassed( true )
 end
 
 vgui.Register( "GNPanel", PANEL, "DFrame" )

@@ -1,5 +1,26 @@
 
 function GNLib.IsInCircle( x, y, circle_x, circle_y, circle_radius )
-    local in_circle = math.sqrt( ( x - circle_x ) ^ 2 + (  y - circle_y ) ^ 2 ) 
-    return in_circle <= circle_radius
+    return math.Distance( x, y, circle_x, circle_y ) <= circle_radius
+end
+
+function GNLib.PlaySoundCloud( url, callback )
+    if not string.find( url, "soundcloud.com") then return GNLib.Error( "Bad URL provided, please use a SoundCloud URL.") end
+    
+    http.Fetch( "http://api.soundcloud.com/resolve.json?url=".. url .."&client_id=831fdf2953440ea6e18c24717406f6b2", function( body, sc_error_id, sc_error_name )
+        local infos = util.JSONToTable( body )
+        if not infos then 
+            GNLib.Error("Invalid URL (%d: %s)"):format( sc_error_id, sc_error_name )
+            if callback then callback( _, _, error_id, error_name ) end
+        end
+
+        sound.PlayURL( "http://api.soundcloud.com/tracks/" .. infos.id .."/stream?client_id=831fdf2953440ea6e18c24717406f6b2", "", function( station, error_id, error_name )
+            if station then
+                station:Play()
+                if callback then callback( infos, station, error_id, error_name ) end
+            else
+                GNLib.Error( ("Invalid Streaming URL (%d: %s)"):format( error_id, error_name ) )
+                if callback then callback( infos, _, error_id, error_name ) end
+            end
+        end )
+    end )
 end

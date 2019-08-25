@@ -21,7 +21,7 @@ function GNLib.OpenVGUIPanel()
     local progress = vgui.Create( "GNProgress", main )
     progress:SetPos( 50, 100 )
     progress:SetPercentage( 0 )
-    progress:SetBarTall( 10 )
+    progress:SetBarTall( 9 )
 
     local progressn = vgui.Create( "GNProgress", main )
     progressn:SetPos( 50, 150 )
@@ -48,9 +48,8 @@ function GNLib.OpenVGUIPanel()
 
         GNLib.DrawOutlinedElipse( 50, 250, 200, 24, 5, GNLib.Colors.Pomegranate )
 
-        GNLib.DrawOutlinedElipse( 300, 250, 200, 24, 1, GNLib.Colors.Emerald )
-
-        GNLib.DrawOutlinedElipse( 600, 250, 200, 24, 10, GNLib.Colors.Amethyst )
+        GNLib.DrawOutlinedRoundedRect( 8, 350, 75, 200, 200, 15, GNLib.Colors.Alizarin )
+        GNLib.DrawOutlinedRoundedRect( 4, 650, 250, 200, 24, 5, GNLib.Colors.Emerald )
     end
 
     local button = vgui.Create( "GNButton", main )
@@ -73,5 +72,8 @@ function GNLib.OpenVGUIPanel()
 
     local searchentry = vgui.Create( "GNIconTextEntry", main )
     searchentry:SetPos( 50, 400 )
+
+    local graphic = vgui.Create( "GNGraphic", main )
+    graphic:SetPos( 50, 450 )
 end
 concommand.Add( "gnlib_vgui", GNLib.OpenVGUIPanel )

@@ -42,10 +42,10 @@ end
 --  > Shadowed drawing
 function GNLib.SimpleTextShadowed( text, font, x, y, color, align_x, align_y, shadow_x, shadow_y, shadow_color )
     --  > Shadow
-    draw.SimpleText( text, font, x + (shadow_x or 1), y + (shadow_y or 1), shadow_color or color_black, align_x, align_y )
+    draw.SimpleText( text, font, x + (shadow_x or 1), y + (shadow_y or 1), shadow_color or color_black, align_x or TEXT_ALIGN_CENTER, align_y or TEXT_ALIGN_CENTER )
 
     --  > Text
-    draw.SimpleText( text, font, x, y, color, align_x, align_y )
+    draw.SimpleText( text, font, x, y, color, align_x or TEXT_ALIGN_CENTER, align_y or TEXT_ALIGN_CENTER )
 end
 
 function GNLib.DrawShadowedIcon( x, y, mat_w, mat_h, mat, color, shadow_x, shadow_y, shadow_color )
@@ -110,7 +110,7 @@ function GNLib.DrawElipse( x, y, w, h, color )
     GNLib.DrawCircle( x + h / 2, y + h / 2 + (y == 0 and 0 or - .5), h / 2, 90, -90, color )
     GNLib.DrawCircle( x + w - h / 2, y + h / 2 + (y == 0 and 0 or - .5), h / 2, -90, 90, color )
 
-    draw.RoundedBox( 0, x + h / 2, y, w - h + 2, h, color or color_white )
+    draw.RoundedBox( 0, x + h / 2, y - 1, w - h + 2, h + 1, color or color_white )
 end
 
 --  > Draw outlined
@@ -148,17 +148,30 @@ function GNLib.DrawOutlinedCircle( x, y, radius, thick, angle_start, angle_end, 
     end
 end 
 
-function GNLib.DrawLine( x, y, target_x, target_y, thick, color )
+function GNLib.DrawLine( x, y, target_x, target_y, color )
     surface.SetDrawColor( color or color_white )
-    for i = 0, thick - 1 do
-        surface.DrawLine( x - i, y - i, target_x - i, target_y - i )
-    end
+    surface.DrawLine( x, y, target_x, target_y )
 end
 
 function GNLib.DrawOutlinedElipse( x, y, w, h, thick, color )
     GNLib.DrawOutlinedCircle( x + h / 2, y + h / 2 + (y == 0 and 0 or - .5), h / 2, thick, 90, -90, color )
     GNLib.DrawOutlinedCircle( x + w - h / 2, y + h / 2 + (y == 0 and 0 or - .5), h / 2, thick, -90, 90, color )
 
-    GNLib.DrawLine( x + h / 2, y - 1, x + w - h / 3.5, y - 1, thick, color or color_white )
-    GNLib.DrawLine( x + h / 2, y + h - 2 + thick, x + w - h / 3.5, y + h - 2 + thick, thick, color or color_white )
+    surface.DrawRect( x + h / 2, y - thick, w - h + 1, thick, color or color_white )
+    surface.DrawRect( x + h / 2, y + h, w - h + 1, thick, color or color_white )
+    --surface.DrawRect( x + h / 2, y + h - 2 + thick, x + w - h / 3.5, y + h - 2 + thick, thick, color or color_white )
+end
+
+function GNLib.DrawOutlinedRoundedRect( corner_radius, x, y, w, h, thick, color )
+    surface.SetDrawColor( color or color_white )
+
+    surface.DrawRect( x + corner_radius, y - thick, w - corner_radius * 2 + 1, thick )
+    surface.DrawRect( x + corner_radius, y + h - 1, w - corner_radius * 2, thick )
+    surface.DrawRect( x - thick, y + corner_radius, thick, h - corner_radius * 2 )
+    surface.DrawRect( x + w, y + corner_radius, thick, h - corner_radius * 2 )
+
+    GNLib.DrawOutlinedCircle( x + corner_radius, y + corner_radius, corner_radius, thick, -180, -90, color )
+    GNLib.DrawOutlinedCircle( x + w - corner_radius, y + corner_radius, corner_radius, thick, -90, 0, color )
+    GNLib.DrawOutlinedCircle( x + corner_radius, y + h - 1 - corner_radius, corner_radius, thick, -270, -180, color )
+    GNLib.DrawOutlinedCircle( x + w - corner_radius, y + h - 1 - corner_radius, corner_radius, thick, 270, 180, color )
 end

@@ -5,7 +5,7 @@ AccessorFunc( PANEL, "clicked_color", "ClickedColor" )
 AccessorFunc( PANEL, "circle_color", "CircleColor" )
 
 function PANEL:Init()
-    self:SetBarTall( 8 )
+    self:SetBarTall( 7 )
     self:SetCursor( "sizewe" )
     self:SetFillColor( GNLib.Colors.Silver )
 

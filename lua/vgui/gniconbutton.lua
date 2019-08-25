@@ -1,6 +1,6 @@
 local PANEL = {}
 
-AccessorFunc( PANEL, "hover_color", "HoverColor" )
+AccessorFunc( PANEL, "hovered_color", "HoveredColor" )
 AccessorFunc( PANEL, "icon", "Icon" )
 AccessorFunc( PANEL, "icon_radius", "IconRadius" )
 AccessorFunc( PANEL, "clicked_color", "ClickedColor" )
