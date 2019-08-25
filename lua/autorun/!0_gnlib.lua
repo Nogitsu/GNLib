@@ -1,5 +1,5 @@
 GNLib = GNLib or {}
-GNLib.Version = "v0.3"
+GNLib.Version = "v0.4"
 GNLib.Author = "Guthen & Nogitsu"
 GNLib.Desc = "Shared library for frequent uses."
 
@@ -72,4 +72,3 @@ end
 concommand.Add( "gnlib_reload", load )
 
 load()
-
