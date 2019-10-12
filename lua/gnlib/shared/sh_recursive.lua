@@ -48,7 +48,7 @@ function GNLib.RequireFolder( path, should_print, indent )
 		end
     end
 
-    for _, f in pairs( folders ) do table.Add( folders, GNLib.RequireFolder( path .. "/" .. f, should_print, indent .. "\v" ) ) end
+    for _, f in pairs( folders ) do table.Add( folders, GNLib.RequireFolder( path .. "/" .. f, should_print, indent .. "\t" ) ) end
 
     return files, folders
 end
