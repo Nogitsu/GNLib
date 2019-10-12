@@ -31,3 +31,8 @@ function GNLib.Translate( source, target, text, callback )
         end
     end )
 end
+
+function GNLib.IsPair( value )
+    if not isnumber(value) then return end
+    return value % 2 == 0
+end
