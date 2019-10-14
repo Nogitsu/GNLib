@@ -31,7 +31,7 @@ function GNLib.DrawTriangle( center_x, center_y, side1_w, side2_w, side3_w, colo
     { x = 100, y = 200 },
 	{ x = 150, y = 100 },
 	{ x = 200, y = 200 } }
-    
+
     draw.NoTexture()
     surface.SetDrawColor( color or color_white )
     surface.DrawPoly( poly )
@@ -45,7 +45,7 @@ function GNLib.SimpleTextShadowed( text, font, x, y, color, align_x, align_y, sh
     draw.SimpleText( text, font, x + (shadow_x or 1), y + (shadow_y or 1), shadow_color or color_black, align_x or TEXT_ALIGN_CENTER, align_y or TEXT_ALIGN_CENTER )
 
     --  > Text
-    draw.SimpleText( text, font, x, y, color, align_x or TEXT_ALIGN_CENTER, align_y or TEXT_ALIGN_CENTER )
+    draw.SimpleText( text, font, x, y, color or color_white, align_x or TEXT_ALIGN_CENTER, align_y or TEXT_ALIGN_CENTER )
 end
 
 function GNLib.DrawShadowedIcon( x, y, mat_w, mat_h, mat, color, shadow_x, shadow_y, shadow_color )
@@ -59,7 +59,7 @@ function GNLib.DrawShadowedIcon( x, y, mat_w, mat_h, mat, color, shadow_x, shado
     surface.SetDrawColor( color or color_white )
     surface.DrawTexturedRect( x, y, mat_w, mat_h )
 end
-    
+
 --   > Drawing icons + text
 function GNLib.DrawIconText( text, font, x, y, color, mat, mat_w, mat_h, mat_color )
     surface.SetDrawColor( mat_color or color_white )
@@ -146,7 +146,7 @@ function GNLib.DrawOutlinedCircle( x, y, radius, thick, angle_start, angle_end, 
             times = times + 1
         end
     end
-end 
+end
 
 function GNLib.DrawLine( x, y, target_x, target_y, color )
     surface.SetDrawColor( color or color_white )
@@ -174,4 +174,89 @@ function GNLib.DrawOutlinedRoundedRect( corner_radius, x, y, w, h, thick, color 
     GNLib.DrawOutlinedCircle( x + w - corner_radius, y + corner_radius, corner_radius, thick, -90, 0, color )
     GNLib.DrawOutlinedCircle( x + corner_radius, y + h - 1 - corner_radius, corner_radius, thick, -270, -180, color )
     GNLib.DrawOutlinedCircle( x + w - corner_radius, y + h - 1 - corner_radius, corner_radius, thick, 270, 180, color )
+end
+
+--  > Graphics
+function GNLib.CircleGraph( x, y, radius, entries, show_type )
+  local total = 0
+
+  for _, v in pairs( entries ) do
+    total = total + v.value
+  end
+
+  local last_angle = 0
+  for i, v in pairs( entries ) do
+    if not v.value or v.value == 0 then continue end
+
+    local new_angle = last_angle + 360 * v.value / total + 1
+    GNLib.DrawCircle( x, y, radius, last_angle, new_angle, v.color )
+
+    if show_type then
+      local text = ""
+
+      if show_type == "percent" then
+        text = v.value / total or "error"
+      elseif show_type == "value" then
+        text = v.value or "error"
+      elseif show_type == "text" then
+        text = v.text or v.value or "error"
+      else
+        text = show_type
+      end
+
+      local ang = math.rad( math.max( new_angle, last_angle ) - math.min( new_angle, last_angle ) )
+      local text_x = x + math.cos( ang ) * radius / 2
+      local text_y = y + math.sin( ang ) * radius / 2
+
+      GNLib.SimpleTextShadowed( text, "GNLFontB15", text_x, text_y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, _, _, color_black )
+    end
+
+    last_angle = new_angle - 1
+  end
+end
+
+function GNLib.BarGraph( x, y, w, h, entries, show_type, align )
+  local max = 0
+
+  for _, v in pairs( entries ) do
+    max = math.max( max, v.value )
+  end
+
+  local bar_w = w / #entries
+
+  for i, v in pairs( entries ) do
+    if not v.value or v.value == 0 then continue end
+
+    local bar_h = ( v.value / max ) * h
+    local bar_x = x + bar_w * ( i - 1 )
+    local bar_y = y + h - math.ceil( bar_h )
+
+    surface.SetDrawColor( v.color )
+    surface.DrawRect( math.ceil( bar_x ), math.ceil( bar_y ), math.ceil( bar_w ), math.ceil( bar_h ) )
+
+    if show_type then
+      local text = ""
+
+      if show_type == "percent" then
+        text = v.value / total or "error"
+      elseif show_type == "value" then
+        text = v.value or "error"
+      elseif show_type == "text" then
+        text = v.text or v.value or "error"
+      else
+        text = show_type
+      end
+
+      local alignments = {
+        ["top"] = { y = bar_y, t = TEXT_ALIGN_TOP },
+        ["center"] = { y = bar_y + bar_h / 2, t = TEXT_ALIGN_CENTER },
+        ["bottom"] = { y = bar_y + bar_h, t = TEXT_ALIGN_BOTTOM },
+      }
+
+      local text_x = bar_x + bar_w / 2
+      local text_y = alignments[ align or "center" ].y or bar_y
+
+      GNLib.SimpleTextShadowed( text, "GNLFontB15", text_x, text_y, color_white, TEXT_ALIGN_CENTER, alignments[ align or "center" ].t or TEXT_ALIGN_CENTER, _, _, color_black )
+    end
+  end
 end

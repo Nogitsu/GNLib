@@ -62,7 +62,7 @@ function GNLib.OpenAddonsList()
             --  > Draw icon
             local iconSize = h / 2
             surface.SetDrawColor( color_white )
-            if selected_addon.logoURL then
+            if selected_addon.logoURL and selected_addon.mat then
                 surface.SetMaterial( selected_addon.mat )
             else
                 surface.SetMaterial( mats.DefaultPic )
@@ -70,7 +70,7 @@ function GNLib.OpenAddonsList()
             surface.DrawTexturedRect( 25, 25, iconSize, iconSize )
 
             --  > Draw name
-            GNLib.SimpleTextShadowed( selected_addon.name ..  " - " .. ( selected_addon.version or "N/A" ), "GNLFontB40", 25 * 1.5 + iconSize, 25, color_white, _, _, 2, 2, _ )
+            GNLib.SimpleTextShadowed( selected_addon.name ..  " - " .. ( selected_addon.version or "N/A" ), "GNLFontB40", 25 * 1.5 + iconSize, 25, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, 2, _ )
 
             --  > Draw certification
             surface.SetFont( "GNLFontB40" )
