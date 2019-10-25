@@ -22,15 +22,13 @@ function GNLib.DrawRadialGradient( x, y, r, c1, c2 )
 end
 
 --  > Polygones
-function GNLib.DrawTriangle( center_x, center_y, side1_w, side2_w, side3_w, color )
-    local poly = {}
-    /*table.insert( poly, { x = center_x - side1_w / 2, y = center_y + side2_w / 2 } )
-    table.insert( poly, { x = center_x + side1_w / 2, y = center_y + side2_w / 2 } )
-    table.insert( poly, { x = center_x, y = center_y - side2_w / 2 } )*/
-    poly = {
-    { x = 100, y = 200 },
-	{ x = 150, y = 100 },
-	{ x = 200, y = 200 } }
+function GNLib.DrawTriangle( center_x, center_y, side_size, angle, color )
+    local poly = 
+	{
+		{ x = center_x, y = center_y - side_size / 2 },
+		{ x = center_x + side_size / 2, y = center_y + side_size / 2 },
+		{ x = center_x - side_size / 2, y = center_y + side_size / 2 },
+	}
 
     draw.NoTexture()
     surface.SetDrawColor( color or color_white )

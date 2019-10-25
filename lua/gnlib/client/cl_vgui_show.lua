@@ -75,5 +75,12 @@ function GNLib.OpenVGUIPanel()
 
     local graphic = vgui.Create( "GNGraphic", main )
     graphic:SetPos( 50, 450 )
+
+    local combobox = vgui.Create( "GNComboBox", main )
+        combobox:SetPos( 500, 450 )
+        combobox:AddChoice( "Banana" )
+        combobox:AddChoice( "Potato" )
+        combobox:AddChoice( "Ducker" )
+
 end
 concommand.Add( "gnlib_vgui", GNLib.OpenVGUIPanel )
