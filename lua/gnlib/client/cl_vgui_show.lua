@@ -52,12 +52,8 @@ function GNLib.OpenVGUIPanel()
         GNLib.DrawOutlinedRoundedRect( 4, 650, 250, 200, 24, 5, GNLib.Colors.Emerald )
     end
 
-    local button = vgui.Create( "GNButton", main )
-    button:SetPos( 50, 300 )
-    button:SetText( "Bouton ovale tout beau avec un auto update size, wow, amazing :kappa:" )
-
     local iconbutton = vgui.Create( "GNIconButton", main )
-    iconbutton:SetPos( button.x + button:GetWide() + 50, 300 )
+    iconbutton:SetPos( 350, 300 )
     iconbutton:SetRadius( 45 )
     iconbutton:SetIconRadius( 45 )
     iconbutton:SetIcon( Material("icon32/tool.png","smooth") )
@@ -78,9 +74,28 @@ function GNLib.OpenVGUIPanel()
 
     local combobox = vgui.Create( "GNComboBox", main )
         combobox:SetPos( 500, 450 )
-        combobox:AddChoice( "Banana" )
-        combobox:AddChoice( "Potato" )
-        combobox:AddChoice( "Ducker" )
+        combobox:SetWide( 150 )
+        combobox:SetValue( "Get a fruit" )
+        combobox:AddChoice( "Banana", 55 )
+        combobox:AddChoice( "Potato", 42 )
+        combobox:AddChoice( "Ducker", 1 )
+        combobox:AddChoice( "Bad Duck", -1 )
+        combobox:AddChoice( "Bad Duck 2", -1 )
+        combobox:SetReseter( false )
+        combobox.OnSelect = function( self, id, txt, data )
+            print( id, txt, data )
+        end
+
+    local groupbox = vgui.Create( "GNGroupBox", main )
+        groupbox:SetPos( 700, 450 )
+        groupbox:SetSize( 400, 250 )
+        groupbox:SetColor( GNLib.Colors.Clouds )
+        groupbox:SetTitle( "Hey Hey, I am a GroupBox" )
+        --groupbox:SetFont( "Default" )
+
+    local button = vgui.Create( "GNButton", groupbox )
+        button:Dock( TOP )
+        button:SetText( "Bouton ovale tout beau avec un auto update size" )
 
 end
 concommand.Add( "gnlib_vgui", GNLib.OpenVGUIPanel )

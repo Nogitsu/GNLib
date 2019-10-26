@@ -22,13 +22,37 @@ function GNLib.DrawRadialGradient( x, y, r, c1, c2 )
 end
 
 --  > Polygones
-function GNLib.DrawTriangle( center_x, center_y, side_size, angle, color )
-    local poly = 
-	{
-		{ x = center_x, y = center_y - side_size / 2 },
-		{ x = center_x + side_size / 2, y = center_y + side_size / 2 },
-		{ x = center_x - side_size / 2, y = center_y + side_size / 2 },
-	}
+function GNLib.DrawTriangle( center_x, center_y, side_size, color, dir )
+    local poly
+    if dir == 0 then
+		poly = 
+		{
+			{ x = center_x, y = center_y - side_size / 2 },
+       		{ x = center_x + side_size / 2, y = center_y + side_size / 2 },
+			{ x = center_x - side_size / 2, y = center_y + side_size / 2 },
+		}
+	elseif dir == 1 then
+		poly = 
+		{
+			{ x = center_x - side_size / 2 + 1, y = center_y - side_size / 2 },
+       		{ x = center_x + side_size / 2 + 1, y = center_y  },
+			{ x = center_x - side_size / 2 + 1, y = center_y + side_size / 2 },
+		}
+	elseif dir == 2 then
+		poly = 
+		{
+			{ x = center_x - side_size / 2, y = center_y - side_size / 2 + 1 },
+       		{ x = center_x + side_size / 2, y = center_y - side_size / 2 + 1 },
+			{ x = center_x, y = center_y + side_size / 2 + 1 },
+		}
+	else
+		poly = 
+		{
+			{ x = center_x + side_size / 2 - 1, y = center_y - side_size / 2 },
+       		{ x = center_x + side_size / 2 - 1, y = center_y + side_size / 2 },
+			{ x = center_x - side_size / 2 - 1, y = center_y },
+		}
+	end
 
     draw.NoTexture()
     surface.SetDrawColor( color or color_white )

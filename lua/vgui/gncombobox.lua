@@ -1,17 +1,22 @@
 local PANEL = {}
 
 AccessorFunc( PANEL, "hovered_color", "HoveredColor" )
-
 AccessorFunc( PANEL, "text_color", "TextColor" )
 
 AccessorFunc( PANEL, "font", "Font", FORCE_STRING )
+AccessorFunc( PANEL, "value", "Value", FORCE_STRING )
+
+AccessorFunc( PANEL, "reseter", "Reseter", FORCE_BOOL )
 
 function PANEL:Init()
-    self:SetSize( 150, 25 )
+    self:SetSize( 100, 25 )
     self:SetText( "" )
     self.self_h = 25
+    self.menu_offset = 5
 
+    self.value = ""
     self.selected = nil
+    self.reseter = false
     self.choices = {}
 
     self.font = "GNLFontB15"
@@ -20,18 +25,37 @@ function PANEL:Init()
     self.text_color = GNLib.Colors.WetAsphalt
 end
 
-function PANEL:Paint( w, h )
-    GNLib.DrawElipse( 0, 0, w, self.self_h, self:IsHovered() and self.hovered_color or self.color )
-    GNLib.DrawTriangle( w - 15, self.self_h / 2, 8, CurTime(), self:IsHovered() and GNLib.Colors.MidnightBlue or GNLib.Colors.WetAsphalt )
-
-    draw.SimpleText( self:GetSelected() and self:GetSelected().text, self.font, 10, self.self_h / 2, self.text_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+function PANEL:OnSelect( id, value, data )
+    --  > Overwrite this func
 end
 
-function PANEL:AddChoice( text, data )
-    self.choices[#self.choices + 1] = { text = text, data = data }
-    self.selected = #self.choices
+function PANEL:Paint( w, h )
+    GNLib.DrawElipse( 0, 0, w, self.self_h, self:IsHovered() and self.hovered_color or self.color )
+    GNLib.DrawTriangle( w - 15, self.self_h / 2, 8, self:IsHovered() and GNLib.Colors.MidnightBlue or GNLib.Colors.WetAsphalt, self:IsMenuOpen() and 2 or 0 )
 
-    self:SetTall( self:GetTall() + 30 )
+    draw.SimpleText( self:GetSelected() and self:GetSelected().text or self:GetValue(), self.font, 10, self.self_h / 2, self.text_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+    
+    surface.SetDrawColor( color_white ) 
+    surface.DrawLine( 0, 0, 0, h )
+end
+
+function PANEL:AddChoice( text, data, auto_select )
+    self.choices[#self.choices + 1] = { text = text, data = data }
+    if auto_select then self.selected = #self.choices end
+
+    self:SetTall( self:GetTall() + ( self.self_h + ( #self.choices == 1 and self.menu_offset or 0 ) ) )
+end
+
+function PANEL:SetReseter( bool )
+    if bool == self:GetReseter() then return end
+
+    if bool then
+        self:SetTall( self:GetTall() + self.self_h )
+    else
+        self:SetTall( self:GetTall() - self.self_h )
+    end
+
+    self.reseter = bool
 end
 
 function PANEL:IsHovered()
@@ -71,21 +95,41 @@ function PANEL:OpenMenu()
         self.Menu:SetSize( W, #self.choices * 30 )
         self.Menu.Paint = function() end
 
+    local y = 0
     local button_space = 10
-    for i, v in ipairs( self.choices ) do
-        local choice = self.Menu:Add( "DButton" )
-            choice:SetPos( button_space, 5 + ( i - 1 ) * self.self_h )
-            choice:SetSize( W - button_space * 2, self.self_h )
-            choice:SetText( "" )
-            choice.Paint = function( _self, w, h ) 
-                draw.RoundedBoxEx( 8, 0, 0, w, h, _self:IsHovered() and self.hovered_color or self.color, i == 1, i == 1, i == #self.choices, i == #self.choices )
+    local function addChoice( id, is_first, is_last, text, data, reseter )
+        local hovered_color = reseter and GNLib.Colors.Pomegranate or self.hovered_color
+        local default_color = reseter and GNLib.Colors.Alizarin or self.color
 
-                draw.SimpleText( v.text, self.font, 10, h / 2, self.text_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )                
+        local choice = self.Menu:Add( "DButton" )
+        choice:SetPos( button_space, 5 + y * self.self_h )
+        choice:SetSize( W - button_space * 2, self.self_h )
+        choice:SetText( "" )
+        choice.Paint = function( _self, w, h ) 
+            draw.RoundedBoxEx( 8, 0, 0, w, h, _self:IsHovered() and hovered_color or default_color, is_first, is_first, is_last, is_last )
+
+            draw.SimpleText( text, self.font, reseter and w / 2 or 10, h / 2, reseter and GNLib.Colors.Clouds or self.text_color, reseter and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )                
+        end
+        choice.DoClick = function()
+            if not reseter then
+                self:SetSelected( id )
+                self:OnSelect( id, text, data )
+            else
+                self.selected = nil
             end
-            choice.DoClick = function()
-                self:SetSelected( i )
-                self:CloseMenu()
-            end
+
+            self:CloseMenu()
+        end
+        y = y + 1
+    end
+
+    for i, v in ipairs( self.choices ) do
+        addChoice( i, i == 1, not self:GetReseter() and i == #self.choices or false, v.text, v.data, false )
+    end
+
+    if self:GetReseter() then
+        --addChoice( _, , true, "x", _, true )
+        addChoice( _, #self.choices == 0, true, "x", 0, true )
     end
 end
 
