@@ -62,7 +62,7 @@ function GNLib.OpenAddonsList()
             --  > Draw icon
             local iconSize = h / 2
             surface.SetDrawColor( color_white )
-            if selected_addon.logoURL and selected_addon.mat then
+            if selected_addon.logoURL then
                 surface.SetMaterial( selected_addon.mat )
             else
                 surface.SetMaterial( mats.DefaultPic )
@@ -80,16 +80,16 @@ function GNLib.OpenAddonsList()
                 surface.SetMaterial( mats.Certified )
                 surface.DrawTexturedRect( 25 * 1.5 + iconSize + name_w + 8, 25 + name_h/2 - 10, 20, 20 )
             end
-            
+
             --  > Draw Install status
             GNLib.DrawIconTextOutlined( selected_addon.installed and "Installed" or "Not Installed", "GNLFontB17", 25 * 1.5 + iconSize, 25 + name_h, selected_addon.installed and GNLib.Colors.Emerald or GNLib.Colors.Alizarin, selected_addon.installed and mats.Accept or mats.NotAccept, 16, 16, _, _, 1 )
- 
+
             --  > Draw lib update status
             GNLib.DrawIconTextOutlined( GNLib.IsOutdatedLib( selected_addon.id ) and "Different version of the library (" .. string.Trim( selected_addon.lib_version ) .. ")" or "Similar version of the library", "GNLFontB17", 25 * 1.5 + iconSize, 25 + name_h + 20, GNLib.IsOutdatedLib( selected_addon.id ) and GNLib.Colors.Orange or GNLib.Colors.Emerald, GNLib.IsOutdatedLib( selected_addon.id ) and mats.Update or mats.Accept, 16, 16, _, _, 1 )
 
             --  > Draw addon update status
             GNLib.DrawIconTextOutlined( GNLib.IsOutdated( selected_addon.id ) and "Different version of this addon (" .. string.Trim( selected_addon.last_version ) .. ")" or "Similar version of this addon", "GNLFontB17", 25 * 1.5 + iconSize, 25 + name_h + 40, GNLib.IsOutdated( selected_addon.id ) and GNLib.Colors.Orange or GNLib.Colors.Emerald, GNLib.IsOutdated( selected_addon.id ) and mats.Update or mats.Accept, 16, 16, _, _, 1 )
-           
+
             --  > Draw WIP
             surface.SetDrawColor( color_white )
             surface.SetMaterial( selected_addon.wip and mats.Bug or mats.Accept )
@@ -109,7 +109,7 @@ function GNLib.OpenAddonsList()
             draw.SimpleTextOutlined( selected_addon.wip and "Warning ! This addon may create errors or may not work properly !" or "This addon is currently stable.", "GNLFontB17", 25 * 1.5 + iconSize + 20, 25 + name_h + 60, selected_addon.wip and GNLib.Colors.SunFlower or GNLib.Colors.Emerald, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black )
         end
     end
-            
+
     function addAddon( k, v )
         GNLib.CheckVersion( k, function( data, url )
             v.last_version = data
@@ -128,7 +128,7 @@ function GNLib.OpenAddonsList()
                 second_col = GNLib.Colors.Nephritis
 
                 if not ( v.lib_version == GNLib.Version ) then
-                    second_col = GNLib.Colors.Carrot 
+                    second_col = GNLib.Colors.Carrot
                 end
             end
 
@@ -140,17 +140,17 @@ function GNLib.OpenAddonsList()
                 x = Lerp( FrameTime() * 5, x, w / 2 )
             end
             GNLib.DrawRectGradient( x, 0, w, h, GNLib.Colors.MidnightBlue, second_col )
-            
+
             draw.SimpleText( ( v.name or "N/A" ), "GNLFontB15", 5, 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
             draw.SimpleText( ( v.author or "N/A" ) .. " | " .. ( v.lib_version or "N/A" ), "GNLFont15", 5, h - 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
-        
+
             if v.certified then
                 surface.SetDrawColor( color_white )
                 surface.SetMaterial( mats.Certified )
                 surface.DrawTexturedRect( w - 30, h / 2 - 7, 16, 16 )
             end
         end
-        
+
         function addon_line:DoClick()
             sound.Play( "ui/buttonclick.wav", LocalPlayer():GetPos(), 75, 100, .80 ) -- want to control the volume
 
@@ -224,7 +224,7 @@ function GNLib.OpenAddonsList()
             sound.Play( "ui/buttonrollover.wav", LocalPlayer():GetPos(), 75, 100, .80 )
         end
     end
-    
+
     local notCertified = {}
     for k, v in pairs( GNLib.GetAddons() ) do
         if v.certified then addAddon( k, v ) else notCertified[k] = v end
@@ -232,6 +232,6 @@ function GNLib.OpenAddonsList()
     for k, v in pairs( notCertified ) do
         addAddon( k, v )
     end
-    
+
 end
 concommand.Add( "gnlib_list", GNLib.OpenAddonsList )

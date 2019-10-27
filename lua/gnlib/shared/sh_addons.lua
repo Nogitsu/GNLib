@@ -12,7 +12,7 @@ end )
 if SERVER then
     util.AddNetworkString( "GNLib:RegisterAddons" )
 
-    hook.Add( "PlayerSpawn", "GNLib:RegisterAddons", function( ply )
+    hook.Add( "PlayerInitialSpawn", "GNLib:RegisterAddons", function( ply )
         GNLib.RefreshAddonsList( ply )
     end )
 

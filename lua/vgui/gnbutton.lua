@@ -3,8 +3,6 @@ local PANEL = {}
 AccessorFunc( PANEL, "hovered_color", "HoveredColor" )
 AccessorFunc( PANEL, "clicked_color", "ClickedColor" )
 
-AccessorFunc( PANEL, "corner_radius", "CornerRadius" )
-
 AccessorFunc( PANEL, "default_textcolor", "DefaultTextColor" )
 AccessorFunc( PANEL, "hovered_textcolor", "HoveredTextColor" )
 AccessorFunc( PANEL, "clicked_textcolor", "ClickedTextColor" )
@@ -13,7 +11,6 @@ function PANEL:Init()
     self:SetSize( 100, 25 )
     self:SetCursor( "hand" )
     self:SetColor( GNLib.Colors.Wisteria )
-    self:SetCornerRadius(true)
 
     self.text = "Label"
     self.font = "GNLFontB15"
@@ -55,12 +52,7 @@ end
 
 --  > Override existing
 function PANEL:Paint( w, h )
-    if self:GetCornerRadius() then
-        GNLib.DrawElipse( 0, 0, w, h, self.clicking and self.clicked_color or self:IsHovered() and self.hovered_color or self.color )
-    else
-        surface.SetDrawColor( self.clicking and self.clicked_color or self:IsHovered() and self.hovered_color or self.color )
-        surface.DrawRect(0, 0, w, h)
-    end
+    GNLib.DrawElipse( 0, 0, w, h, self.clicking and self.clicked_color or self:IsHovered() and self.hovered_color or self.color )
 
     draw.SimpleText( self.text, self.font, w / 2, h / 2, self.clicking and self.clicked_textcolor or self:IsHovered() and self.hovered_textcolor or self.default_textcolor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 end

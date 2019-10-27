@@ -124,6 +124,8 @@ end
 function GNLib.DrawOutlinedCircle( x, y, radius, thick, angle_start, angle_end, color )
     surface.SetDrawColor( color or color_white )
 
+    local corrector = 0
+
     local min_ang = math.min( angle_start or 0, angle_end or 360 )
 
     for t = 0, thick - 1 do
@@ -215,8 +217,47 @@ function GNLib.CircleGraph( x, y, radius, entries, show_type )
   end
 end
 
-function GNLib.BarGraph( x, y, w, h, entries, show_type, align )
+function GNLib.OutlinedCircleGraph( x, y, radius, thick, entries, show_type )
+  local total = 0
+
+  for _, v in pairs( entries ) do
+    total = total + v.value
+  end
+
+  local last_angle = 0
+  for i, v in pairs( entries ) do
+    if not v.value or v.value == 0 then continue end
+
+    local new_angle = last_angle + 360 * v.value / total + 1
+    GNLib.DrawOutlinedCircle( x, y, radius, thick or 1, last_angle, new_angle, v.color )
+
+    if show_type then
+      local text = ""
+
+      if show_type == "percent" then
+        text = v.value / total or "error"
+      elseif show_type == "value" then
+        text = v.value or "error"
+      elseif show_type == "text" then
+        text = v.text or v.value or "error"
+      else
+        text = show_type
+      end
+
+      local ang = math.rad( math.max( new_angle, last_angle ) - math.min( new_angle, last_angle ) )
+      local text_x = x + math.cos( ang ) * radius / 2
+      local text_y = y + math.sin( ang ) * radius / 2
+
+      GNLib.SimpleTextShadowed( text, "GNLFontB15", text_x, text_y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, _, _, color_black )
+    end
+
+    last_angle = new_angle - 1
+  end
+end
+
+function GNLib.BarGraph( x, y, w, h, space, entries, show_type, align )
   local max = 0
+  space = space or 0
 
   for _, v in pairs( entries ) do
     max = math.max( max, v.value )
@@ -228,7 +269,7 @@ function GNLib.BarGraph( x, y, w, h, entries, show_type, align )
     if not v.value or v.value == 0 then continue end
 
     local bar_h = ( v.value / max ) * h
-    local bar_x = x + bar_w * ( i - 1 )
+    local bar_x = x + ( bar_w + space ) * ( i - 1 )
     local bar_y = y + h - math.ceil( bar_h )
 
     surface.SetDrawColor( v.color )
@@ -259,4 +300,26 @@ function GNLib.BarGraph( x, y, w, h, entries, show_type, align )
       GNLib.SimpleTextShadowed( text, "GNLFontB15", text_x, text_y, color_white, TEXT_ALIGN_CENTER, alignments[ align or "center" ].t or TEXT_ALIGN_CENTER, _, _, color_black )
     end
   end
+end
+
+
+function GNLib.Curve( x, y, w, h, min_x, max_x, min_y, max_y, color, entries )
+  local last_x, last_y = entries[ 1 ][ 1 ], entries[ 1 ][ 2 ]
+
+  for _, coordinates in pairs( entries ) do
+    surface.SetDrawColor( color or Color( 255, 0, 0 ) )
+    surface.DrawLine( x + (last_x - min_x) / max_x * w, y + h - (last_y - min_y) / max_y * h, x + (coordinates[1] - min_x) / max_x * w, y + h - (coordinates[2] - min_y) / max_y * h )
+
+    last_x, last_y = coordinates[1], coordinates[2]
+  end
+end
+
+function GNLib.DrawFunc( x, y, w, h, min_x, max_x, min_y, max_y, interval, fx, color )
+  local entries = {}
+
+  for i = min_x, max_x, interval do
+    entries[ #entries + 1 ] = { i, GNLib.CalculateF( fx, i ) }
+  end
+
+  GNLib.Curve( x, y, w, h, min_x, max_x, min_y, max_y, color, entries )
 end
