@@ -36,3 +36,16 @@ function GNLib.IsPair( value )
     if not isnumber(value) then return end
     return value % 2 == 0
 end
+
+--  > This function come from GMod Creators Area
+function GNLib.Benchmark( callback, name )
+    local start = SysTime()
+    
+    callback()
+
+    local totalTime = ( SysTime() - start ) * 1000
+    local endTime = tostring( totalTime ) .. 'ms'
+    print( name or '', 'Time elapsed: ', endTime )
+
+    return totalTime
+end
