@@ -97,5 +97,14 @@ function GNLib.OpenVGUIPanel()
         button:Dock( TOP )
         button:SetText( "Bouton ovale tout beau avec un auto update size" )
 
+    local taglist = vgui.Create( "GNTagList", groupbox )
+        taglist:SetPos( 25, 75 )
+        taglist:SetTitle( "Supported internet explorers" )
+        taglist:SetFont( "GNLFontB15" )
+        taglist:AddTag( "Google", GNLib.Colors.Alizarin, GNLib.Colors.Clouds )
+        taglist:AddTag( "Firefox", GNLib.Colors.Pumpkin, GNLib.Colors.Clouds )
+        taglist:AddTag( "Internet Explorer", GNLib.Colors.PeterRiver, GNLib.Colors.Clouds )
+        taglist:AddTag( "Exploducker", GNLib.Colors.SunFlower, GNLib.Colors.Clouds )
+
 end
 concommand.Add( "gnlib_vgui", GNLib.OpenVGUIPanel )
