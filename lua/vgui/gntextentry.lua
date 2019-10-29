@@ -26,6 +26,13 @@ function PANEL:Init()
     self.hovered_color = GNLib.Colors.Amethyst
 end
 
+function PANEL:GetPaintTall()
+    surface.SetFont( self.font )
+    local w, h = surface.GetTextSize( self.title )
+    
+    return self:GetTall() - h / 2, h / 2
+end
+
 function PANEL:Paint( w, h )
     local color = self:IsHovered() and self:GetHoveredColor() or self:GetColor()
     surface.SetDrawColor( color )

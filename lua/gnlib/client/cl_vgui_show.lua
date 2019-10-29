@@ -106,5 +106,18 @@ function GNLib.OpenVGUIPanel()
         taglist:AddTag( "Internet Explorer", GNLib.Colors.PeterRiver, GNLib.Colors.Clouds )
         taglist:AddTag( "Exploducker", GNLib.Colors.SunFlower, GNLib.Colors.Clouds )
 
+    local numentry = vgui.Create( "GNNumEntry", groupbox )
+        numentry:SetPos( 25, 150 )
+        numentry:SetSize( 125, 35 )
+        numentry:SetColor( GNLib.Colors.Clouds )
+        numentry:SetHoveredColor( GNLib.Colors.Silver )
+
+    local colorpicker = vgui.Create( "GNColorPicker", groupbox )
+        colorpicker:SetPos( 175, 125 )
+        colorpicker:SetSize( 100, 100 )
+        colorpicker.OnColorChanged = function( self, clr )
+            numentry:SetColor( clr )
+        end
+
 end
 concommand.Add( "gnlib_vgui", GNLib.OpenVGUIPanel )
