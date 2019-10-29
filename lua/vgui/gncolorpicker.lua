@@ -5,6 +5,8 @@ AccessorFunc( PANEL, "color", "Color" )
 local ColorWheel = Material( "gnlib/colorwheel.png" )
 
 function PANEL:Init()
+    self:SetSize( 150, 150 )
+
     self.Knob:NoClipping( false )
     self.Knob.Paint = function( _self, w, h )
         --GNLib.DrawOutlinedCircle( w / 2, h / 2, h / 2 - 2, 2, 0, 360, GNLib.Colors.Clouds )
@@ -33,6 +35,10 @@ function PANEL:GetPosColor( x, y )
     local clr = ColorWheel:GetColor( x, y ) 
 
     return Color( clr.r, clr.g, clr.b )
+end
+
+function PANEL:OnColorChanged( clr )
+    --  > Overwrite
 end
 
 function PANEL:TranslateValues( x, y )
