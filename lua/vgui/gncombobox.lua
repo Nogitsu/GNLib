@@ -9,10 +9,11 @@ AccessorFunc( PANEL, "value", "Value", FORCE_STRING )
 AccessorFunc( PANEL, "reseter", "Reseter", FORCE_BOOL )
 
 function PANEL:Init()
-    self:SetSize( 100, 25 )
-    self:SetText( "" )
     self.self_h = 25
     self.menu_offset = 5
+
+    self:SetSize( 100, self.self_h )
+    self:SetText( "" )
 
     self.value = ""
     self.selected = nil
@@ -29,14 +30,15 @@ function PANEL:OnSelect( id, value, data )
     --  > Overwrite this func
 end
 
+function PANEL:OnReset()
+    --  > Overwrite this func
+end
+
 function PANEL:Paint( w, h )
     GNLib.DrawElipse( 0, 0, w, self.self_h, self:IsHovered() and self.hovered_color or self.color )
     GNLib.DrawTriangle( w - 15, self.self_h / 2, 8, self:IsHovered() and GNLib.Colors.MidnightBlue or GNLib.Colors.WetAsphalt, self:IsMenuOpen() and 2 or 0 )
 
     draw.SimpleText( self:GetSelected() and self:GetSelected().text or self:GetValue(), self.font, 10, self.self_h / 2, self.text_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
-    
-    surface.SetDrawColor( color_white ) 
-    surface.DrawLine( 0, 0, 0, h )
 end
 
 function PANEL:AddChoice( text, data, auto_select )
@@ -46,16 +48,16 @@ function PANEL:AddChoice( text, data, auto_select )
     self:SetTall( self:GetTall() + ( self.self_h + ( #self.choices == 1 and self.menu_offset or 0 ) ) )
 end
 
+function PANEL:CalcTall()
+    self:SetTall( self.self_h + self.menu_offset + ( #self.choices + ( self.reseter and 1 or 0 ) ) * self.self_h )
+end
+
 function PANEL:SetReseter( bool )
     if bool == self:GetReseter() then return end
 
-    if bool then
-        self:SetTall( self:GetTall() + self.self_h )
-    else
-        self:SetTall( self:GetTall() - self.self_h )
-    end
-
     self.reseter = bool
+
+    self:CalcTall()
 end
 
 function PANEL:IsHovered()
@@ -92,7 +94,7 @@ function PANEL:OpenMenu()
 
     self.Menu = self:Add( "DPanel" )
         self.Menu:SetPos( 0, self.self_h )
-        self.Menu:SetSize( W, #self.choices * 30 )
+        self.Menu:SetSize( W, self:GetTall() - self.self_h )
         self.Menu.Paint = function() end
 
     local y = 0
@@ -103,7 +105,8 @@ function PANEL:OpenMenu()
 
         local choice = self.Menu:Add( "DButton" )
         choice:SetPos( button_space, 5 + y * self.self_h )
-        choice:SetSize( W - button_space * 2, self.self_h )
+        choice:SetWide( W - button_space * 2 ) 
+        choice:SetTall( self.self_h )
         choice:SetText( "" )
         choice.Paint = function( _self, w, h ) 
             draw.RoundedBoxEx( 8, 0, 0, w, h, _self:IsHovered() and hovered_color or default_color, is_first, is_first, is_last, is_last )
@@ -115,6 +118,7 @@ function PANEL:OpenMenu()
                 self:SetSelected( id )
                 self:OnSelect( id, text, data )
             else
+                self:OnReset()
                 self.selected = nil
             end
 
@@ -128,7 +132,6 @@ function PANEL:OpenMenu()
     end
 
     if self:GetReseter() then
-        --addChoice( _, , true, "x", _, true )
         addChoice( _, #self.choices == 0, true, "x", 0, true )
     end
 end

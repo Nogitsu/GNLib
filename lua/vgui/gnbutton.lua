@@ -3,7 +3,7 @@ local PANEL = {}
 AccessorFunc( PANEL, "hovered_color", "HoveredColor" )
 AccessorFunc( PANEL, "clicked_color", "ClickedColor" )
 
-AccessorFunc( PANEL, "default_textcolor", "DefaultTextColor" )
+AccessorFunc( PANEL, "default_textcolor", "TextColor" )
 AccessorFunc( PANEL, "hovered_textcolor", "HoveredTextColor" )
 AccessorFunc( PANEL, "clicked_textcolor", "ClickedTextColor" )
 

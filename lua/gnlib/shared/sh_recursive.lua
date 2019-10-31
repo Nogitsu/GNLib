@@ -25,6 +25,8 @@ end
 function GNLib.RequireFolder( path, should_print, indent )
 	local files, folders = file.Find( path .. "/*", "LUA" )
 	local indent = indent or ""
+
+	if should_print then print( indent:gsub( "\t", "" ) .. path ) end	
     for _, v in pairs( files ) do
         if not v:EndsWith( ".lua" ) then continue end
         if v:StartWith( "cl_" ) then

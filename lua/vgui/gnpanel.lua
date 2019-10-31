@@ -4,8 +4,8 @@ AccessorFunc( PANEL, "color", "Color" )
 AccessorFunc( PANEL, "default_cursor", "DefaultCursor", FORCE_STRING )
 
 function PANEL:Init()
-    self:SetSize( 50, 25 )
-    self:SetPos( 0, 0 )
+    self:SetSize( 500, 500 )
+    self:Center()
 
     self:ShowCloseButton( false )
     self:SetDraggable( false )

@@ -15,9 +15,11 @@ function GNLib.DrawRectGradient( x, y, w, h, color1, color2, vertical )
     end
 end
 
+local surface_DrawCircle = surface.DrawCircle
+local GNLib_LerpColor = GNLib.LerpColor
 function GNLib.DrawRadialGradient( x, y, r, c1, c2 )
     for i = 0, r do
-        surface.DrawCircle( x, y, i, GNLib.LerpColor( i / r, c1, c2 ) )
+        surface_DrawCircle( x, y, i, GNLib_LerpColor( i / r, c1, c2 ) )
     end
 end
 
