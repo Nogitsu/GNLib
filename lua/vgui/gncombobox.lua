@@ -45,7 +45,7 @@ function PANEL:AddChoice( text, data, auto_select )
     self.choices[#self.choices + 1] = { text = text, data = data }
     if auto_select then self.selected = #self.choices end
 
-    self:SetTall( self:GetTall() + ( self.self_h + ( #self.choices == 1 and self.menu_offset or 0 ) ) )
+    self:CalcTall()
 end
 
 function PANEL:CalcTall()
