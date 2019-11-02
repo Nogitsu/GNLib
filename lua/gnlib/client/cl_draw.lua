@@ -63,6 +63,13 @@ function GNLib.DrawTriangle( center_x, center_y, side_size, color, dir )
     return poly
 end
 
+--  > Material
+function GNLib.DrawMaterial( mat, x, y, w, h, color )
+    surface.SetDrawColor( color or color_white )
+	surface.SetMaterial( mat )
+	surface.DrawTexturedRect( x, y, w, h )
+end
+
 --  > Shadowed drawing
 function GNLib.SimpleTextShadowed( text, font, x, y, color, align_x, align_y, shadow_x, shadow_y, shadow_color )
     --  > Shadow
@@ -86,17 +93,13 @@ end
 
 --   > Drawing icons + text
 function GNLib.DrawIconText( text, font, x, y, color, mat, mat_w, mat_h, mat_color )
-    surface.SetDrawColor( mat_color or color_white )
-    surface.SetMaterial( mat )
-    surface.DrawTexturedRect( x, y, mat_w, mat_h )
+	GNLib.DrawMaterial( mat, x, y, mat_w, mat_h, mat_color )
 
     draw.SimpleText( text, font, x + mat_w + 5, y + mat_h / 2, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
 end
 
 function GNLib.DrawIconTextOutlined( text, font, x, y, color, mat, mat_w, mat_h, mat_color, outline_color, outline_w )
-    surface.SetDrawColor( mat_color or color_white )
-    surface.SetMaterial( mat )
-    surface.DrawTexturedRect( x, y, mat_w, mat_h )
+	GNLib.DrawMaterial( mat, x, y, mat_w, mat_h, mat_color )
 
     draw.SimpleTextOutlined( text, font, x + mat_w + 5, y + mat_h / 2, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, outline_w or .5, outline_color or Color( 0, 0, 0 ) )
 end
