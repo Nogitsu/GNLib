@@ -46,10 +46,10 @@ function GNLib.OpenVGUIPanel()
     function main:Paint( w, h )
         self:oldPaint( w, h )
 
-        GNLib.DrawOutlinedElipse( 50, 250, 200, 24, 5, GNLib.Colors.Pomegranate )
+        --GNLib.DrawOutlinedElipse( 50, 250, 200, 24, 5, GNLib.Colors.Pomegranate )
 
-        GNLib.DrawOutlinedRoundedRect( 8, 350, 75, 200, 200, 15, GNLib.Colors.Alizarin )
-        GNLib.DrawOutlinedRoundedRect( 4, 650, 250, 200, 24, 5, GNLib.Colors.Emerald )
+        --GNLib.DrawOutlinedRoundedRect( 8, 350, 75, 200, 200, 15, GNLib.Colors.Alizarin )
+        --GNLib.DrawOutlinedRoundedRect( 4, 650, 250, 200, 24, 5, GNLib.Colors.Emerald )
     end
 
     local iconbutton = vgui.Create( "GNIconButton", main )
@@ -122,5 +122,11 @@ function GNLib.OpenVGUIPanel()
         colorpicker.OnColorChanged = function( self, clr )
             numentry:SetColor( clr )
         end
+
+    local carousel = vgui.Create( "GNCarousel", main )
+        carousel:SetPos( 750, 50 )
+        --carousel:AddImage( "miitw.png", "Medieval Total War II" )
+        --carousel:AddImage( "rometw.png", "Rome Total War" )
+        --carousel:AddImage( "rometw2.png", "Rome Total War : Julii vs. Greeks" )
 end
 concommand.Add( "gnlib_vgui", GNLib.OpenVGUIPanel )
