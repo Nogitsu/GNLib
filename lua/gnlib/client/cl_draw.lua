@@ -63,6 +63,34 @@ function GNLib.DrawTriangle( center_x, center_y, side_size, color, dir )
     return poly
 end
 
+--	> Stencil
+function GNLib.DrawStencil( shape_draw_func, draw_func )
+	render.ClearStencil()
+    render.SetStencilEnable( true )
+
+    render.SetStencilWriteMask( 1 )
+    render.SetStencilTestMask( 1 )
+
+    render.SetStencilFailOperation( STENCILOPERATION_REPLACE )
+    render.SetStencilPassOperation( STENCILOPERATION_ZERO )
+    render.SetStencilZFailOperation( STENCILOPERATION_ZERO )
+    render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_NEVER )
+    render.SetStencilReferenceValue( 1 )
+
+    shape_draw_func()
+
+    render.SetStencilFailOperation( STENCILOPERATION_ZERO )
+    render.SetStencilPassOperation( STENCILOPERATION_REPLACE )
+    render.SetStencilZFailOperation( STENCILOPERATION_ZERO )
+    render.SetStencilCompareFunction( STENCILCOMPARISONFUNCTION_EQUAL )
+    render.SetStencilReferenceValue( 1 )
+
+    draw_func()
+
+    render.SetStencilEnable( false )
+    render.ClearStencil()
+end	
+
 --  > Material
 function GNLib.DrawMaterial( mat, x, y, w, h, color )
     surface.SetDrawColor( color or color_white )
