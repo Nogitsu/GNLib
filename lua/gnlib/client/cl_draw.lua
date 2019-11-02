@@ -205,6 +205,20 @@ function GNLib.DrawOutlinedRoundedRect( corner_radius, x, y, w, h, thick, color 
     GNLib.DrawOutlinedCircle( x + w - corner_radius, y + h - 1 - corner_radius, corner_radius, thick, 270, 180, color )
 end
 
+
+function GNLib.DrawRoundedRect( corner_radius, x, y, w, h, color )
+    surface.SetDrawColor( color or color_white )
+
+    surface.DrawRect( x + corner_radius, y, w - corner_radius * 2, h )
+    surface.DrawRect( x, y + corner_radius, corner_radius, h - corner_radius * 2 )
+    surface.DrawRect( x + w - corner_radius, y + corner_radius, corner_radius, h - corner_radius * 2 )
+
+    GNLib.DrawCircle( x + corner_radius, y + corner_radius, corner_radius, -180, -90, color )
+    GNLib.DrawCircle( x + w - corner_radius, y + corner_radius, corner_radius, -90, 0, color )
+    GNLib.DrawCircle( x + corner_radius, y + h - corner_radius, corner_radius, -270, -180, color )
+    GNLib.DrawCircle( x + w - corner_radius, y + h - corner_radius, corner_radius, 270, 180, color )
+end
+
 --  > Graphics
 function GNLib.CircleGraph( x, y, radius, entries, show_type )
   local total = 0
