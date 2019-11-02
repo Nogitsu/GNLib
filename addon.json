@@ -1,0 +1,17 @@
+{
+	"title" :	"GNLib v0.5.1",
+	"type"  :	"tool",
+	"tags"  :	[],
+	"ignore":
+	[
+		"*.cmd",
+		"*.ini",
+		"*.lnk",
+		"*.url",
+		"*.md",
+		"*.json",
+		".git/*",
+		"GNLib.jpg",
+		"GNLib.png"
+	]
+}
