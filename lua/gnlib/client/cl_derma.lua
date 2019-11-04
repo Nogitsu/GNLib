@@ -1,14 +1,14 @@
 --  > Main GNLib frame styled
 local remove_icon = Material( "icon16/cross.png" )
-function GNLib.CreateFrame( title )
-    local W, H = math.max( ScrW() * .75, 1024 ), math.max( ScrH() * .75, 720 )
+function GNLib.CreateFrame( title, W, H, color, color2 )
+    local W, H = W or math.max( ScrW() * .75, 1024 ), H or math.max( ScrH() * .75, 720 )
 
     local main = vgui.Create( "GNPanel" )
     main:SetSize( W, H )
     main:Center()
     main:MakePopup()
-    main.color = GNLib.Colors.MidnightBlue
-    main.color2 = GNLib.Colors.WetAsphalt
+    main.color = color or GNLib.Colors.MidnightBlue
+    main.color2 = color2 or GNLib.Colors.WetAsphalt
     function main:Paint( w, h )
         GNLib.DrawRectGradient( 0, 0, w, h, self.color, self.color2, true )
 
