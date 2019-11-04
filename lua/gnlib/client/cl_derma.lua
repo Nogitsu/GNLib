@@ -31,9 +31,7 @@ function GNLib.CreateFrame( title, W, H, color, color2 )
         end
         GNLib.DrawRectGradient( 0, 0, w, h, GNLib.Colors.Asbestos, c1, true )
 
-        surface.SetMaterial( remove_icon )
-        surface.SetDrawColor( color_white )
-        surface.DrawTexturedRect( 2, 2, 16, 16 )
+        GNLib.DrawMaterial( remove_icon, 2, 2, 16, 16 )
     end
 
     return main, close
