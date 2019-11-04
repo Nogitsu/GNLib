@@ -1,6 +1,6 @@
 
 function GNLib.LerpColor( t, c1, c2 )
-    return Color( Lerp( t, c1.r, c2.r ), Lerp( t, c1.g, c2.g ), Lerp( t, c1.b, c2.b ) )
+    return Color( Lerp( t, c1.r, c2.r ), Lerp( t, c1.g, c2.g ), Lerp( t, c1.b, c2.b ), c1.a == c2.a and c1.a or Lerp( t, c1.a, c2.a ) )
 end
 
 function GNLib.EncodeURL( url )
