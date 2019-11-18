@@ -40,11 +40,6 @@ function GNLib.SendDiscordEmbed( webhook, title, msg, footer )
     http.Post( "https://guthen.000webhostapp.com/discord_embed.php", { url = webhook, msg = msg, title = title, footer = footer } )
 end
 
-function GNLib.IsPair( value )
-    if not isnumber(value) then return end
-    return value % 2 == 0
-end
-
 --  > This function come from GMod Creators Area
 function GNLib.Benchmark( callback, name )
     local start = SysTime()
