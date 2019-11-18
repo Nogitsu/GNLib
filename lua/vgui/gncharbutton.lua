@@ -1,14 +1,14 @@
 local PANEL = {}
 
-AccessorFunc( PANEL, "hover_color", "HoverColor" )
+AccessorFunc( PANEL, "hovered_color", "HoveredColor" )
 AccessorFunc( PANEL, "clicked_color", "ClickedColor" )
 
 AccessorFunc( PANEL, "default_textcolor", "DefaultTextColor" )
-AccessorFunc( PANEL, "hover_textcolor", "HoverTextColor" )
+AccessorFunc( PANEL, "hovered_textcolor", "HoveredTextColor" )
 AccessorFunc( PANEL, "clicked_textcolor", "ClickedTextColor" )
 
 AccessorFunc( PANEL, "default_shadowcolor", "DefaultShadowColor" )
-AccessorFunc( PANEL, "hover_shadowcolor", "HoverShadowColor" )
+AccessorFunc( PANEL, "hovered_shadowcolor", "HoveredShadowColor" )
 AccessorFunc( PANEL, "clicked_shadowcolor", "ClickedShadowColor" )
 
 AccessorFunc( PANEL, "font", "Font", FORCE_STRING )
@@ -63,7 +63,7 @@ PANEL.GetText = PANEL.GetChar
 function PANEL:Paint( w, h )
     GNLib.DrawCircle( self.radius, self.radius, self.radius, _, _, self.clicking and self.clicked_color or self:IsHovered() and self.hovered_color or self.color )
 
-    GNLib.SimpleTextShadowed( string.sub( self.char, 1, 1 ), self.font, self.radius, self.radius, self.clicking and self.clicked_textcolor or self:IsHovered() and self.hovered_textcolor or self.default_textcolor, self.shadow_x, self.shadow_y, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, _ )
+    GNLib.SimpleTextShadowed( self.char, self.font, self.radius, self.radius, self.clicking and self.clicked_textcolor or self:IsHovered() and self.hovered_textcolor or self.default_textcolor, self.shadow_x, self.shadow_y, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, _ )
 end
 
 vgui.Register( "GNCharButton", PANEL, "GNPanel" )
