@@ -53,8 +53,11 @@ function PANEL:SetChar( char )
 end
 
 function PANEL:GetChar()
-    return char
+    return self.char
 end
+
+PANEL.SetText = PANEL.SetChar
+PANEL.GetText = PANEL.GetChar
 
 --  > Override existing
 function PANEL:Paint( w, h )
