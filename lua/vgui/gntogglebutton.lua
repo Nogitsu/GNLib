@@ -6,20 +6,26 @@ AccessorFunc( PANEL, "color_off", "ColorOff" )
 AccessorFunc( PANEL, "color_back_on", "ColorBackOn" )
 AccessorFunc( PANEL, "color_back_off", "ColorBackOff" )
 
-AccessorFunc( PANEL, "color_back", "ColorBack" )
+AccessorFunc( PANEL, "text_color", "TextColor" )
 
-AccessorFunc( PANEL, "toggled", "Toggled" )
-AccessorFunc( PANEL, "speed", "Speed" )
-AccessorFunc( PANEL, "circle_r", "CircleRadius" )
+AccessorFunc( PANEL, "toggled", "Toggled", FORCE_BOOL )
+AccessorFunc( PANEL, "speed", "Speed", FORCE_NUMBER )
+AccessorFunc( PANEL, "circle_r", "CircleRadius", FORCE_NUMBER )
 
+AccessorFunc( PANEL, "show_text", "ShowText", FORCE_BOOL )
+AccessorFunc( PANEL, "font", "Font", FORCE_STRING )
 
 function PANEL:Init()
     self:SetSize( 50, 25 )
-    self:SetDefaultCursor( "hand" )
-    self:SetCursor( "hand" )
+    --self:SetCursor( "hand" )
+    self.first_time = true
 
     self.toggled = false
     self.speed = 5
+
+    self.show_text = true
+    self.font = "GNLFontB10"
+    self.text_color = GNLib.Colors.Clouds
 
     self.circle_x = self:GetWide() * 0.25
     self.circle_r = self:GetTall() / 2 - 2
@@ -34,29 +40,41 @@ function PANEL:Init()
     self.color = self.color_off
 end
 
-function PANEL:OnToggled()
-end
-
---  > Override existing
 function PANEL:Paint( w, h )
-    local left_pos, right_pos = self:GetWide()*0.25, self:GetWide()*0.75
+    local left_pos, right_pos = self:GetWide() * 0.25, self:GetWide() * 0.75
     
+    local spd = FrameTime() * self.speed
     if self.toggled and self.circle_x < right_pos then
 
-        self.circle_x = Lerp( FrameTime() * self.speed, self.circle_x, right_pos )
-        self.color = GNLib.LerpColor( FrameTime() * self.speed, self.color, self.color_on )
-        self.color_back = GNLib.LerpColor( FrameTime() * self.speed, self.color_back, self.color_back_on )
+        self.circle_x = Lerp( spd, self.circle_x, right_pos )
+        self.color = GNLib.LerpColor( spd, self.color, self.color_on )
+        self.color_back = GNLib.LerpColor( spd, self.color_back, self.color_back_on )
 
+        self.first_time = false
     elseif not self.toggled and self.circle_x > left_pos then
 
-        self.circle_x = Lerp( FrameTime() * self.speed, self.circle_x, left_pos )
-        self.color = GNLib.LerpColor( FrameTime() * self.speed, self.color, self.color_off )
-        self.color_back = GNLib.LerpColor( FrameTime() * self.speed, self.color_back, self.color_back_off )
+        self.circle_x = Lerp( spd, self.circle_x, left_pos )
+        self.color = GNLib.LerpColor( spd, self.color, self.color_off )
+        self.color_back = GNLib.LerpColor( spd, self.color_back, self.color_back_off )
 
+        self.first_time = false
+    end
+
+    if self.first_time then
+        self.color = self.color_off
+        self.color_back = self.color_back_off
     end
 
     GNLib.DrawElipse( 0, 0, w, h, self.color_back )
-    GNLib.DrawCircle( self.circle_x, h/2, self.circle_r, _, _, self.color )
+
+    if self:GetShowText() then
+        draw.SimpleText( "ON", self.font, left_pos, h / 2, self.text_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+        draw.SimpleText( "OFF", self.font, right_pos, h / 2, self.text_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+    end
+
+    GNLib.DrawCircle( self.circle_x, h / 2, self.circle_r, _, _, self.color )
+
+    return true
 end
 
 function PANEL:DoClick()
@@ -64,4 +82,11 @@ function PANEL:DoClick()
     self:OnToggled( self.toggled )
 end
 
-vgui.Register( "GNToggleButton", PANEL, "GNPanel" )
+function PANEL:OnToggled()
+    --  > For overwrite
+end
+
+PANEL.SetColor = nil
+PANEL.GetColor = nil
+
+vgui.Register( "GNToggleButton", PANEL, "DButton" )
