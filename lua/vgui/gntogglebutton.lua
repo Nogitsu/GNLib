@@ -10,7 +10,9 @@ AccessorFunc( PANEL, "text_color", "TextColor" )
 
 AccessorFunc( PANEL, "toggled", "Toggled", FORCE_BOOL )
 AccessorFunc( PANEL, "speed", "Speed", FORCE_NUMBER )
+
 AccessorFunc( PANEL, "circle_r", "CircleRadius", FORCE_NUMBER )
+AccessorFunc( PANEL, "bar_tall", "BarTall", FORCE_NUMBER )
 
 AccessorFunc( PANEL, "show_text", "ShowText", FORCE_BOOL )
 AccessorFunc( PANEL, "font", "Font", FORCE_STRING )
@@ -23,9 +25,11 @@ function PANEL:Init()
     self.toggled = false
     self.speed = 5
 
-    self.show_text = true
+    self.show_text = false
     self.font = "GNLFontB10"
     self.text_color = GNLib.Colors.Clouds
+
+    self.bar_tall = self:GetTall()
 
     self.circle_x = self:GetWide() * 0.25
     self.circle_r = self:GetTall() / 2 - 2
@@ -65,7 +69,7 @@ function PANEL:Paint( w, h )
         self.color_back = self.color_back_off
     end
 
-    GNLib.DrawElipse( 0, 0, w, h, self.color_back )
+    GNLib.DrawElipse( 0, h / 2 - self.bar_tall / 2, w, self.bar_tall, self.color_back )
 
     if self:GetShowText() then
         draw.SimpleText( "ON", self.font, left_pos, h / 2, self.text_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
