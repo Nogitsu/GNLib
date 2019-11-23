@@ -1,7 +1,7 @@
 local PANEL = {}
 
 AccessorFunc( PANEL, "color", "Color" )
-AccessorFunc( PANEL, "default_cursor", "DefaultCursor", FORCE_STRING )
+AccessorFunc( PANEL, "default_cursor", "DefaultCursor" )
 
 function PANEL:Init()
     self:SetSize( 500, 500 )
@@ -12,18 +12,22 @@ function PANEL:Init()
     self:SetTitle( "" )
 
     self.color = GNLib.Colors.MidnightBlue
-    self.default_cursor = "none"
-
-    self:SetCursor( self.default_cursor )
+    
+    self:SetDefaultCursor()
 
     self.enabled = true
     self.clicking = false
 end
 
+function PANEL:SetDefaultCursor( cursor )
+    self.default_cursor = cursor or "none"
+    self:SetCursor( self.default_cursor )
+end
+
 --  > Enable
 function PANEL:SetEnabled( bool )
     self.enabled = bool
-    self:SetCursor( bool and self.default_cursor or "no" )
+    self:SetCursor( bool and self.default_cursor or "none" )
 end
 
 function PANEL:IsEnabled()
