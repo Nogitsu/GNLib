@@ -171,7 +171,7 @@ end
 --  > Draw outlined
 function GNLib.DrawOutlinedBox( x, y, w, h, thick, color )
     surface.SetDrawColor( color or color_white )
-    for i = 0, thick do
+    for i = 0, thick - 1 do
         surface.DrawOutlinedRect( x + i, y + i, w - i * 2, h - i * 2 )
     end
 end
@@ -222,15 +222,17 @@ end
 function GNLib.DrawOutlinedRoundedRect( corner_radius, x, y, w, h, thick, color )
     surface.SetDrawColor( color or color_white )
 
-    surface.DrawRect( x + corner_radius, y - thick, w - corner_radius * 2 + 1, thick )
-    surface.DrawRect( x + corner_radius, y + h - 1, w - corner_radius * 2, thick )
-    surface.DrawRect( x - thick, y + corner_radius, thick, h - corner_radius * 2 )
-    surface.DrawRect( x + w, y + corner_radius, thick, h - corner_radius * 2 )
+    local pos_thick = math.floor( thick / 2 )
 
-    GNLib.DrawOutlinedCircle( x + corner_radius, y + corner_radius, corner_radius, thick, -180, -90, color )
-    GNLib.DrawOutlinedCircle( x + w - corner_radius, y + corner_radius, corner_radius, thick, -90, 0, color )
-    GNLib.DrawOutlinedCircle( x + corner_radius, y + h - 1 - corner_radius, corner_radius, thick, -270, -180, color )
-    GNLib.DrawOutlinedCircle( x + w - corner_radius, y + h - 1 - corner_radius, corner_radius, thick, 270, 180, color )
+    surface.DrawRect( x + corner_radius, y + pos_thick / 2, w - corner_radius * 2 + 1, thick )
+    surface.DrawRect( x + corner_radius, y + h - thick, w - corner_radius * 2, thick )
+    surface.DrawRect( x + pos_thick / 2, y + corner_radius, thick, h - corner_radius * 2 )
+    surface.DrawRect( x + w - pos_thick * 2, y + corner_radius, thick, h - corner_radius * 2 )
+
+    GNLib.DrawOutlinedCircle( x + corner_radius + pos_thick, y + corner_radius + pos_thick, corner_radius, thick, -180, -90, color )
+    GNLib.DrawOutlinedCircle( x + w - corner_radius - pos_thick, y + corner_radius + pos_thick, corner_radius, thick, -90, 0, color )
+    GNLib.DrawOutlinedCircle( x + corner_radius + pos_thick, y + h - 1 - corner_radius, corner_radius, thick, -270, -180, color )
+    GNLib.DrawOutlinedCircle( x + w - corner_radius - pos_thick, y + h - 1 - corner_radius, corner_radius, thick, 270, 180, color )
 end
 
 
