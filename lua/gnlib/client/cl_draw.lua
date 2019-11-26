@@ -394,3 +394,58 @@ function GNLib.DrawFunc( x, y, w, h, min_x, max_x, min_y, max_y, interval, fx, c
 
   GNLib.Curve( x, y, w, h, min_x, max_x, min_y, max_y, color, entries )
 end
+
+--  > Gradient text
+function GNLib.GradientText( text, font, x, y, align_x, align_y, color1, color2, linear )
+  local lines = text:Split( "\n" )
+  local drawn = {}
+  local char_pos = 1
+
+  for k, line in ipairs( lines ) do
+    drawn[ k ] = ""
+    for i = 1, #line do
+      local char = line:sub( i, i )
+
+      surface.SetFont( font or "GNLFontB15" )
+      local last_x, _ = surface.GetTextSize( drawn[ k ] )
+      local last_y = drawn[ k - 1 ] and select( 2, surface.GetTextSize( drawn[ 1 ] ) ) * (k-1) or 0
+
+      draw.SimpleText( char, font or "GNLFontB15", x + last_x, y + last_y, GNLib.LerpColor( linear and (char_pos / #text) or (i/#line), color1, color2 ), align_x or TEXT_ALIGN_LEFT, align_y or TEXT_ALIGN_TOP )
+      
+      drawn[ k ] = drawn[ k ] .. char
+      char_pos = char_pos + 1
+    end
+  end
+end
+
+function GNLib.GradientTextOutlined( text, font, x, y, align_x, align_y, color1, color2, linear, outline_w, outline_color )
+  local lines = text:Split( "\n" )
+  local drawn = {}
+  local char_pos = 1
+
+  for k, line in ipairs( lines ) do
+    drawn[ k ] = ""
+    for i = 1, #line do
+      local char = line:sub( i, i )
+
+      surface.SetFont( font or "GNLFontB15" )
+      local last_x, _ = surface.GetTextSize( drawn[ k ] )
+      local last_y = drawn[ k - 1 ] and select( 2, surface.GetTextSize( drawn[ 1 ] ) ) * (k-1) or 0
+
+      draw.SimpleTextOutlined( char, font or "GNLFontB15", x + last_x, y + last_y, GNLib.LerpColor( linear and (char_pos / #text) or (i/#line), color1, color2 ), align_x or TEXT_ALIGN_LEFT, align_y or TEXT_ALIGN_TOP, outline_w or .5, outline_color or Color( 0, 0, 0 ) )
+      
+      drawn[ k ] = drawn[ k ] .. char
+      char_pos = char_pos + 1
+    end
+  end
+end
+
+hook.Add( "HUDPaint", "Dev", function()
+  GNLib.GradientText( "GNLib is life !", "GNLFontB40", 5, 5, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst )
+
+  GNLib.GradientText( "Voici la version avec le gradient sur chaque ligne (compatible \\n)\nEt sans outline", "GNLFontB40", 5, 75, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst )
+  GNLib.GradientText( "Voici la version avec le gradient sur la totale\nEt sans outline", "GNLFontB40", 5, 150, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst, true )
+
+  GNLib.GradientTextOutlined( "Voici la version avec le gradient sur chaque ligne (compatible \\n)\nEt avec outline", "GNLFontB40", 5, 250, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst )
+  GNLib.GradientTextOutlined( "Voici la version avec le gradient sur la totale\nEt avec outline", "GNLFontB40", 5, 325, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst, true )
+end )
