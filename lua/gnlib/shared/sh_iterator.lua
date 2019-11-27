@@ -2,7 +2,7 @@
 function GNLib.IterateChars( txt )
 	local i = 0
 	return function()
-	if i >= #txt then return end
+		if i >= #txt then return end
 
 		i = i + 1
 		return txt:sub( i, i )
@@ -13,7 +13,7 @@ function GNLib.IterateWords( txt )
 	local words = {}
   	do 
     	local word = ""
-    	for c in iterateChars( txt ) do
+    	for c in GNLib.IterateChars( txt ) do
       		if c == " " then
         		words[#words + 1] = word
         		word = ""
