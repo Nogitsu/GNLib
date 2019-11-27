@@ -10,7 +10,7 @@ function GNLib.IterateChars( txt )
 end
 
 function GNLib.IterateWords( txt )
-	local words = {}
+	--[[local words = {}
   	do 
     	local word = ""
     	for c in GNLib.IterateChars( txt ) do
@@ -30,5 +30,11 @@ function GNLib.IterateWords( txt )
 
     	i = i + 1
     	return words[i]
-  	end
+  	end]]--
+	return string.gmatch( txt, "%w+" ) 
 end
+
+function GNLib.IterateLines( txt )
+	return string.gmatch( txt, "[%w%s\n]+" )
+end
+
