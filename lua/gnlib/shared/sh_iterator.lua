@@ -34,7 +34,7 @@ function GNLib.IterateWords( txt )
 	return string.gmatch( txt, "%w+" ) 
 end
 
-function GNLib.IterateLines( txt )
-	return string.gmatch( txt, "[%w%s\n]+" )
+function GNLib_IterateLines( txt )
+	return string.gmatch( txt, "[%w%s\r?\n]+" )
 end
 
