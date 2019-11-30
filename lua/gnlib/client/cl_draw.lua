@@ -440,7 +440,7 @@ function GNLib.GradientTextOutlined( text, font, x, y, align_x, align_y, color1,
   end
 end
 
-hook.Add( "HUDPaint", "Dev", function()
+--[[ hook.Add( "HUDPaint", "Dev", function()
   GNLib.GradientText( "GNLib is life !", "GNLFontB40", 5, 5, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst )
 
   GNLib.GradientText( "Voici la version avec le gradient sur chaque ligne (compatible \\n)\nEt sans outline", "GNLFontB40", 5, 75, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst )
@@ -448,4 +448,4 @@ hook.Add( "HUDPaint", "Dev", function()
 
   GNLib.GradientTextOutlined( "Voici la version avec le gradient sur chaque ligne (compatible \\n)\nEt avec outline", "GNLFontB40", 5, 250, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst )
   GNLib.GradientTextOutlined( "Voici la version avec le gradient sur la totale\nEt avec outline", "GNLFontB40", 5, 325, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst, true )
-end )
+end ) ]]
