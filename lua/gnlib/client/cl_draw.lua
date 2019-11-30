@@ -92,10 +92,15 @@ function GNLib.DrawStencil( shape_draw_func, draw_func )
 end	
 
 --  > Material
-function GNLib.DrawMaterial( mat, x, y, w, h, color )
-    surface.SetDrawColor( color or color_white )
+function GNLib.DrawMaterial( mat, x, y, w, h, color, ang )
+	surface.SetDrawColor( color or color_white )
 	surface.SetMaterial( mat )
-	surface.DrawTexturedRect( x, y, w, h )
+
+	if ang then
+		surface.DrawTexturedRectRotated( x, y, w, h, ang )
+	else
+		surface.DrawTexturedRect( x, y, w, h )
+	end
 end
 
 --  > Shadowed drawing
@@ -387,7 +392,6 @@ function GNLib.BarGraph( x, y, w, h, space, entries, show_type, align )
     end
   end
 end
-
 
 function GNLib.Curve( x, y, w, h, min_x, max_x, min_y, max_y, color, entries )
   local last_x, last_y = entries[ 1 ][ 1 ], entries[ 1 ][ 2 ]
