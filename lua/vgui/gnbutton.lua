@@ -61,7 +61,7 @@ function PANEL:Paint( w, h )
         if self:IsClicking() then
             local x, y = self:GetLastClickPos()
             GNLib.DrawCircle( x, y, self.clicktime, 0, 360, self.clicked_color )
-            self.clicktime = math.min( self.clicktime + FrameTime() * 1500, w )
+            self.clicktime = math.min( self.clicktime + FrameTime() * 1000, w )
         else
             self.clicktime = 0
         end
