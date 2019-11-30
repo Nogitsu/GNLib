@@ -20,8 +20,18 @@ function PANEL:Init()
     self.outline_thick = 2
 end
 
+function PANEL:PerformLayout( w, h )
+    if self.avatar then
+        self.avatar:SetSize( w, h )
+    end
+end
+
 local function drawMat( self, w, h )
-    GNLib.DrawMaterial( self.material, 0, 0, w, h, self.color )
+    if not self.avatar then
+        GNLib.DrawMaterial( self.material, 0, 0, w, h, self.color )
+    else
+        self.avatar:PaintManual()
+    end
 end
 
 function PANEL:Paint( w, h )
@@ -69,6 +79,29 @@ end
 
 function PANEL:GetImage() 
     return self.image
+end
+
+function PANEL:SetAvatar( ply, size )
+    if not ply then 
+        if IsValid( self.avatar ) then
+            self.avatar:Remove()
+            self.avatar = nil
+        end
+        return
+    end
+    size = size or 128
+
+    self.avatar = self:Add( "AvatarImage" )
+    if isstring( ply ) then 
+        self.avatar:SetSteamID( ply, size )
+    else
+        self.avatar:SetPlayer( ply, size )
+    end
+    self.avatar:SetPaintedManually( true )
+end
+
+function PANEL:GetAvatar()
+    return self.avatar
 end
 
 vgui.Register( "GNImage", PANEL, "DPanel" )
