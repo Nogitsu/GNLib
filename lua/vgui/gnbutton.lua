@@ -15,12 +15,14 @@ function PANEL:Init()
     self.text = "Label"
     self.font = "GNLFontB15"
 
-    self.hovered_color = GNLib.Colors.Amethyst
-    self.clicked_color = GNLib.Colors.BelizeHole
+    self.clicktime = 0
+
+    self.hovered_color = GNLib.Colors.Wisteria
+    self.clicked_color = GNLib.Colors.Amethyst
 
     self.default_textcolor = GNLib.Colors.MidnightBlue
     self.hovered_textcolor = GNLib.Colors.WetAsphalt
-    self.clicked_textcolor = GNLib.Colors.Asbestos
+    self.clicked_textcolor = GNLib.Colors.WetAsphalt
 end
 
 function PANEL:UpdateSize()
@@ -52,9 +54,20 @@ end
 
 --  > Override existing
 function PANEL:Paint( w, h )
-    GNLib.DrawElipse( 0, 0, w, h, self.clicking and self.clicked_color or self:IsHovered() and self.hovered_color or self.color )
-
-    draw.SimpleText( self.text, self.font, w / 2, h / 2, self.clicking and self.clicked_textcolor or self:IsHovered() and self.hovered_textcolor or self.default_textcolor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+    GNLib.DrawStencil( function()
+        GNLib.DrawElipse( 0, 0, w, h, self:IsHovered() and self.hovered_color or self.color )
+    end, function()
+        draw.RoundedBoxEx( 0, 0, 0, w, h, self:IsHovered() and self.hovered_color or self.color )
+        if self:IsClicking() then
+            local x, y = self:GetLastClickPos()
+            GNLib.DrawCircle( x, y, self.clicktime, 0, 360, self.clicked_color )
+            self.clicktime = math.min( self.clicktime + FrameTime() * 1500, w )
+        else
+            self.clicktime = 0
+        end
+    end )
+    
+    draw.SimpleText( self.text, self.font, w / 2, h / 2, self:IsClicking() and self.clicked_textcolor or self:IsHovered() and self.hovered_textcolor or self.default_textcolor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 end
 
 vgui.Register( "GNButton", PANEL, "GNPanel" )

@@ -17,11 +17,22 @@ function PANEL:Init()
 
     self.enabled = true
     self.clicking = false
+
+    self.last_click_x = 0
+    self.last_click_y = 0
 end
 
 function PANEL:SetDefaultCursor( cursor )
     self.default_cursor = cursor or "none"
     self:SetCursor( self.default_cursor )
+end
+
+function PANEL:IsClicking()
+    return self.clicking
+end
+
+function PANEL:GetLastClickPos()
+    return self.last_click_x, self.last_click_y
 end
 
 --  > Enable
@@ -49,6 +60,7 @@ function PANEL:OnMousePressed( key_code )
     self:OnPressed()
     if MOUSE_LEFT == key_code then
         self.clicking = true
+        self.last_click_x, self.last_click_y = self:ScreenToLocal( gui.MousePos() )
     end
 end
 
