@@ -235,7 +235,6 @@ function GNLib.DrawOutlinedRoundedRect( corner_radius, x, y, w, h, thick, color 
     GNLib.DrawOutlinedCircle( x + w - corner_radius - pos_thick, y + h - 1 - corner_radius, corner_radius, thick, 270, 180, color )
 end
 
-
 function GNLib.DrawRoundedRect( corner_radius, x, y, w, h, color )
     surface.SetDrawColor( color or color_white )
 
@@ -247,6 +246,22 @@ function GNLib.DrawRoundedRect( corner_radius, x, y, w, h, color )
     GNLib.DrawCircle( x + w - corner_radius, y + corner_radius, corner_radius, -90, 0, color )
     GNLib.DrawCircle( x + corner_radius, y + h - corner_radius, corner_radius, -270, -180, color )
     GNLib.DrawCircle( x + w - corner_radius, y + h - corner_radius, corner_radius, 270, 180, color )
+end
+
+local blur = Material( "pp/blurscreen" )
+function GNLib.DrawBlur( x, y, w, h, amount )
+    surface.SetDrawColor( color_white )
+    surface.SetMaterial( blur )
+
+    for i = 1, 3 do
+        blur:SetFloat( "$blur", ( i / 3 ) * ( amount or 6 ) )
+        blur:Recompute()
+
+        render.UpdateScreenEffectTexture()
+        render.SetScissorRect( x, y, x + w, y + h, true )
+    			surface.DrawTexturedRect( 0, 0, ScrW(), ScrH() )
+    		render.SetScissorRect( 0, 0, 0, 0, false )
+    end
 end
 
 --  > Graphics
@@ -441,11 +456,5 @@ function GNLib.GradientTextOutlined( text, font, x, y, align_x, align_y, color1,
 end
 
 --[[ hook.Add( "HUDPaint", "Dev", function()
-  GNLib.GradientText( "GNLib is life !", "GNLFontB40", 5, 5, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst )
-
-  GNLib.GradientText( "Voici la version avec le gradient sur chaque ligne (compatible \\n)\nEt sans outline", "GNLFontB40", 5, 75, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst )
-  GNLib.GradientText( "Voici la version avec le gradient sur la totale\nEt sans outline", "GNLFontB40", 5, 150, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst, true )
-
-  GNLib.GradientTextOutlined( "Voici la version avec le gradient sur chaque ligne (compatible \\n)\nEt avec outline", "GNLFontB40", 5, 250, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst )
-  GNLib.GradientTextOutlined( "Voici la version avec le gradient sur la totale\nEt avec outline", "GNLFontB40", 5, 325, _, _, GNLib.Colors.PeterRiver, GNLib.Colors.Amethyst, true )
-end ) ]]
+    GNLib.DrawBlur( 25, 25, 200, 200, ( CurTime() * 3 ) % 10 )
+end )  ]]

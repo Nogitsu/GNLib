@@ -5,17 +5,15 @@ function GNLib.OpenVGUIPanel()
     --  > Toggle credits mod
     local toggleButton = vgui.Create( "GNToggleButton", main )
     toggleButton:SetPos( 50, 50 )
-    toggleButton:SetColor( GNLib.Colors.MidnightBlue )
-    toggleButton:SetColorBack( GNLib.Colors.Asbestos )
+--[[     toggleButton:SetColorOn( GNLib.Colors.Asbestos )
+    toggleButton:SetColorOff( GNLib.Colors.MidnightBlue )
+    toggleButton:SetColorBackOn( GNLib.Colors.MidnightBlue )
+    toggleButton:SetColorBackOff( GNLib.Colors.Asbestos ) ]]
+--[[     toggleButton:SetBarTall( 9 )
+    toggleButton:SetCircleRadius( 12 ) ]]
     function toggleButton:OnToggled( toggled )
         main.color = toggled and GNLib.Colors.Asbestos or GNLib.Colors.MidnightBlue
         main.color2 = toggled and GNLib.Colors.Concrete or GNLib.Colors.WetAsphalt
-
-        self.color_on = GNLib.Colors.Asbestos
-        self.color_off = GNLib.Colors.MidnightBlue
-
-        self.color_back_on = GNLib.Colors.MidnightBlue
-        self.color_back_off = GNLib.Colors.Asbestos
     end
 
     local progress = vgui.Create( "GNProgress", main )
@@ -65,12 +63,6 @@ function GNLib.OpenVGUIPanel()
     textentry:SetPos( 50, 350 )
     textentry:SetSize( 250, 35  )
     textentry:SetTitle( "Your name" )
-
-    local searchentry = vgui.Create( "GNIconTextEntry", main )
-    searchentry:SetPos( 50, 400 )
-
-    local graphic = vgui.Create( "GNGraphic", main )
-    graphic:SetPos( 50, 450 )
 
     local combobox = vgui.Create( "GNComboBox", main )
         combobox:SetPos( 500, 450 )
@@ -128,5 +120,42 @@ function GNLib.OpenVGUIPanel()
         --carousel:AddImage( "miitw.png", "Medieval Total War II" )
         --carousel:AddImage( "rometw.png", "Rome Total War" )
         --carousel:AddImage( "rometw2.png", "Rome Total War : Julii vs. Greeks" )
+
+    local pagination = main:Add( "GNPagination" )
+        pagination:SetPos( 750, 300 )
+        pagination:SetPages( 9 )
+
+    local box_image = main:Add( "GNImage" )
+        box_image:SetPos( 750, 335 )
+        --box_image:SetImage( "../data/minimap_gm_fork.png" )
+        box_image:SetAvatar( LocalPlayer() )
+        box_image.Think = function()
+            box_image:SetOutline( math.floor( CurTime() ) % 3 == 0 )
+        end
+        box_image:SetOutline( true )
+        box_image:SetOutlineColor( GNLib.Colors.Emerald )
+
+    local rounded_image = main:Add( "GNImage" )
+        rounded_image:SetPos( 900, 335 )
+        --rounded_image:SetImage( "../data/minimap_gm_fork.png" )
+        rounded_image:SetAvatar( LocalPlayer() )
+        rounded_image.Think = function()
+            rounded_image:SetOutline( math.floor( CurTime() ) % 3 == 0 )
+        end
+        rounded_image:SetRounded( 16 )
+        rounded_image:SetOutline( true )
+        rounded_image:SetOutlineColor( GNLib.Colors.Alizarin )
+
+    local circle_image = main:Add( "GNImage" )
+        circle_image:SetPos( 1050, 335 )
+       -- circle_image:SetImage( "../data/minimap_gm_fork.png" )
+        circle_image:SetAvatar( LocalPlayer() )
+        circle_image:SetCircle( true )
+        circle_image.Think = function()
+            circle_image:SetOutline( math.floor( CurTime() ) % 3 == 0 )
+        end
+        circle_image:SetOutline( true )
+        circle_image:SetOutlineColor( GNLib.Colors.PeterRiver )
+
 end
 concommand.Add( "gnlib_vgui", GNLib.OpenVGUIPanel )
