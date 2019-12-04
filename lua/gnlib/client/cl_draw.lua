@@ -485,7 +485,7 @@ function GNLib.GradientTextOutlined( text, font, x, y, align_x, align_y, color1,
     end
   end
 end
-
+--[[ 
 hook.Add( "HUDPaint", "Dev", function()
     GNLib.DrawBlurCircle( ScrW() / 2, ScrH() / 2, 100, 0, 360, ( CurTime() * 10 ) % 20 )
-end )  
+end )   ]]
