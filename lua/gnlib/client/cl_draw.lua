@@ -255,18 +255,45 @@ end
 
 local blur = Material( "pp/blurscreen" )
 function GNLib.DrawBlur( x, y, w, h, amount )
+	amount = amount or 6
+
     surface.SetDrawColor( color_white )
     surface.SetMaterial( blur )
 
     for i = 1, 3 do
-        blur:SetFloat( "$blur", ( i / 3 ) * ( amount or 6 ) )
+        blur:SetFloat( "$blur", i / 3 * amount )
         blur:Recompute()
 
         render.UpdateScreenEffectTexture()
         render.SetScissorRect( x, y, x + w, y + h, true )
-    			surface.DrawTexturedRect( 0, 0, ScrW(), ScrH() )
-    		render.SetScissorRect( 0, 0, 0, 0, false )
+    		surface.DrawTexturedRect( 0, 0, ScrW(), ScrH() )
+    	render.SetScissorRect( 0, 0, 0, 0, false )
     end
+end
+
+function GNLib.DrawBlurCircle( x, y, radius, angle_start, angle_end, amount )
+	GNLib.DrawStencil( function()
+		GNLib.DrawCircle( x, y, radius, angle_start, angle_end, color_white )
+	end, function()
+		GNLib.DrawBlur( x - radius, y - radius, radius * 2, radius * 2, amount )
+	end )  
+end
+
+function GNLib.DrawRotated( x, y, w, h, rot, draw_func )
+	rot = rot % 360
+	
+	local m = Matrix()
+	m:SetTranslation( Vector( x + w/2, y + h/2 ) )
+	m:SetAngles( Angle( 0, rot, 0 ) )
+	m:Translate( -Vector( w/2, h/2 ) )
+	
+	cam.PushModelMatrix( m )
+	  	draw_func( 0, 0, w, h )
+	cam.PopModelMatrix()
+end
+  
+function GNLib.DrawRectRotated( x, y, w, h, rot )
+	GNLib.DrawRotated( x, y, w, h, rot, surface.DrawRect )
 end
 
 --  > Graphics
@@ -459,6 +486,6 @@ function GNLib.GradientTextOutlined( text, font, x, y, align_x, align_y, color1,
   end
 end
 
---[[ hook.Add( "HUDPaint", "Dev", function()
-    GNLib.DrawBlur( 25, 25, 200, 200, ( CurTime() * 3 ) % 10 )
-end )  ]]
+hook.Add( "HUDPaint", "Dev", function()
+    GNLib.DrawBlurCircle( ScrW() / 2, ScrH() / 2, 100, 0, 360, ( CurTime() * 10 ) % 20 )
+end )  
