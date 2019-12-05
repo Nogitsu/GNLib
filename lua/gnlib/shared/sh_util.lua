@@ -40,7 +40,7 @@ function GNLib.SendDiscordEmbed( webhook, title, msg, footer )
     http.Post( "https://guthen.000webhostapp.com/discord_embed.php", { url = webhook, msg = msg, title = title, footer = footer } )
 end
 
---  > This function come from GMod Creators Area (http://discord.gg/gca)
+--  > This function come from GMod Creators Area (https://g-ca.fr/)
 function GNLib.Benchmark( callback, name )
     local start = SysTime()
     
