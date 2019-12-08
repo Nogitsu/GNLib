@@ -52,3 +52,14 @@ function GNLib.Benchmark( callback, name )
 
     return totalTime
 end
+
+--  > Allows bigger tables
+function GNLib.WriteTable( tab )
+    local compressed = util.Compress( util.TableToJSON( tab ) )
+
+    net.WriteData( compressed, #compressed )
+end
+
+function GNLib.ReadTable( len )
+    return util.JSONToTable( util.Decompress( net.ReadData( len ) ) )
+end
