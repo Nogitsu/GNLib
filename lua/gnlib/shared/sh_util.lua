@@ -40,7 +40,7 @@ function GNLib.SendDiscordEmbed( webhook, title, msg, footer )
     http.Post( "https://guthen.000webhostapp.com/discord_embed.php", { url = webhook, msg = msg, title = title, footer = footer } )
 end
 
---  > This function come from GMod Creators Area (discord.gg/jqEZtwG)
+--  > This function come from GMod Creators Area (https://g-ca.fr)
 function GNLib.Benchmark( callback, name, verbose )
     local start = SysTime()
     verbose = verbose == nil and true or verbose
@@ -52,4 +52,15 @@ function GNLib.Benchmark( callback, name, verbose )
     if verbose then print( name or '', 'Time elapsed: ', endTime ) end
 
     return totalTime
+end
+
+--  > Allows bigger tables
+function GNLib.WriteTable( tab )
+    local compressed = util.Compress( util.TableToJSON( tab ) )
+
+    net.WriteData( compressed, #compressed )
+end
+
+function GNLib.ReadTable( len )
+    return util.JSONToTable( util.Decompress( net.ReadData( len ) ) )
 end
