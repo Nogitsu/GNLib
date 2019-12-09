@@ -41,14 +41,15 @@ function GNLib.SendDiscordEmbed( webhook, title, msg, footer )
 end
 
 --  > This function come from GMod Creators Area (discord.gg/jqEZtwG)
-function GNLib.Benchmark( callback, name )
+function GNLib.Benchmark( callback, name, verbose )
     local start = SysTime()
+    verbose = verbose == nil and true or verbose
     
     callback()
 
     local totalTime = ( SysTime() - start ) * 1000
     local endTime = tostring( totalTime ) .. 'ms'
-    print( name or '', 'Time elapsed: ', endTime )
+    if verbose then print( name or '', 'Time elapsed: ', endTime ) end
 
     return totalTime
 end
