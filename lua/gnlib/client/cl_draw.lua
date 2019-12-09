@@ -64,42 +64,42 @@ end
 end
 
 function GNLib.DrawTriangleRectangle( x, y, w, h, pos )
-local points
+  local points
 
-if pos == 0 then
-    points = {
-        { x = x - w, y = y },
-        { x = x, y = y },
-        { x = x, y = y + h },
-    }
-elseif pos == 1 then
-    points = {
-        { x = x - w, y = y + h },
-        { x = x, y = y },
-        { x = x, y = y + h },
-    }
-elseif pos == 2 then
-    points = {
-        { x = x, y = y },
-        { x = x + w, y = y + h },
-        { x = x, y = y + h },
-    }
-else
-    points = {
-        { x = x, y = y },
-        { x = x + w, y = y },
-        { x = x, y = y + h },
-    }
-end
+  if pos == 0 then
+      points = {
+          { x = x, y = y },
+          { x = x + w, y = y },
+          { x = x + w, y = y + h },
+      }
+  elseif pos == 1 then
+      points = {
+          { x = x, y = y + h },
+          { x = x + w, y = y },
+          { x = x + w, y = y + h },
+      }
+  elseif pos == 2 then
+      points = {
+          { x = x, y = y },
+          { x = x + w, y = y + h },
+          { x = x, y = y + h },
+      }
+  else
+      points = {
+          { x = x, y = y },
+          { x = x + w, y = y },
+          { x = x, y = y + h },
+      }
+  end
+  
+  draw.NoTexture()
+  surface.DrawPoly( points )
 
-draw.NoTexture()
-surface.DrawPoly( points )
-
-return {
-    A = w,
-    B = h,
-    C = math.sqrt( w ^ 2 + h ^ 2 )
-}
+  return {
+      A = w,
+      B = h,
+      C = math.sqrt( w^2 + h^2 )
+  }
 end
 
 --	> Stencil
@@ -213,77 +213,77 @@ function GNLib.DrawElipse( x, y, w, h, color, hide_left, hide_right )
     GNLib.DrawCircle( x + w - h / 2, y + h / 2 + (y == 0 and 0 or - .5), h / 2, -90, 90, color )
   end
 
-  draw.RoundedBox( 0, x + h / 2, y - 1, w - h + 2, h + 1, color or color_white )
+  draw.RoundedBox( 0, x + h / 2, y, w - h, h, color or color_white )
 end
 
 --  > Shears
 function GNLib.DrawShearedRect( x, y, w, h, ang )
-local a = h * math.sin( math.rad( ang ) )
-local points = {
-    { x = x + a, y = y },
-    { x = x + w + a, y = y },
-    { x = x + w, y = y + h },
-    { x = x, y = y + h }
-}
+  local a = h * math.sin( math.rad( ang ) )
+  local points = {
+      { x = x + a, y = y },
+      { x = x + w, y = y },
+      { x = x + w - a, y = y + h },
+      { x = x, y = y + h }
+  }
 
-draw.NoTexture()
-surface.DrawPoly( points )
+  draw.NoTexture()
+  surface.DrawPoly( points )
 
-return {
-    A = a,
-    B = h,
-    C = math.sqrt( a^2 + h^2 )
-}
+  return {
+      A = a,
+      B = h,
+      C = math.sqrt( a^2 + h^2 )
+  }
 end
 
 function GNLib.DrawRightShearedRect( x, y, w, h, ang )
-local a = h * math.sin( math.rad( ang ) )
-local points = {
-    { x = x, y = y },
-    { x = x + w + a, y = y },
-    { x = x + w, y = y + h },
-    { x = x, y = y + h }
-}
+  local a = h * math.sin( math.rad( ang ) )
+  local points = {
+      { x = x, y = y },
+      { x = x + w, y = y },
+      { x = x + w - a, y = y + h },
+      { x = x, y = y + h }
+  }
 
-draw.NoTexture()
-surface.DrawPoly( points )
+  draw.NoTexture()
+  surface.DrawPoly( points )
 
-return {
-    A = a,
-    B = h,
-    C = math.sqrt( a^2 + h^2 )
-}
+  return {
+      A = a,
+      B = h,
+      C = math.sqrt( a^2 + h^2 )
+  }
 end
 
 function GNLib.DrawLeftShearedRect( x, y, w, h, ang )
-local a = h * math.sin( math.rad( ang ) )
-local points = {
-    { x = x + a, y = y },
-    { x = x + w, y = y },
-    { x = x + w, y = y + h },
-    { x = x, y = y + h }
-}
+  local a = h * math.sin( math.rad( ang ) )
+  local points = {
+      { x = x + a, y = y },
+      { x = x + w, y = y },
+      { x = x + w, y = y + h },
+      { x = x, y = y + h }
+  }
 
-draw.NoTexture()
-surface.DrawPoly( points )
+  draw.NoTexture()
+  surface.DrawPoly( points )
 
-return {
-    A = a,
-    B = h,
-    C = math.sqrt( a^2 + h^2 )
-}
+  return {
+      A = a,
+      B = h,
+      C = math.sqrt( a^2 + h^2 )
+  }
 end
 
 function GNLib.DrawShearedElipse( x, y, w, h, tri_w, left )
-local color = surface.GetDrawColor()
+  local color = surface.GetDrawColor()
 
-if left then
-    local shear = GNLib.DrawTriangleRectangle( x + tri_w, y, tri_w, h, 1 )
-    GNLib.DrawElipse( x + tri_w - h / 2, y, w - tri_w, h, color, true, false )
-else
-    local shear = GNLib.DrawTriangleRectangle( x + w - tri_w - h / 2 + 2, y - 1, tri_w, h )
-    GNLib.DrawElipse( x, y, w - tri_w, h, color, false, true )
-end
+  if left then
+      GNLib.DrawTriangleRectangle( x, y, tri_w, h, 1 )
+      GNLib.DrawElipse( x - h / 2 + tri_w, y, w + h / 2 - tri_w, h, color, true, false )
+  else
+      GNLib.DrawTriangleRectangle( x + w - tri_w, y, tri_w, h )
+      GNLib.DrawElipse( x, y, w + h / 2 - tri_w, h, color, false, true )
+  end
 end
 
 --  > Draw outlined
