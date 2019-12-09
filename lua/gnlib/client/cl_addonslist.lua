@@ -15,27 +15,22 @@ local mats = {
 function GNLib.OpenAddonsList()
     local W, H = math.max( ScrW() * .75, 1024 ), math.max( ScrH() * .75, 720 )
 
-    local main = GNLib.CreateFrame( "GNLib Addons List - " .. GNLib.Version )
+    local main, header, close = GNLib.CreateFrame( "GNLib Addons List - " .. GNLib.Version )
 
     local refresh = vgui.Create( "DButton", main )
-    refresh:SetPos( W - 55, 5 )
-    refresh:SetSize( 20, 20 )
+    refresh:SetPos( W - close:GetWide() * 2, 0 )
+    refresh:SetSize( header:GetTall(), header:GetTall() )
     refresh:SetText( "" )
-    function refresh.DoClick()
+    refresh.DoClick = function()
         main:Remove()
         GNLib.OpenAddonsList()
+        timer.Simple( .1, function() gui.EnableScreenClicker( true ) end )
     end
-    function refresh:Paint( w, h )
-        local c1 = GNLib.Colors.Concrete
-        if self:IsHovered() then
-            local t = math.abs( math.sin( CurTime() ) / w ) * 100 * 2
-            c1 = GNLib.LerpColor( t, c1, GNLib.Colors.Nephritis )
-        end
-        GNLib.DrawRectGradient( 0, 0, w, h, GNLib.Colors.Asbestos, c1, true )
+    refresh.Paint = function( self, w, h )
+        draw.RoundedBox( 0, 0, 0, w, h, self:IsHovered() and GNLib.Colors.Emerald or GNLib.Colors.Nephritis )
 
-        surface.SetMaterial( mats.Reload )
-        surface.SetDrawColor( color_white )
-        surface.DrawTexturedRect( 2, 2, 16, 16 )
+        local new_h = ( self:GetTall() - 16 ) / 2
+        GNLib.DrawMaterial( mats.Reload, new_h, new_h, 16, 16, color_white )
     end
 
     local addons_list = vgui.Create( "DScrollPanel", main )
