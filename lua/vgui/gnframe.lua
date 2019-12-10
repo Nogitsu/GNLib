@@ -6,9 +6,8 @@ AccessorFunc( PANEL, "rounded_radius", "RoundedRadius" )
 AccessorFunc( PANEL, "show_top_bar", "ShowTopBar" )
 
 function PANEL:Init()
-    gui.EnableScreenClicker( true )
-
     self:ShowCloseButton( false )
+    self:MakePopup()
 
     self:SetColor( GNLib.Colors.MidnightBlue )
     self:SetTitle( "GNLib - Your title here" )
@@ -55,10 +54,6 @@ end
 
 function PANEL:Paint( w, h )
     draw.RoundedBox( self.rounded_radius + 2, 0, 0, w, h, self.color )
-end
-
-function PANEL:OnRemove()
-    gui.EnableScreenClicker( false )
 end
 
 vgui.Register( "GNFrame", PANEL, "DFrame" )
