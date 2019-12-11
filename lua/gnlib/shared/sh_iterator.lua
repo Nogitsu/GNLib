@@ -32,7 +32,7 @@ function GNLib.IterateWords( txt )
     	i = i + 1
     	return words[i]
   	end]]--
-	return txt:gmatch( "%w+" ) 
+	return txt:gmatch( "[^% ]+" ) 
 end
 
 function GNLib.IterateLines( txt )
