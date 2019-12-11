@@ -1,12 +1,13 @@
 
 function GNLib.IterateChars( txt )
-	local i = 0
+	--[[ local i = 0
 	return function()
 		if i >= #txt then return end
 
 		i = i + 1
 		return txt:sub( i, i )
-	end
+	end ]]
+	return txt:gmatch( "." )
 end
 
 function GNLib.IterateWords( txt )
@@ -31,10 +32,10 @@ function GNLib.IterateWords( txt )
     	i = i + 1
     	return words[i]
   	end]]--
-	return string.gmatch( txt, "%w+" ) 
+	return txt:gmatch( "%w+" ) 
 end
 
 function GNLib.IterateLines( txt )
-	return string.gmatch( txt, "[^\n]+" )
+	return txt:gmatch( "[^\n]+" )
 end
 
