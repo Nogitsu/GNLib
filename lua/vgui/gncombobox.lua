@@ -18,6 +18,7 @@ function PANEL:Init()
     self.value = ""
     self.selected = nil
     self.reseter = false
+    self.menu_tall = 0
     self.choices = {}
 
     self.font = "GNLFontB15"
@@ -49,7 +50,7 @@ function PANEL:AddChoice( text, data, auto_select )
 end
 
 function PANEL:CalcTall()
-    self:SetTall( self.self_h + self.menu_offset + ( #self.choices + ( self.reseter and 1 or 0 ) ) * self.self_h )
+    self.menu_tall = self.self_h + self.menu_offset + ( #self.choices + ( self.reseter and 1 or 0 ) ) * self.self_h
 end
 
 function PANEL:SetReseter( bool )
@@ -66,11 +67,7 @@ function PANEL:IsHovered()
 end
 
 function PANEL:Think()
-    if self:IsHovered() then
-        self:SetCursor( "hand" ) 
-    else
-        self:SetCursor( "none" )
-    end
+    self:SetCursor( "hand" ) 
 end
 
 function PANEL:GetSelected()
@@ -92,9 +89,11 @@ end
 function PANEL:OpenMenu()
     local W, H = self:GetSize()
 
-    self.Menu = self:Add( "DPanel" )
-        self.Menu:SetPos( 0, self.self_h )
-        self.Menu:SetSize( W, self:GetTall() - self.self_h )
+    local parent = self:GetParent()
+    local x, y = self:GetPos()
+    self.Menu = vgui.Create( "DPanel", parent )
+        self.Menu:SetPos( x, y + self.self_h )
+        self.Menu:SetSize( W, self.menu_tall - self.self_h )
         self.Menu.Paint = function() end
 
     local y = 0
