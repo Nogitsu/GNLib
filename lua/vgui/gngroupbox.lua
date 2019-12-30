@@ -14,7 +14,7 @@ function PANEL:Init()
     self.font = "GNLFontB15"
 end
 
-function PANEL:Paint( w, h )
+function PANEL:PaintOver( w, h )
     --  > Just a copy/paste from GNTextEntry
     surface.SetDrawColor( self.color )
 
@@ -34,5 +34,7 @@ function PANEL:Paint( w, h )
     GNLib.DrawOutlinedCircle( w - 4, text_height / 2 + 4, 4, 1, -90, 0, self.color )
     GNLib.DrawOutlinedCircle( w - 4, h - 4, 4, 1, 180, 270, self.color )
 end
+
+function PANEL:Paint( w, h ) end
 
 vgui.Register( "GNGroupBox", PANEL, "DPanel" )
