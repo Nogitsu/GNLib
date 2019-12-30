@@ -3,6 +3,8 @@ local PANEL = {}
 AccessorFunc( PANEL, "hovered_color", "HoveredColor" )
 AccessorFunc( PANEL, "text_color", "TextColor" )
 
+AccessorFunc( PANEL, "max_menu_tall", "MaxMenuTall", FORCE_NUMBER )
+
 AccessorFunc( PANEL, "font", "Font", FORCE_STRING )
 AccessorFunc( PANEL, "value", "Value", FORCE_STRING )
 
@@ -14,11 +16,13 @@ function PANEL:Init()
 
     self:SetSize( 100, self.self_h )
     self:SetText( "" )
+    self:SetCursor( "hand" ) 
 
     self.value = ""
     self.selected = nil
     self.reseter = false
     self.menu_tall = 0
+    self.max_menu_tall = 200
     self.choices = {}
 
     self.font = "GNLFontB15"
@@ -36,10 +40,10 @@ function PANEL:OnReset()
 end
 
 function PANEL:Paint( w, h )
-    GNLib.DrawElipse( 0, 0, w, self.self_h, self:IsHovered() and self.hovered_color or self.color )
-    GNLib.DrawTriangle( w - 15, self.self_h / 2, 8, self:IsHovered() and GNLib.Colors.MidnightBlue or GNLib.Colors.WetAsphalt, self:IsMenuOpen() and 2 or 0 )
+    GNLib.DrawElipse( 0, 0, w, h, self:IsHovered() and self.hovered_color or self.color )
+    GNLib.DrawTriangle( w - 15, h / 2, 8, self:IsHovered() and GNLib.Colors.MidnightBlue or GNLib.Colors.WetAsphalt, self:IsMenuOpen() and 2 or 0 )
 
-    draw.SimpleText( self:GetSelected() and self:GetSelected().text or self:GetValue(), self.font, 10, self.self_h / 2, self.text_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+    draw.SimpleText( self:GetSelected() and self:GetSelected().text or self:GetValue(), self.font, 10, h / 2, self.text_color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
 end
 
 function PANEL:AddChoice( text, data, auto_select )
@@ -50,7 +54,7 @@ function PANEL:AddChoice( text, data, auto_select )
 end
 
 function PANEL:CalcTall()
-    self.menu_tall = self.self_h + self.menu_offset + ( #self.choices + ( self.reseter and 1 or 0 ) ) * self.self_h
+    self.menu_tall = math.min( self.self_h + self.menu_offset + ( #self.choices + ( self.reseter and 1 or 0 ) ) * self.self_h, self.max_menu_tall )
 end
 
 function PANEL:SetReseter( bool )
@@ -64,10 +68,6 @@ end
 function PANEL:IsHovered()
     local x, y = self:LocalCursorPos()
     return x <= self:GetWide() and y <= self.self_h and 0 <= x and 0 <= y
-end
-
-function PANEL:Think()
-    self:SetCursor( "hand" ) 
 end
 
 function PANEL:GetSelected()
@@ -89,12 +89,21 @@ end
 function PANEL:OpenMenu()
     local W, H = self:GetSize()
 
-    local parent = self:GetParent()
+    local parent_x, parent_y = 0, 0
+    if self:GetParent() then
+        parent_x, parent_y = self:GetParent():GetPos()
+    end
+
     local x, y = self:GetPos()
-    self.Menu = vgui.Create( "DPanel", parent )
-        self.Menu:SetPos( x, y + self.self_h )
-        self.Menu:SetSize( W, self.menu_tall - self.self_h )
+    self.Menu = vgui.Create( "DScrollPanel" )
+        self.Menu:SetPos( x + parent_x, y + parent_y + self:GetTall() + self.menu_offset )
+        self.Menu:SetSize( W, self.menu_tall - self:GetTall() )
         self.Menu.Paint = function() end
+        self.Menu:MakePopup()
+
+        local vbar = self.Menu:GetVBar()
+        vbar:SetHideButtons( true )
+        vbar:SetWide( 0 )
 
     local y = 0
     local button_space = 10
@@ -103,7 +112,7 @@ function PANEL:OpenMenu()
         local default_color = reseter and GNLib.Colors.Alizarin or self.color
 
         local choice = self.Menu:Add( "DButton" )
-        choice:SetPos( button_space, 5 + y * self.self_h )
+        choice:SetPos( button_space, y * self.self_h )
         choice:SetWide( W - button_space * 2 ) 
         choice:SetTall( self.self_h )
         choice:SetText( "" )
@@ -136,12 +145,18 @@ function PANEL:OpenMenu()
 end
 
 function PANEL:CloseMenu()
+    if not IsValid( self.Menu ) then return end
+
     self.Menu:Remove()
     self.Menu = nil
 end
 
 function PANEL:IsMenuOpen()
     return self.Menu and true or false
+end
+
+function PANEL:OnRemove()
+    self:CloseMenu()
 end
 
 vgui.Register( "GNComboBox", PANEL, "DButton" )
