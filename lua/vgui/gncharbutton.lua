@@ -64,6 +64,7 @@ PANEL.GetText = PANEL.GetChar
 
 --  > Override existing
 function PANEL:Paint( w, h )
+    local _ = nil
     GNLib.DrawCircle( self.radius, self.radius, self.radius, _, _, self.clicking and self.clicked_color or self:IsHovered() and self.hovered_color or self.color )
 
     GNLib.SimpleTextShadowed( self.char, self.font, self.radius, self.radius, self.clicking and self.clicked_textcolor or self:IsHovered() and self.hovered_textcolor or self.default_textcolor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, self.shadow_x, self.shadow_y, _ )

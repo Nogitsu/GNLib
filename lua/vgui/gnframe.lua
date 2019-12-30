@@ -39,7 +39,7 @@ function PANEL:Init()
             self:Remove()
         end 
         close.Paint = function( _self, w, h )
-            draw.RoundedBoxEx( self.rounded_radius, 0, 0, w, h, _self:IsHovered() and GNLib.Colors.Alizarin or GNLib.Colors.Pomegranate, _, true )
+            draw.RoundedBoxEx( self.rounded_radius, 0, 0, w, h, _self:IsHovered() and GNLib.Colors.Alizarin or GNLib.Colors.Pomegranate, false, true )
         
             draw.SimpleText( "x", "GNLFontB15", w / 2 - 1, h / 2 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
         end

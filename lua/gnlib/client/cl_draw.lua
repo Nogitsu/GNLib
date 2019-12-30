@@ -1,3 +1,5 @@
+local color_black = Color( 0, 0, 0 )
+
 --  > Gradient functions
 function GNLib.DrawRectGradient( x, y, w, h, color1, color2, vertical )
 	vertical = vertical or false
@@ -207,13 +209,13 @@ end
 --  > Draw ellipse with half-circle
 function GNLib.DrawElipse( x, y, w, h, color, hide_left, hide_right )
 	if not hide_left then
-		GNLib.DrawCircle( x + h / 2, y + h / 2 + (y == 0 and 0 or - .5), h / 2, 90, -90, color )
+		GNLib.DrawCircle( x + h / 2, y + h / 2, h / 2, 90, -90, color )
 	end
 	if not hide_right then
-		GNLib.DrawCircle( x + w - h / 2, y + h / 2 + (y == 0 and 0 or - .5), h / 2, -90, 90, color )
+		GNLib.DrawCircle( x + w - h / 2, y + h / 2, h / 2, -90, 90, color )
 	end
 
-	draw.RoundedBox( 0, x + h / 2, y, w - h, h, color or color_white )
+	draw.RoundedBox( 0, x + h / 2, y, w - h + ( y == 0 and 2 or 0 ), h, color or color_white )
 end
 
 --  > Shears
