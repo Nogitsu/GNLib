@@ -1,5 +1,5 @@
 GNLib = GNLib or {}
-GNLib.Version = "v0.6.6"
+GNLib.Version = "v0.6.7"
 GNLib.Author = "Guthen & Nogitsu"
 GNLib.Desc = "Shared library for frequent uses."
 
@@ -65,8 +65,8 @@ end
 --  > Using
 
 local function load()
-	if SERVER then 
-		IncludeSV( "gnlib/server" ) 
+	if SERVER then
+		IncludeSV( "gnlib/server" )
 	end
     IncludeCL( "gnlib/client" )
     IncludeSH( "gnlib/shared" )

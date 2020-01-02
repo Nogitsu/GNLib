@@ -44,7 +44,7 @@ end
 function GNLib.Benchmark( callback, name, verbose )
     local start = SysTime()
     verbose = verbose == nil and true or verbose
-    
+
     callback()
 
     local totalTime = ( SysTime() - start ) * 1000
@@ -52,6 +52,11 @@ function GNLib.Benchmark( callback, name, verbose )
     if verbose then print( name or '', 'Time elapsed: ', endTime ) end
 
     return totalTime
+end
+
+--  > Returns current filename
+function GNLib.GetCurrentFilename()
+  return string.GetFileFromFilename( debug.getinfo( 2, "S" ).source )
 end
 
 --  > Allows bigger tables
