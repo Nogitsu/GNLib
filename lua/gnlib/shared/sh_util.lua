@@ -55,8 +55,9 @@ function GNLib.Benchmark( callback, name, verbose )
 end
 
 --  > Returns current filename
-function GNLib.GetCurrentFilename()
-  return string.GetFileFromFilename( debug.getinfo( 2, "S" ).source )
+function GNLib.GetCurrentFilename( extension )
+  local filename = string.GetFileFromFilename( debug.getinfo( 2, "S" ).source )
+  return extension and filename or filename:sub( 1, -5 )
 end
 
 --  > Allows bigger tables
