@@ -57,7 +57,7 @@ end
 --  > Returns current filename
 function GNLib.GetCurrentFilename( extension )
   local filename = string.GetFileFromFilename( debug.getinfo( 2, "S" ).source )
-  return extension and filename or filename:sub( 1, -5 )
+  return extension and filename or filename:gsub( "%.%w+$", "" )
 end
 
 --  > Allows bigger tables
