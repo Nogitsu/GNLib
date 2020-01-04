@@ -1,5 +1,5 @@
 GNLib = GNLib or {}
-GNLib.Version = "v0.6.7"
+GNLib.Version = "v0.6.8"
 GNLib.Author = "Guthen & Nogitsu"
 GNLib.Desc = "Shared library for frequent uses."
 
