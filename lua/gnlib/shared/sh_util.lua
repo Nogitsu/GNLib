@@ -32,12 +32,19 @@ function GNLib.Translate( source, target, text, callback )
     end )
 end
 
-function GNLib.SendDiscordMessage( webhook, msg )
-    http.Post( "https://guthen.000webhostapp.com/discord.php", { url = webhook, msg = msg } )
-end
-
-function GNLib.SendDiscordEmbed( webhook, title, msg, footer )
-    http.Post( "https://guthen.000webhostapp.com/discord_embed.php", { url = webhook, msg = msg, title = title, footer = footer } )
+function GNLib.SendDiscordMessage( webhook, msg, embed )
+    http.Post( "https://guthen.000webhostapp.com/discord/index.php", { json = util.TableToJSON( { 
+        url = webhook, 
+        message = { 
+            content = msg.content,
+            username = msg.username,
+            avatar_url = msg.avatar_url,
+            tts = msg.tts,
+        },
+        embed = embed,
+    } ) }, function( response ) 
+        print( "Response: " .. response )
+    end )
 end
 
 --  > This function come from GMod Creators Area (https://g-ca.fr)
