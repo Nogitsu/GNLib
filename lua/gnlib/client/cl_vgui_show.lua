@@ -61,8 +61,14 @@ function GNLib.OpenVGUIPanel()
 
     local textentry = vgui.Create( "GNTextEntry", main )
         textentry:SetPos( 500, 550 )
-        textentry:SetSize( 150, 35  )
-        textentry:SetTitle( "Your name" )
+        textentry:SetSize( 150, 35 )
+        textentry:SetTitle( "Name" )
+
+    local password_textentry = vgui.Create( "GNTextEntry", main )
+        password_textentry:SetPos( 500, 600 )
+        password_textentry:SetSize( 150, 35 )
+        password_textentry:SetTitle( "Password" )
+        password_textentry:SetHideText( true )
 
     local combobox = vgui.Create( "GNComboBox", main )
         combobox:SetPos( 500, 700 )
