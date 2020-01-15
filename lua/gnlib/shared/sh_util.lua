@@ -127,3 +127,77 @@ end
 function GNLib.ReadTable( len )
     return util.JSONToTable( util.Decompress( net.ReadData( len ) ) )
 end
+
+--- @title:
+---     GNLib.MakeDocumentation: <function> Make a documentation from code comments
+--- @params:
+---     target_file: <string> Path to the file (from `lua/`)
+---     code_path: <string> Link from your GitHub repository where will be added the file path
+function GNLib.MakeDocumentation( target_file, code_path )
+    local content = file.Read( target_file, "LUA" )
+
+    local side = target_file:find( "cl_" ) and "iconclient" or target_file:find( "sv_" ) and "iconserver" or "iconshared"
+    local code_path = ( code_path or "https://github.com/Nogitsu/GNLib/blob/master/lua/" ) .. target_file
+
+    local output
+    local function makeOutput( ... )
+        return ( ":%s: **%s :** %s\n• Code source : %s%s\n\n:pencil2: **Description :** %s\n\n:bulb: **Utilisation :** `%s( %s )`\n\n:card_box: **Arguments :**\n%s" ):format( side, ... )
+    end
+
+    local param_pattern = "(%@%w+):"
+    local value_pattern = "([%w+%.%:?]+):"
+
+    local trad = {
+        ["function"] = "Fonction",
+    }
+
+    local function table_concat_key( tbl, concat ) 
+        local output = ""
+
+        for k, v in pairs( tbl ) do
+            output = output .. k .. ( next( tbl, k ) and concat or "" )
+        end
+
+        return output
+    end
+
+    local function make_args_list( tbl )
+        local output = ""
+
+        for k, v in pairs( tbl ) do
+            output = output .. ( "• **%s** `%s` : %s" .. ( next( tbl, k ) and "\n" or "" ) ):format( v.tpe, k, v.desc )
+        end
+
+        return output
+    end
+
+    local doc_type
+    local name, tpe, desc, params, note
+    local function refresh()
+        doc_type, name, tpe, desc, params, note = nil, "", "", "", {}, ""
+    end
+    refresh()
+
+    for line in GNLib.IterateLines( content ) do
+        if not line:StartWith( "---" ) then 
+            if not ( doc_type == nil ) then 
+                print( "\n[[NEW DOCUMENTATION]]\n" )
+                print( makeOutput( trad[tpe], name, code_path, note, desc, name, table_concat_key( params, ", " ), make_args_list( params ) ) )
+                refresh()
+            end
+            continue 
+        end
+        --print( line )
+
+        if line:find( "%@%w+" ) then doc_type = line:match( "%@(%w+)" ) continue end
+        
+        if doc_type == "title" then 
+            name, tpe, desc = line:match( "([%w+%.%:?]+): <(%w+)> (.+)" )
+        elseif doc_type == "note" then
+            note = "\n• Note: " .. line:gsub( "-", "" ):TrimLeft() 
+        elseif doc_type == "params" then
+            local var, tpe, desc = line:match( "(%w+): <(%w+)> (.+)" )
+            params[var] = { tpe = tpe, desc = desc }
+        end
+    end
+end
