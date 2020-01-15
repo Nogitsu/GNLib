@@ -1,12 +1,30 @@
 
+--- @title:
+---     GNLib.LerpColor: <function> Linear interpolation between two colors
+--- @params:
+---     t: <number> Fraction for finding the result (between 0 and 1)
+---     c1: <Color> First color
+---     c2: <Color> Second color
+--- @output:
+---     The color result of the linear interpolation: <Color>
 function GNLib.LerpColor( t, c1, c2 )
     return Color( Lerp( t, c1.r, c2.r ), Lerp( t, c1.g, c2.g ), Lerp( t, c1.b, c2.b ), c1.a == c2.a and c1.a or Lerp( t, c1.a, c2.a ) )
 end
 
+--- @title:
+---     GNLib.EncodeURL: <function> Replace each space letters by '%20'
+--- @params:
+---     url: <string> URL to perform encode
 function GNLib.EncodeURL( url )
     return string.Replace( url, " ", "%20" )
 end
 
+--- @title:
+---     GNLib.AutoTranslate: <function> Translate automatically a text to target language
+--- @params:
+---     target: <string> Translation language
+---     text: <string> Text to translate
+---     callback: <function> (optional) Function called when translation is received
 local apikey = "trnsl.1.1.20190822T114859Z.8b4909373dc0b830.cf06aab555bbefc0acd710f07f8d6903105fe7ff"
 function GNLib.AutoTranslate( target, text, callback )
     local url = string.format( "https://translate.yandex.net/api/v1.5/tr.json/translate?key=%s&text=%s&lang=%s", apikey, text, target )
@@ -20,6 +38,13 @@ function GNLib.AutoTranslate( target, text, callback )
     end )
 end
 
+--- @title:
+---     GNLib.Translate: <function> Translate a text to target language from source language
+--- @params:
+---     source: <string> Original text language
+---     target: <string> Translation language
+---     text: <string> Text to translate
+---     callback: <function> (optional) Function called when translation is received
 function GNLib.Translate( source, target, text, callback )
     local url = string.format( "https://translate.yandex.net/api/v1.5/tr.json/translate?key=%s&text=%s&lang=%s-%s", apikey, text, source, target )
 
@@ -32,15 +57,36 @@ function GNLib.Translate( source, target, text, callback )
     end )
 end
 
-function GNLib.SendDiscordMessage( webhook, msg )
-    http.Post( "https://guthen.000webhostapp.com/discord.php", { url = webhook, msg = msg } )
+--- @title:
+---     GNLib.SendDiscordMessage: <function> Send a message on a Discord webhook 
+--- @params:
+---     webhook: <string> Discord webhook to send the message
+---     msg: <table> Contain `content` and optionally `username`, `avatar_url` and `tts` 
+---     embed: <table> (optional) Contain all embed informations : https://discordapp.com/developers/docs/resources/channel#embed-object
+---     verbose: <bool> (optional) Show or not the response of the web side
+function GNLib.SendDiscordMessage( webhook, msg, embed, verbose )
+    http.Post( "https://guthen.000webhostapp.com/discord/index.php", { json = util.TableToJSON( { 
+        url = webhook, 
+        message = { 
+            content = msg.content,
+            username = msg.username,
+            avatar_url = msg.avatar_url,
+            tts = msg.tts,
+        },
+        embed = embed,
+    } ) }, function( response ) 
+        if verbose then print( "GNLib.SendDiscordMessage' response: " .. response ) end
+    end )
 end
 
-function GNLib.SendDiscordEmbed( webhook, title, msg, footer )
-    http.Post( "https://guthen.000webhostapp.com/discord_embed.php", { url = webhook, msg = msg, title = title, footer = footer } )
-end
-
---  > This function come from GMod Creators Area (https://g-ca.fr)
+--- @title:
+---     GNLib.Benchmark: <function> Calculate the time taken by CPU to execute callback
+--- @note: 
+---     This function come from GMod Creators Area (https://g-ca.fr)
+--- @params:
+---     callback: <function> Function to perform timestamp
+---     name: <string> (optional) Display name in `verbose` mode 
+---     verbose: <bool> (optional) Show or not the time elapsed
 function GNLib.Benchmark( callback, name, verbose )
     local start = SysTime()
     verbose = verbose == nil and true or verbose
@@ -54,19 +100,30 @@ function GNLib.Benchmark( callback, name, verbose )
     return totalTime
 end
 
---  > Returns current filename
-function GNLib.GetCurrentFilename( extension )
-  local filename = string.GetFileFromFilename( debug.getinfo( 2, "S" ).source )
+--- @title:
+---     GNLib.GetCurrentFilename: <function> Get the filename where this function is called
+--- @params:
+---     extension: <bool> (optional) Remove or not the extension of the filename
+---     stack_index: <number> (optional) Stack index from this function (`2` is default and will return the filename where you call this function)
+function GNLib.GetCurrentFilename( extension, stack_index )
+  local filename = string.GetFileFromFilename( debug.getinfo( stack_index or 2, "S" ).source )
   return extension and filename or filename:gsub( "%.%w+$", "" )
 end
 
---  > Allows bigger tables
+--- @title:
+---     GNLib.WriteTable: <function> Used for net sending, send a compressed JSON table
+--- @params:
+---     tab: <table> Table to send
 function GNLib.WriteTable( tab )
     local compressed = util.Compress( util.TableToJSON( tab ) )
 
     net.WriteData( compressed, #compressed )
 end
 
+--- @title:
+---     GNLib.ReadTable: <function> Used for net receving, receive a compressed JSON table
+--- @params:
+---     len: <number> Bytes lenght of the received net minus all datas lenght
 function GNLib.ReadTable( len )
     return util.JSONToTable( util.Decompress( net.ReadData( len ) ) )
 end
