@@ -1,6 +1,16 @@
 local color_black = Color( 0, 0, 0 )
 
 --  > Gradient functions
+--- @title:
+---     GNLib.DrawRectGradient: <function> Draw a rectangle gradient from two colors vertically or horizontally
+--- @params:
+---     x: <number> X position
+---     y: <number> Y position
+---     w: <number> Width
+---		h: <number> Height
+---		color1: <Color> First color of the gradient
+---		color2: <Color> Second color of the gradient
+---		vertical: <bool> Whenever the gradient is vertical or horizontal
 function GNLib.DrawRectGradient( x, y, w, h, color1, color2, vertical )
 	vertical = vertical or false
 
@@ -17,11 +27,21 @@ function GNLib.DrawRectGradient( x, y, w, h, color1, color2, vertical )
 	end
 end
 
+--- @title:
+---     GNLib.DrawRadialGradient: <function> Draw a circle gradient from two colors
+---	@note:
+---		This function is very expensive in performance
+--- @params:
+---     x: <number> X position
+---     y: <number> Y position
+---     r: <number> Radius
+---		color1: <Color> First color of the gradient
+---		color2: <Color> Second color of the gradient
 local surface_DrawCircle = surface.DrawCircle
 local GNLib_LerpColor = GNLib.LerpColor
-function GNLib.DrawRadialGradient( x, y, r, c1, c2 )
+function GNLib.DrawRadialGradient( x, y, r, color1, color2 )
 	for i = 0, r do
-		surface_DrawCircle( x, y, i, GNLib_LerpColor( i / r, c1, c2 ) )
+		surface_DrawCircle( x, y, i, GNLib_LerpColor( i / r, color1, color2 ) )
 	end
 end
 
@@ -105,6 +125,11 @@ function GNLib.DrawTriangleRectangle( x, y, w, h, pos )
 end
 
 --	> Stencil
+--- @title:
+---     GNLib.DrawStencil: <function> Draw a stencil mask from a shape drawing function and the drawing function
+--- @params:
+---     shape_draw_func: <function> Shape of the mask drawing function (limit of the drawing function)
+---     draw_func: <function> Draw function
 function GNLib.DrawStencil( shape_draw_func, draw_func )
 	render.ClearStencil()
 	render.SetStencilEnable( true )
