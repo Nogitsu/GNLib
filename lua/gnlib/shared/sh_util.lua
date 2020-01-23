@@ -5,8 +5,6 @@
 ---     t: <number> Fraction for finding the result (between 0 and 1)
 ---     c1: <Color> First color
 ---     c2: <Color> Second color
---- @output:
----     The color result of the linear interpolation: <Color>
 function GNLib.LerpColor( t, c1, c2 )
     return Color( Lerp( t, c1.r, c2.r ), Lerp( t, c1.g, c2.g ), Lerp( t, c1.b, c2.b ), c1.a == c2.a and c1.a or Lerp( t, c1.a, c2.a ) )
 end
@@ -151,11 +149,11 @@ function GNLib.MakeDocumentation( target_file, code_path )
         ["function"] = "Fonction",
     }
 
-    local function table_concat_key( tbl, concat ) 
+    local function table_concat_name( tbl, concat ) 
         local output = ""
 
-        for k, v in pairs( tbl ) do
-            output = output .. k .. ( next( tbl, k ) and concat or "" )
+        for i, v in ipairs( tbl ) do
+            output = output .. v.name .. ( tbl[i + 1] and concat or "" )
         end
 
         return output
@@ -164,8 +162,8 @@ function GNLib.MakeDocumentation( target_file, code_path )
     local function make_args_list( tbl )
         local output = ""
 
-        for k, v in pairs( tbl ) do
-            output = output .. ( "• **%s** `%s` : %s" .. ( next( tbl, k ) and "\n" or "" ) ):format( v.tpe, k, v.desc )
+        for i, v in ipairs( tbl ) do
+            output = output .. ( "• **%s** `%s` : %s" .. ( tbl[i + 1] and "\n" or "" ) ):format( v.tpe, v.name, v.desc )
         end
 
         return output
@@ -182,7 +180,7 @@ function GNLib.MakeDocumentation( target_file, code_path )
         if not line:StartWith( "---" ) then 
             if not ( doc_type == nil ) then 
                 print( "\n[[NEW DOCUMENTATION]]\n" )
-                print( makeOutput( trad[tpe], name, code_path, note, desc, name, table_concat_key( params, ", " ), make_args_list( params ) ) )
+                print( makeOutput( trad[tpe], name, code_path, note, desc, name, table_concat_name( params, ", " ), make_args_list( params ) ) )
                 refresh()
             end
             continue 
@@ -192,12 +190,12 @@ function GNLib.MakeDocumentation( target_file, code_path )
         if line:find( "%@%w+" ) then doc_type = line:match( "%@(%w+)" ) continue end
         
         if doc_type == "title" then 
-            name, tpe, desc = line:match( "([%w+%.%:?]+): <(%w+)> (.+)" )
+            name, tpe, desc = line:match( "([%w+%.%:%_?]+): <(%w+)> (.+)" )
         elseif doc_type == "note" then
             note = "\n• Note: " .. line:gsub( "-", "" ):TrimLeft() 
         elseif doc_type == "params" then
-            local var, tpe, desc = line:match( "(%w+): <(%w+)> (.+)" )
-            params[var] = { tpe = tpe, desc = desc }
+            local var, tpe, desc = line:match( "([%w+%.%:%_?]+): <(%w+)> (.+)" )
+            params[#params + 1] = { name = var, tpe = tpe, desc = desc }
         end
     end
 end
