@@ -174,6 +174,20 @@ function GNLib.DrawStencil( shape_draw_func, draw_func )
 end	
 
 --  > Material
+--- @title:
+--- 	GNLib.DrawMaterial: <function> Draw a material with given coordinates
+--- @params:
+--- 	mat: <Material> Material which will be drawn, remember to keep it in a variable outside of a hook/function called every frame
+--- 	x: <number> X position
+--- 	y: <number> Y position
+--- 	w: <number> Width 
+--- 	h: <number> Height
+--- 	color: <Color> (optional) Color of the material
+--- 	ang: <number> (optional) Angle of the material
+--- @example:
+--- 	#prompt: Draw a default avatar on the screen at coordinates 0, 0
+--- 	#code: local avatar = Material( "vgui/avatar_default", "smooth" )\n\nhook.Add( "HUDPaint", "GNLib:DrawDefaultAvatar", function()\n\tGNLib.DrawMaterial( avatar, 0, 0, 256, 256 )\nend )
+--- 	#output: 
 function GNLib.DrawMaterial( mat, x, y, w, h, color, ang )
 	surface.SetDrawColor( color or color_white )
 	surface.SetMaterial( mat )
@@ -226,6 +240,19 @@ function GNLib.DrawIconTextShadowed( text, font, x, y, color, mat, mat_w, mat_h,
 end
 
 --  > Draw filled circle
+--- @title:
+--- 	GNLib.DrawCircle: <function> Draw a circle with given coordinates, radius and angles
+--- @params:
+--- 	x: <number> X position
+--- 	y: <number> Y position
+--- 	radius: <number> Radius of circle
+--- 	angle_start: <number> (optional) Start angle of circle
+--- 	angle_end: <number> (optional) End angle of circle
+--- 	color: <Color> (optional) Color of circle
+--- @example:
+--- 	#prompt: Draw a white half-circle of radius 100px on middle of the screen
+--- 	#code: hook.Add( "HUDPaint", "GNLib:DrawCircle", function()\n\tGNLib.DrawCircle( ScrW() / 2, ScrH() / 2, 100, 0, 180 )\nend )
+--- 	#output: 
 function GNLib.DrawCircle( x, y, radius, angle_start, angle_end, color )
 	local poly = {}
 	table.insert( poly, { x = x, y = y } )
@@ -248,6 +275,20 @@ function GNLib.DrawCircle( x, y, radius, angle_start, angle_end, color )
 end
 
 --  > Draw ellipse with half-circle
+--- @title:
+--- 	GNLib.DrawElipse: <function> Draw an elipse with given coordinates
+--- @params:
+--- 	x: <number> X position
+--- 	y: <number> Y position
+--- 	w: <number> Width
+--- 	h: <number> Height
+--- 	color: <Color> (optional) Color of circle
+--- 	hide_left: <boolean> (optional) Show or not the left part
+--- 	hide_right: <boolean> (optional) Show or not the right part
+--- @example:
+--- 	#prompt: Draw a centered red elipse
+--- 	#code: local W, H = 100, 25\n\nhook.Add( "HUDPaint", "GNLib:DrawCircle", function()\n\tGNLib.DrawElipse( ScrW() / 2 - W / 2, ScrH() / 2 - H / 2, W, H, GNLib.Colors.Alizarin )\nend )
+--- 	#output: 
 function GNLib.DrawElipse( x, y, w, h, color, hide_left, hide_right )
 	if not hide_left then
 		GNLib.DrawCircle( x + h / 2, y + h / 2, h / 2, 90, -90, color )
