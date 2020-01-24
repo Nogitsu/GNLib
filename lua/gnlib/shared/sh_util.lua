@@ -91,6 +91,10 @@ end
 ---     verbose: <bool> (optional) Show or not the time elapsed
 --- @return:
 ---     total_time: <number> Time took by CPU to execute callback
+--- @example:
+---     #prompt: Benchmarking du `ipairs` vs. `pairs` :
+---     #code: local tab = {}\n\nfor i = 0, 1000000 do\n\ttab[i] = true\nend\n\nlocal _pairs = GNLib.Benchmark( function()\n\tfor k, v in pairs( tab ) do\n\tend\nend, "pairs" )\n\nlocal _ipairs = GNLib.Benchmark( function()\n\tfor i, v in ipairs( tab ) do\n\tend\nend, "ipairs" )\n\nprint( "Fastest is: " .. ( _ipairs < _pairs and "ipairs" or "pairs" ) )
+---     #output: https://cdn.discordapp.com/attachments/630800979880706107/637606229585166347/unknown.png
 function GNLib.Benchmark( callback, name, verbose )
     local start = SysTime()
     verbose = verbose == nil and true or verbose
