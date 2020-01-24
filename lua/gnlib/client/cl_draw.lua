@@ -46,6 +46,14 @@ function GNLib.DrawRadialGradient( x, y, r, color1, color2 )
 end
 
 --  > Polygones
+--- @title:
+---     GNLib.DrawTriangle: <function> Draw a triangle from centers and side size
+--- @params:
+---     center_x: <number> X position
+---     center_y: <number> Y position
+---     size_side: <number> Size 
+---     color: <Color> Color of the triangle
+---     dir: <number> Direction of the triangle (0, 1, 2, 3)
 function GNLib.DrawTriangle( center_x, center_y, side_size, color, dir )
 	local poly
 	if dir == 0 then
@@ -85,6 +93,14 @@ function GNLib.DrawTriangle( center_x, center_y, side_size, color, dir )
 	return poly
 end
 
+--- @title:
+---     GNLib.DrawTriangleRectangle: <function> Draw a triangle rectangle from size and pos
+--- @params:
+---     x: <number> X position
+---     y: <number> Y position
+---     w: <number> Width (size)
+---     h: <number> Height (size)
+---     pos: <number> Position (0, 1, 2, 3)
 function GNLib.DrawTriangleRectangle( x, y, w, h, pos )
 	local points
 
