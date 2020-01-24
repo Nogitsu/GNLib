@@ -5,6 +5,8 @@
 ---     t: <number> Fraction for finding the result (between 0 and 1)
 ---     c1: <Color> First color
 ---     c2: <Color> Second color
+--- @return:
+---     lerped_color: <Color> Lerped color
 function GNLib.LerpColor( t, c1, c2 )
     return Color( Lerp( t, c1.r, c2.r ), Lerp( t, c1.g, c2.g ), Lerp( t, c1.b, c2.b ), c1.a == c2.a and c1.a or Lerp( t, c1.a, c2.a ) )
 end
@@ -13,6 +15,8 @@ end
 ---     GNLib.EncodeURL: <function> Replace each space letters by '%20'
 --- @params:
 ---     url: <string> URL to perform encode
+--- @return:
+---     url: <string> URL edited
 function GNLib.EncodeURL( url )
     return string.Replace( url, " ", "%20" )
 end
@@ -85,17 +89,19 @@ end
 ---     callback: <function> Function to perform timestamp
 ---     name: <string> (optional) Display name in `verbose` mode 
 ---     verbose: <bool> (optional) Show or not the time elapsed
+--- @return:
+---     total_time: <number> Time took by CPU to execute callback
 function GNLib.Benchmark( callback, name, verbose )
     local start = SysTime()
     verbose = verbose == nil and true or verbose
 
     callback()
 
-    local totalTime = ( SysTime() - start ) * 1000
-    local endTime = tostring( totalTime ) .. 'ms'
-    if verbose then print( name or '', 'Time elapsed: ', endTime ) end
+    local total_time = ( SysTime() - start ) * 1000
+    local end_time = tostring( total_time ) .. 'ms'
+    if verbose then print( name or '', 'Time elapsed: ', end_time ) end
 
-    return totalTime
+    return total_time
 end
 
 --- @title:
@@ -103,9 +109,11 @@ end
 --- @params:
 ---     extension: <bool> (optional) Remove or not the extension of the filename
 ---     stack_index: <number> (optional) Stack index from this function (`2` is default and will return the filename where you call this function)
+--- @return:
+---     filename: <string> Filename with or not extension
 function GNLib.GetCurrentFilename( extension, stack_index )
-  local filename = string.GetFileFromFilename( debug.getinfo( stack_index or 2, "S" ).source )
-  return extension and filename or filename:gsub( "%.%w+$", "" )
+    local filename = string.GetFileFromFilename( debug.getinfo( stack_index or 2, "S" ).source )
+    return extension and filename or filename:gsub( "%.%w+$", "" )
 end
 
 --- @title:
@@ -122,6 +130,8 @@ end
 ---     GNLib.ReadTable: <function> Used for net receving, receive a compressed JSON table
 --- @params:
 ---     len: <number> Bytes lenght of the received net minus all datas lenght
+--- @return:
+---     compressed_table: <table> Read table which was writing by GNLib.WriteTable 
 function GNLib.ReadTable( len )
     return util.JSONToTable( util.Decompress( net.ReadData( len ) ) )
 end
