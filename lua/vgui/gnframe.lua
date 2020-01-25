@@ -6,6 +6,8 @@ AccessorFunc( PANEL, "rounded_radius", "RoundedRadius" )
 AccessorFunc( PANEL, "show_top_bar", "ShowTopBar" )
 
 function PANEL:Init()
+    self:DockPadding( 0, 0, 0, 0 )
+
     self:ShowCloseButton( false )
     self:MakePopup()
 

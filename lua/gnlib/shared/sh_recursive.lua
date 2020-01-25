@@ -42,6 +42,21 @@ function GNLib.GetFolder( path, game_path, extension )
 end
 
 --	> Allow you to require your addon folder easily
+--- @title:
+--- 	GNLib.RequireFolder: <function> Require an addon recursively (folders, sub-folders, etc.) by side (shared, server and client)
+--- @note:
+--- 	Files named with `cl_` will be client-side, `sv_` server-side and `sh_` server and client side (shared). Files with any of theses prefixes won't be executed.
+--- @params:
+--- 	path: <string> Path to the addon, from `lua/`
+--- 	should_print: <boolean> (optional) Verbose mode, print or not each files included and/or sent to clients
+--- 	indent: <string> (optional) Indentation of the verbose mode (you shouln't touch to this)
+--- @return:
+--- 	files: <table> Files found
+--- 	folders: <table> Folders found
+--- @example:
+--- 	#prompt: Include GNLib with verbose mode (following code will be executed client-side, so the output is different from server)
+--- 	#code: GNLib.RequireFolder( "gnlib", true )
+--- 	#output: https://cdn.discordapp.com/attachments/638822462431166495/670668557176274955/unknown.png
 function GNLib.RequireFolder( path, should_print, indent )
 	local files, folders = file.Find( path .. "/*", "LUA" )
 	local indent = indent or ""

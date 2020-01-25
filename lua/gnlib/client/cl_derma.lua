@@ -1,90 +1,30 @@
 --  > Main GNLib frame styled
-local remove_icon = Material( "icon16/cross.png" )
+--- @title:
+--- 	GNLib.CreateFrame: <function> Create a centered GNFrame VGUI
+--- @params:
+--- 	title: <string> Title of the frame
+--- 	W: <number> (optional) Width
+--- 	H: <number> (optional) Height
+--- 	main_color: <Color> (optional) Main color
+--- 	second_color: <Color> (optional) Second color
+--- @return:
+--- 	main: <GNFrame> Main frame
+--- 	header: <DPanel> Header of the main frame
+--- 	close: <DButton> Close button parented to the header
+--- @example:
+--- 	#prompt: Code from `lua/gnlib/client/cl_addonslist.lua` line 18
+--- 	#code: local main, header, close = GNLib.CreateFrame( "GNLib Addons List - " .. GNLib.Version )
+--- 	#output: Create a basic GNFrame and put return values in local variables
 function GNLib.CreateFrame( title, W, H, main_color, second_color )
     local W, H = W or math.max( ScrW() * .75, 1024 ), H or math.max( ScrH() * .75, 720 )
 
-    --[[ local main = vgui.Create( "GNPanel" )
-    main:SetSize( W, H )
-    main:Center()
-    main:MakePopup()
-    main.color = color or GNLib.Colors.MidnightBlue
-    main.color2 = color2 or GNLib.Colors.WetAsphalt
-    function main:Paint( w, h )
-        GNLib.DrawRectGradient( 0, 0, w, h, self.color, self.color2, true )
-
-        draw.SimpleText( title, "GNLFontB20", 15, 15, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
-    end
-
-    local close = vgui.Create( "DButton", main )
-    close:SetPos( W - 30, 5 )
-    close:SetSize( 20, 20 )
-    close:SetText( "" )
-    close:SetTextColor( color_white )
-    function close.DoClick()
-        main:Remove()
-    end
-    function close:Paint( w, h )
-        local c1 = GNLib.Colors.Concrete
-        if self:IsHovered() then
-            local t = math.abs( math.sin( CurTime() ) / w ) * 100 * 2
-            c1 = GNLib.LerpColor( t, c1, GNLib.Colors.Pomegranate )
-        end
-        GNLib.DrawRectGradient( 0, 0, w, h, GNLib.Colors.Asbestos, c1, true )
-
-        GNLib.DrawMaterial( remove_icon, 2, 2, 16, 16 )
-    end ]]
-    --[[ gui.EnableScreenClicker( true )
-
-    local frame = vgui.Create( "DFrame" )
-        frame:SetSize( W, H )
-        frame:Center()
-        frame:DockPadding( 0, 0, 0, 0 )
-        frame.color = GNLib.Colors.MidnightBlue
-        frame.Paint = function( self, w, h )
-            draw.RoundedBox( 8, 0, 0, w, h, self.color )
-        end
-        frame.OnRemove = function()
-            gui.EnableScreenClicker( false )
-        end
-
-    --  > Header
-
-    local header = frame:Add( "DPanel" )
-        --header:DockPadding( 0, 0, 0, H * .02 )
-        header:Dock( TOP )
-        header.color = GNLib.Colors.WetAsphalt
-        header.title = title
-        header.Paint = function( self, w, h )
-            draw.RoundedBoxEx( 6, 0, 0, w, h, self.color, true, true )
-
-            surface.SetDrawColor( self.color )
-            surface.DrawLine( 0, h - 1, w, h - 1 )
-
-            draw.SimpleText( self.title, "GNLFontB17", 10, 3, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT )
-        end
-
-    local close = header:Add( "DButton" )
-        close:SetSize( header:GetTall(), header:GetTall() )
-        close:SetPos( W - close:GetWide(), header:GetTall() / 2 - close:GetTall() / 2 )
-        close:SetText( "" )
-        close.DoClick = function()
-            frame:Remove()
-        end 
-        close.Paint = function( self, w, h )
-            draw.RoundedBoxEx( 6, 0, 0, w, h, self:IsHovered() and GNLib.Colors.Alizarin or GNLib.Colors.Pomegranate, _, true )
-        
-            draw.SimpleText( "x", "GNLFontB15", w / 2 - 1, h / 2 - 1, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-        end]]
-
     local frame = vgui.Create( "GNFrame" )
+        frame:SetTitle( title )
         frame:SetSize( W, H )
         frame:Center()
-        frame:DockPadding( 0, 0, 0, 0 )
-        frame:SetTitle( title )
         if main_color then frame:SetColor( main_color ) end
         if second_color then frame.header.color = second_color end
 
-    --[[ return main, close ]]
     return frame, frame.header, frame.close
 end
 

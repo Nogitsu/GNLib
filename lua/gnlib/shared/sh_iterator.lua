@@ -41,7 +41,7 @@ end
 --- 	closure: <function> Function used to iterate
 --- @example:
 --- 	#prompt: Iterate each line through "GNLib <3"
---- 	#code: for l in GNLib.IterateLines( "GNLib <3\nBetter than Anything\n:kappa:" ) do\n\tprint( l )\nend
+--- 	#code: for l in GNLib.IterateLines( "GNLib <3\\nBetter than Anything\\n:kappa:" ) do\n\tprint( l )\nend
 --- 	#output: https://cdn.discordapp.com/attachments/638822462431166495/670654870382182440/unknown.png
 function GNLib.IterateLines( txt )
 	return txt:gmatch( "[^\n]+" )
