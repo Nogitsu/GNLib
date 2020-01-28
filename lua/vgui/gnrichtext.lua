@@ -8,7 +8,7 @@ function PANEL:Init()
     self.scroll:Dock( FILL )
 
     self.canvas = self:Add( "DPanel" )
-    self.canvas:Dock( FILL )
+    self.canvas:Dock( TOP )
 
     self.char_tall = 20
 
@@ -18,25 +18,40 @@ function PANEL:Init()
 
         surface.SetFont( "DermaDefault" )
         surface.SetDrawColor( color_white )
+        surface.SetTextColor( color_black )
 
         for _, obj in ipairs( self.inputs ) do
             if obj.type == "text" then
-                print( "Inserting text:" .. obj.value )
-                if self.last_x > self:GetWide() - surface.GetTextSize( obj.value ) then
+                local text_w = surface.GetTextSize( obj.value )
+
+                if self.last_x > self:GetWide() - text_w then
                     self.last_x = 0
                     self.last_y = self.last_y + self.char_tall
+
+                    if self.last_y > self.canvas:GetTall() - self.char_tall then
+                        self.canvas:SetTall( self.last_y + self.char_tall )
+                    end
                 end
 
                 surface.SetTextPos( self.last_x, self.last_y )
                 surface.DrawText( obj.value )
 
-                self.last_x = self.last_x + surface.GetTextSize( obj.value )
+                self.last_x = self.last_x + text_w
             elseif obj.type == "color" then
-                MsgC( color_white, "Inserting new ", obj.value, "color", color_white, "\n" )
                 surface.SetTextColor( obj.value )
+                surface.SetDrawColor( obj.value )
             elseif obj.type == "font" then
-                print( "Inserting font:" .. obj.value )
                 surface.SetFont( obj.value )
+            elseif obj.type == "image" then
+                surface.SetMaterial( obj.value )
+                surface.DrawTexturedRect( self.last_x, self.last_y, obj.w, obj.h )
+
+                if self.last_x > self:GetWide() then
+                    self.last_x = 0
+                    self.last_y = self.last_y + obj.h
+                end
+
+                self.last_x = self.last_x + obj.w
             end
         end
     end
@@ -53,6 +68,10 @@ end
 
 function PANEL:InsertFontChange( font )
     self.inputs[ #self.inputs + 1 ] = { type = "font", value = font }
+end
+
+function PANEL:InsertImage( mat, w, h )
+    self.inputs[ #self.inputs + 1 ] = { type = "image", value = mat, w = w or 16, h = h or 16 }
 end
 
 function PANEL:Paint( w, h ) end
