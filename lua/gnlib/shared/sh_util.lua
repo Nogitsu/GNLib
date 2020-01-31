@@ -213,3 +213,23 @@ function GNLib.MakeDocumentation( target_file, code_path )
         end
     end
 end
+
+--- @title:
+--- 	GNLib.Format: <function> Format a text by index of argument. Brackets (`{}`) will be used to format the text and should contain the index of the argument.
+--- @params:
+--- 	str: <string> Text to format
+--- 	args: <varargs> Args used to format
+--- @example:
+--- 	#prompt:
+--- 	#code: print( GNLib.Format( "I will {2} from your {1} !", "skull", "drink" ) )
+--- 	#output: "I will drink from your skull !"
+function GNLib.Format( str, ... )
+    local args = { ... }
+
+    for arg in str:gmatch( "%b{}" ) do
+        local id = tonumber( arg:match( "%d+" ) )
+        str = str:gsub( arg, args[id] or "nil" )
+    end
+
+    return str
+end

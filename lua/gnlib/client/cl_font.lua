@@ -29,7 +29,7 @@ end
 --- @return:
 --- 	names: <table> Names of the created fonts
 --- @example:
---- 	#prompt: Code from `lua/gnlib/client/cl_font.lua` : create 9 fonts with including 6 bolded fonts
+--- 	#prompt: Code from `lua/gnlib/client/cl_font.lua` : create 9 fonts including 6 bolded fonts
 --- 	#code: GNLib.CreateFonts( "GNLFont", "Caviar Dreams", { 10, 15, 20 } )\nGNLib.CreateFonts( "GNLFontB", "Caviar Dreams Bold", { 10, 13, 15, 17, 20, 40 } )
 --- 	#output: 
 function GNLib.CreateFonts( name, font, sizes, options, noscale )
