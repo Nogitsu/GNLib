@@ -57,7 +57,7 @@ function GNLib.OpenAddonsList()
             --  > Draw icon
             local iconSize = h / 2
             surface.SetDrawColor( color_white )
-            if selected_addon.logoURL then
+            if selected_addon.logoURL and selected_addon.mat then
                 surface.SetMaterial( selected_addon.mat )
             else
                 surface.SetMaterial( mats.DefaultPic )
