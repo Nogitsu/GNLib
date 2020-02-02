@@ -123,3 +123,21 @@ function GNLib.DermaStringRequest( title, confirm_text, cancel_text, callback, .
 
     return frame
 end
+
+function GNLib.OpenURL( url )
+    local frame = GNLib.CreateFrame( url )
+
+    local controller = frame:Add( "DHTMLControls" )
+    controller:Dock( TOP )
+    controller:DockMargin( 5, 5, 5, 0 )
+
+    local browser = frame:Add( "DHTML" )
+    browser:Dock( FILL )
+    browser:DockMargin( 5, 0, 5, 5 )
+    browser:OpenURL( url )
+    function browser:OnChangeTitle( title )
+        frame:SetTitle( title )
+    end
+
+    controller:SetHTML( browser )
+end

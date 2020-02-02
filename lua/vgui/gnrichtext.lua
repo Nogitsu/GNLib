@@ -16,9 +16,9 @@ function PANEL:Init()
         self.last_x = 0
         self.last_y = 0
 
-        surface.SetFont( "DermaDefault" )
+        surface.SetFont( "GNLFont20" )
         surface.SetDrawColor( color_white )
-        surface.SetTextColor( color_black )
+        surface.SetTextColor( color_white )
 
         for _, obj in ipairs( self.inputs ) do
             if obj.type == "text" then
@@ -72,6 +72,10 @@ end
 
 function PANEL:InsertImage( mat, w, h )
     self.inputs[ #self.inputs + 1 ] = { type = "image", value = mat, w = w or 16, h = h or 16 }
+end
+
+function PANEL:Clear()
+    self.inputs = {}
 end
 
 function PANEL:Paint( w, h ) end
