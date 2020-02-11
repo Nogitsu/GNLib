@@ -2,28 +2,35 @@ local color_black = Color( 0, 0, 0 )
 
 --  > Gradient functions
 --- @title:
----     GNLib.DrawRectGradient: <function> Draw a rectangle gradient from two colors vertically or horizontally
+---     GNLib.DrawRectGradient: <function> Draw a rectangle gradient from multipke colors vertically or horizontally
 --- @params:
 ---     x: <number> X position
 ---     y: <number> Y position
 ---     w: <number> Width
 ---		h: <number> Height
----		color1: <Color> First color of the gradient
----		color2: <Color> Second color of the gradient
 ---		vertical: <bool> Whenever the gradient is vertical or horizontal
-function GNLib.DrawRectGradient( x, y, w, h, color1, color2, vertical )
+---		colors: <varargs> Colors of the gradient
+function GNLib.DrawRectGradient( x, y, w, h, vertical, ... )
 	vertical = vertical or false
 
-	if not vertical then
-		for i = 0, w do
-			surface.SetDrawColor( GNLib.LerpColor( i / w, color1, color2 ) )
-			surface.DrawLine( x + i, y, x + i, y + h )
-		end
-	else
-		for i = 0, h do
-			surface.SetDrawColor( GNLib.LerpColor( i / h, color1, color2 ) )
-			surface.DrawLine( x, y + i, x + w, y + i )
-		end
+	local colors = { ... }
+	local current_index = 0
+
+	local last_color, next_color
+	local function change_to_next_color()
+		if current_index >= #colors then return end
+
+		current_index = current_index + 1
+		last_color = colors[current_index]
+		next_color = colors[current_index + 1] or colors[current_index]
+	end
+
+	local change_color = math.ceil( ( vertical and h or w ) / ( #colors - 1 ) )
+	for i = 0, vertical and h or w do
+		if i % change_color == 0 then change_to_next_color() end
+
+		surface.SetDrawColor( GNLib.LerpColor( ( i % change_color ) / change_color, last_color, next_color ) )
+		surface.DrawLine( vertical and x or x + i, vertical and y + i or y, vertical and x + w or x + i, vertical and y + i or y + h )
 	end
 end
 
