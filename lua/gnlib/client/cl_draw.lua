@@ -2,7 +2,7 @@ local color_black = Color( 0, 0, 0 )
 
 --  > Gradient functions
 --- @title:
----     GNLib.DrawRectGradient: <function> Draw a rectangle gradient from multipke colors vertically or horizontally
+---     GNLib.DrawRectGradient: <function> Draw a rectangle gradient from multiple colors vertically or horizontally
 --- @params:
 ---     x: <number> X position
 ---     y: <number> Y position
