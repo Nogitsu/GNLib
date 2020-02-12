@@ -215,6 +215,63 @@ function GNLib.MakeDocumentation( target_file, code_path )
 end
 
 --- @title:
+--- 	GNLib.MakeSnippet: <function> Make a VSCode snippet in JSON format from code comments
+--- @params:
+--- 	target_file: <string> Path to the file (from `lua/`)
+--- @example:
+--- 	#prompt: Make snippet from the GNLib' recursive file
+--- 	#code: GNLib.MakeSnippet( "gnlib/shared/sh_recursive.lua" )
+--- 	#output: https://cdn.discordapp.com/attachments/638822462431166495/677135810952429568/unknown.png
+function GNLib.MakeSnippet( target_file )
+    local doc = file.Read( target_file, "LUA" )
+
+    local snippets = {}
+
+    local tpe, n_param = 0, 1
+    for l in doc:gmatch( "[^\n]+" ) do
+        if not l:StartWith( "---" ) then
+            if tpe then 
+                if snippets[#snippets] then
+                    snippets[#snippets].body[1] = snippets[#snippets].body[1]:gsub( "%,$", "" ) .. " )"
+                end
+                snippets[#snippets + 1] = {} 
+                tpe, n_param = nil, 1
+            end
+            continue
+        end
+
+        if not snippets[#snippets] then continue end
+
+        local new_tpe = l:match( "%@(%w+)" )
+        if new_tpe then
+            tpe = new_tpe 
+        else
+            if tpe == "title" then
+                local name, _, desc = l:match( "([%w+%.%:%_?]+): <(%w+)> (.+)" )
+                snippets[#snippets].prefix = { name }
+                snippets[#snippets].body = { name .. "(" }
+                snippets[#snippets].description = desc
+            elseif tpe == "params" then
+                local name, tpe = l:match( "([%w+%_?]+): <(%w+)>" )
+                snippets[#snippets].body[1] = snippets[#snippets].body[1] .. ( " ${%d:%s %s}," ):format( n_param, tpe, name )
+
+                n_param = n_param + 1
+            end
+        end
+    end
+
+    local _snippets = snippets
+    snippets = {}
+
+    for k, v in pairs( _snippets ) do
+        if not v.prefix then continue end
+        snippets[v.prefix[1]] = v
+    end
+
+    print( util.TableToJSON( snippets, true ) )
+end
+
+--- @title:
 --- 	GNLib.Format: <function> Format a text by index of argument. Brackets (`{}`) will be used to format the text and should contain the index of the argument.
 --- @params:
 --- 	str: <string> Text to format
