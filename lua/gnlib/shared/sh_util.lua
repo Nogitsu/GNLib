@@ -290,3 +290,33 @@ function GNLib.Format( str, ... )
 
     return str
 end
+
+--- @title:
+--- 	GNLib.TableShuffle: <function> Shuffle a numerical indexed table
+--- @params:
+--- 	tbl: <table> Table to shuffle
+--- @return:
+--- 	shuffled_table: <table> Shuffled table
+--- @example:
+--- 	#prompt: Shuffle a numerical table
+--- 	#code: PrintTable( GNLib.TableShuffle( { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 } ) )
+--- 	#output: https://cdn.discordapp.com/attachments/638822462431166495/678566089411788820/unknown.png
+function GNLib.TableShuffle( tbl )
+    --  > set tempory sorting order and value
+    local new_tbl = {}
+    for i, v in ipairs( tbl ) do
+        new_tbl[i] = { _value = v, _sort_order = math.random( 0, 2 ) }
+    end
+
+    --  > sort randomly
+    table.sort( new_tbl, function( a, b ) 
+        return a._sort_order > b._sort_order
+    end )
+
+    --  > remove tempory variables
+    for i, v in ipairs( new_tbl ) do 
+        tbl[i] = v._value
+    end
+
+    return tbl
+end

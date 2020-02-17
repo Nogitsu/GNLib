@@ -1,27 +1,28 @@
-function GNLib.RecursiveFind( path, filter ) --GNLib.RecursiveFind("models/weapons", "mdl")
-	filter = filter or ""
+function GNLib.RecursiveFind( path, game_path, filter ) --GNLib.RecursiveFind("models/weapons", "GAME", "mdl")
+	filter = filter or "lua"
+	game_path = game_path or "GAME"
 	local search = path .. "/"
 	
-	local files, _ = file.Find( search .. "*." .. filter, "GAME" )
-	local _, folders = file.Find( search .. "*", "GAME" )
+	local files, _ = file.Find( search .. "*." .. filter, game_path )
+	local _, folders = file.Find( search .. "*", game_path )
+
 	local tbl = {}
-	
+
 	for k, v in pairs( folders ) do
-		for sk, sv in pairs( GNLib.RecursiveFind(search .. v, filter) ) do
-			if not tbl[path] then tbl[path] = {} end
-			tbl[path][v] = sv
+		for sk, sv in pairs( GNLib.RecursiveFind( search .. v, game_path, filter ) ) do
+			tbl[#tbl + 1] = sv
 		end
 	end
 	
 	for k, v in pairs( files ) do
-		tbl[path] = search .. v
+		tbl[#tbl + 1] = search .. v
 	end
-	
+
 	return tbl
 end
 
 function GNLib.GetFolder( path, game_path, extension )
-	path = (path and ( path:EndsWith( "/" ) and path or (path .. "/") ) or "")
+	path = (path and ( path:EndsWith( "/" ) and path or ( path .. "/" ) ) or "")
 	extension = extension or "*"
 	game_path = game_path or "DATA"
 

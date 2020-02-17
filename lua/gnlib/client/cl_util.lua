@@ -30,3 +30,11 @@ function GNLib.PlaySoundCloud( url, callback )
         end )
     end )
 end
+
+--  > Net receive for GNLib.SendHook server-side function
+net.Receive( "GNLib:NetHooks", function( len )
+    local name = net.ReadString()
+    local args = GNLib.ReadTable( len - #name )
+
+    hook.Run( name, unpack( args ) )
+end )
