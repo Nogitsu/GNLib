@@ -67,19 +67,19 @@ function GNLib.DermaStringRequest( title, confirm_text, cancel_text, callback, .
     confirm_text = confirm_text or "OK"
     cancel_text = cancel_text or "Cancel"
 
-    local frame, close = GNLib.CreateFrame( title )
-    frame:SetSize( ScrW() / 3, 50 * #{ ... } + 15 * (#{ ... } - 1) )
-    frame:Center()
+    local args = { ... }
+
+    local frame, header, close = GNLib.CreateFrame( title, ScrW() / 5, 50 * #args + 30 * #args + 25 )
+        close:Remove()
 
     local W, H = frame:GetSize()
-    close:SetPos( W - 30, 5 )
-
     local textentries = {}
     if ... then 
-        for k, v in pairs( { ... } ) do
+        for i, v in ipairs( args ) do
             local textentry = vgui.Create( "GNTextEntry", frame )
-            textentry:SetPos( 15, 30 * k + 15 * (k - 1) )
-            textentry:SetWide( W - 30 )
+            textentry:SetPos( 15, 30 * i + 15 * ( i - 1 ) )
+            textentry:SetWide( W / 1.5 )
+            textentry:CenterHorizontal()
             textentry:SetColor( GNLib.Colors.Silver )
             textentry:SetHoveredColor( GNLib.Colors.Clouds )
 
@@ -97,29 +97,33 @@ function GNLib.DermaStringRequest( title, confirm_text, cancel_text, callback, .
         end
     end
 
-    local button = vgui.Create( "GNButton", frame )
-    button:SetPos( W / 2 - button:GetWide() - 15, H / 2 - button:GetTall() / 2 + H / 2.45 )
-    button:SetText( confirm_text )
-    button:SetColor( GNLib.Colors.Clouds )
-    button:SetHoveredColor( GNLib.Colors.Silver )
-    function button:DoClick()
-        frame:Remove()
-        
-        local values = {}
-        for k, v in pairs( textentries ) do 
-            if #v:GetValue() > 0 then table.insert( values, v:GetValue() ) else table.insert( values, v:GetPlaceholder() ) end
+    local accept_button = vgui.Create( "GNButton", frame )
+        accept_button:SetPos( W / 2 - accept_button:GetWide() - 15, H - accept_button:GetTall() - 7 )
+        accept_button:SetText( confirm_text )
+        accept_button:SetTextColor( color_white )
+        accept_button:SetHoveredTextColor( color_white )
+        accept_button:SetColor( GNLib.Colors.Emerald )
+        accept_button:SetHoveredColor( GNLib.Colors.Nephritis )
+        function accept_button:DoClick()
+            frame:Remove()
+            
+            local values = {}
+            for k, v in pairs( textentries ) do 
+                if #v:GetValue() > 0 then table.insert( values, v:GetValue() ) else table.insert( values, v:GetPlaceholder() ) end
+            end
+            if callback then callback( unpack( values ) ) end
         end
-        if callback then callback( unpack( values ) ) end
-    end
 
     local cancel_button = vgui.Create( "GNButton", frame )
-    cancel_button:SetPos( W / 2 + 15, H / 2 - cancel_button:GetTall() / 2 + H / 2.45 )
-    cancel_button:SetText( cancel_text )
-    cancel_button:SetColor( GNLib.Colors.Clouds )
-    cancel_button:SetHoveredColor( GNLib.Colors.Silver )
-    function cancel_button:DoClick()
-        frame:Remove()
-    end
+        cancel_button:SetPos( W / 2 + 15, H - cancel_button:GetTall() - 7 )
+        cancel_button:SetText( cancel_text )
+        cancel_button:SetTextColor( color_white )
+        cancel_button:SetHoveredTextColor( color_white )
+        cancel_button:SetColor( GNLib.Colors.Alizarin )
+        cancel_button:SetHoveredColor( GNLib.Colors.Pomegranate )
+        function cancel_button:DoClick()
+            frame:Remove()
+        end
 
     return frame
 end

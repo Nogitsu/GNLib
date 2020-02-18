@@ -51,6 +51,7 @@ function PANEL:Init()
 end
 
 function PANEL:PerformLayout( w, h )
+    if not IsValid( self.close ) then return end
     self.close:SetPos( w - self.close:GetWide(), self.header:GetTall() / 2 - self.close:GetTall() / 2 )
 end
 
