@@ -276,6 +276,8 @@ end
 --- @params:
 --- 	str: <string> Text to format
 --- 	args: <varargs> Args used to format
+--- @return:
+--- 	str: <string> Formated text
 --- @example:
 --- 	#prompt:
 --- 	#code: print( GNLib.Format( "I will {2} from your {1} !", "skull", "drink" ) )
@@ -286,6 +288,26 @@ function GNLib.Format( str, ... )
     for arg in str:gmatch( "%b{}" ) do
         local id = tonumber( arg:match( "%d+" ) )
         str = str:gsub( arg, args[id] or "nil" )
+    end
+
+    return str
+end
+
+--- @title:
+--- 	GNLib.FormatWithTable: <function> Format a text by index of the argument in the given table. Like `GNLib.Format`, brackets (`{}`) will be used to format the text and should contain the index of the argument.
+--- @params:
+--- 	str: <string> Text to format
+--- 	tbl: <table> Table with indexed arguments
+--- @return:
+--- 	str: <string> Formated text
+--- @example:
+--- 	#prompt: 
+--- 	#code: print( GNLib.FormatWithTable( "you are a {name} and a {gender} or {nul}", { "yo", name = "thicc boy", gender = "bOy" } ) )\n
+--- 	#output: "you are a thicc boy and a bOy or nil"
+function GNLib.FormatWithTable( str, tbl )
+    for k in str:gmatch( "%b{}" ) do
+        local v = tbl[k:gsub( "[{}]", "" )] or "nil"
+        str = str:gsub( k, v )
     end
 
     return str
