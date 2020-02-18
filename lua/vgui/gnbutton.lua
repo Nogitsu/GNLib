@@ -7,6 +7,9 @@ AccessorFunc( PANEL, "default_textcolor", "TextColor" )
 AccessorFunc( PANEL, "hovered_textcolor", "HoveredTextColor" )
 AccessorFunc( PANEL, "clicked_textcolor", "ClickedTextColor" )
 
+AccessorFunc( PANEL, "hide_left", "HideLeft" )
+AccessorFunc( PANEL, "hide_right", "HideRight" )
+
 function PANEL:Init()
     self:SetSize( 100, 25 )
     self:SetCursor( "hand" )
@@ -19,6 +22,9 @@ function PANEL:Init()
 
     self.hovered_color = GNLib.Colors.Amethyst
     --self.clicked_color = GNLib.Colors.Wisteria
+
+    self.hide_left = false
+    self.hide_right = false
 
     self.default_textcolor = GNLib.Colors.WetAsphalt
     self.hovered_textcolor = GNLib.Colors.MidnightBlue
@@ -55,7 +61,13 @@ end
 --  > Override existing
 function PANEL:Paint( w, h )
     GNLib.DrawStencil( function()
-        GNLib.DrawElipse( 0, 0, w, h, self:IsHovered() and self.hovered_color or self.color )
+        GNLib.DrawElipse( 0, 0, w, h, self:IsHovered() and self.hovered_color or self.color, self.hide_left, self.hide_right )
+        if self.hide_left then
+            draw.RoundedBoxEx( 0, 0, 0, h, h, self:IsHovered() and self.hovered_color or self.color )
+        end
+        if self.hide_right then
+            draw.RoundedBoxEx( 0, w - h, 0, h, h, self:IsHovered() and self.hovered_color or self.color )
+        end
     end, function()
         draw.RoundedBoxEx( 0, 0, 0, w, h, self:IsHovered() and self.hovered_color or self.color )
         if self:IsClicking() then

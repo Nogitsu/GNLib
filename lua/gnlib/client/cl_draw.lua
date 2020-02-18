@@ -646,6 +646,23 @@ function GNLib.DrawFunc( x, y, w, h, min_x, max_x, min_y, max_y, interval, fx, c
 end
 
 --  > Text
+function GNLib.GetLinesSize( text )
+	local lines = text:Split( "\n" )
+	local last_y = 0
+
+	local w = 0
+	local h = 0
+
+	for _, line in ipairs( lines ) do
+		local line_w, line_h = surface.GetTextSize( line )
+
+		w = math.max( w, line_w )
+		h = h + line_h
+	end
+
+	return w, h
+end
+
 function GNLib.DrawLines( text, x, y )
 	local lines = text:Split( "\n" )
 	local last_y = 0
