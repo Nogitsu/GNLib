@@ -306,7 +306,7 @@ end
 --- 	#output: "you are a thicc boy and a bOy or nil"
 function GNLib.FormatWithTable( str, tbl )
     for k in str:gmatch( "%b{}" ) do
-        local v = tbl[k:gsub( "[{}]", "" )] or "nil"
+        local v = tbl[tonumber( k:match( "%d+" ) ) or k:gsub( "[{}]", "" )] or "nil"
         str = str:gsub( k, v )
     end
 
