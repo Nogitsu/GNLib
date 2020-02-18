@@ -49,7 +49,7 @@ function GNLib.OpenAddonsList()
     local bug_target = 255
 
     function addon_infos:Paint( w, h )
-        GNLib.DrawRectGradient( 0, 0, w, h, GNLib.Colors.Concrete, GNLib.Colors.Silver, true )
+        GNLib.DrawRectGradient( 0, 0, w, h, true, GNLib.Colors.Concrete, GNLib.Colors.Silver )
 
         --GNLib.DrawTriangle( w / 2, h / 2, 50, 50, 50, Color( 255, 0, 0 ) )
 
@@ -134,7 +134,7 @@ function GNLib.OpenAddonsList()
             else
                 x = Lerp( FrameTime() * 5, x, w / 2 )
             end
-            GNLib.DrawRectGradient( x, 0, w, h, GNLib.Colors.MidnightBlue, second_col )
+            GNLib.DrawRectGradient( x, 0, w, h, false, GNLib.Colors.MidnightBlue, second_col )
 
             draw.SimpleText( ( v.name or "N/A" ), "GNLFontB15", 5, 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
             draw.SimpleText( ( v.author or "N/A" ) .. " | " .. ( v.lib_version or "N/A" ), "GNLFont15", 5, h - 10, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )

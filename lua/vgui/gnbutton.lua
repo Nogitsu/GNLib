@@ -17,12 +17,12 @@ function PANEL:Init()
 
     self.clicktime = 0
 
-    self.hovered_color = GNLib.Colors.Wisteria
-    self.clicked_color = GNLib.Colors.Amethyst
+    self.hovered_color = GNLib.Colors.Amethyst
+    --self.clicked_color = GNLib.Colors.Wisteria
 
-    self.default_textcolor = GNLib.Colors.MidnightBlue
-    self.hovered_textcolor = GNLib.Colors.WetAsphalt
-    self.clicked_textcolor = GNLib.Colors.WetAsphalt
+    self.default_textcolor = GNLib.Colors.WetAsphalt
+    self.hovered_textcolor = GNLib.Colors.MidnightBlue
+    --self.clicked_textcolor = GNLib.Colors.WetAsphalt
 end
 
 function PANEL:UpdateSize()
@@ -60,14 +60,14 @@ function PANEL:Paint( w, h )
         draw.RoundedBoxEx( 0, 0, 0, w, h, self:IsHovered() and self.hovered_color or self.color )
         if self:IsClicking() then
             local x, y = self:GetLastClickPos()
-            GNLib.DrawCircle( x, y, self.clicktime, 0, 360, self.clicked_color )
+            GNLib.DrawCircle( x, y, self.clicktime, 0, 360, self.clicked_color or self.color )
             self.clicktime = math.min( self.clicktime + FrameTime() * 1000, w )
         else
             self.clicktime = 0
         end
     end )
     
-    draw.SimpleText( self.text, self.font, w / 2, h / 2, self:IsClicking() and self.clicked_textcolor or self:IsHovered() and self.hovered_textcolor or self.default_textcolor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+    draw.SimpleText( self.text, self.font, w / 2, h / 2, self:IsClicking() and ( self.clicked_textcolor or self.default_textcolor ) or self:IsHovered() and self.hovered_textcolor or self.default_textcolor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 end
 
 vgui.Register( "GNButton", PANEL, "GNPanel" )
