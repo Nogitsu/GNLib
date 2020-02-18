@@ -90,8 +90,14 @@ function PANEL:OpenMenu()
     local W, H = self:GetSize()
 
     local parent_x, parent_y = 0, 0
-    if self:GetParent() then
-        parent_x, parent_y = self:GetParent():GetPos()
+    do 
+        local parent = self:GetParent()
+        while parent do
+            local x, y = parent:GetPos()
+            parent_x, parent_y = parent_x + x, parent_y + y
+
+            parent = parent:GetParent()
+        end
     end
 
     local x, y = self:GetPos()
@@ -107,40 +113,41 @@ function PANEL:OpenMenu()
 
     local y = 0
     local button_space = 10
-    local function addChoice( id, is_first, is_last, text, data, reseter )
+    local function add_choice( id, is_first, is_last, text, data, reseter )
         local hovered_color = reseter and GNLib.Colors.Pomegranate or self.hovered_color
         local default_color = reseter and GNLib.Colors.Alizarin or self.color
 
         local choice = self.Menu:Add( "DButton" )
-        choice:SetPos( button_space, y * self.self_h )
-        choice:SetWide( W - button_space * 2 ) 
-        choice:SetTall( self.self_h )
-        choice:SetText( "" )
-        choice.Paint = function( _self, w, h ) 
-            draw.RoundedBoxEx( 8, 0, 0, w, h, _self:IsHovered() and hovered_color or default_color, is_first, is_first, is_last, is_last )
+            choice:SetPos( button_space, y * self.self_h )
+            choice:SetWide( W - button_space * 2 ) 
+            choice:SetTall( self.self_h )
+            choice:SetText( "" )
+            choice.Paint = function( _self, w, h ) 
+                draw.RoundedBoxEx( 8, 0, 0, w, h, _self:IsHovered() and hovered_color or default_color, is_first, is_first, is_last, is_last )
 
-            draw.SimpleText( text, self.font, reseter and w / 2 or 10, h / 2, reseter and GNLib.Colors.Clouds or self.text_color, reseter and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )                
-        end
-        choice.DoClick = function()
-            if not reseter then
-                self:SetSelected( id )
-                self:OnSelect( id, text, data )
-            else
-                self:OnReset()
-                self.selected = nil
+                draw.SimpleText( text, self.font, reseter and w / 2 or 10, h / 2, reseter and GNLib.Colors.Clouds or self.text_color, reseter and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )                
+            end
+            choice.DoClick = function()
+                if not reseter then
+                    self:SetSelected( id )
+                    self:OnSelect( id, text, data )
+                else
+                    self:OnReset()
+                    self.selected = nil
+                end
+
+                self:CloseMenu()
             end
 
-            self:CloseMenu()
-        end
         y = y + 1
     end
 
     for i, v in ipairs( self.choices ) do
-        addChoice( i, i == 1, not self:GetReseter() and i == #self.choices or false, v.text, v.data, false )
+        add_choice( i, i == 1, not self:GetReseter() and i == #self.choices or false, v.text, v.data, false )
     end
 
     if self:GetReseter() then
-        addChoice( _, #self.choices == 0, true, "x", 0, true )
+        add_choice( _, #self.choices == 0, true, "x", 0, true )
     end
 end
 
