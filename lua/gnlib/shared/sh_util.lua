@@ -302,8 +302,8 @@ end
 --- 	str: <string> Formated text
 --- @example:
 --- 	#prompt: 
---- 	#code: print( GNLib.FormatWithTable( "you are a {name} and a {gender} or {nul}", { "yo", name = "thicc boy", gender = "bOy" } ) )\n
---- 	#output: "you are a thicc boy and a bOy or nil"
+--- 	#code: print( GNLib.FormatWithTable( "you are a {name} and a {gender} or {1}", { "a noob", name = "thicc boy", gender = "bOy" } ) )\n
+--- 	#output: "you are a thicc boy and a bOy or a noob"
 function GNLib.FormatWithTable( str, tbl )
     for k in str:gmatch( "%b{}" ) do
         local v = tbl[tonumber( k:match( "%d+" ) ) or k:gsub( "[{}]", "" )] or "nil"
