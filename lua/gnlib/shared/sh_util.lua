@@ -324,6 +324,8 @@ end
 --- 	#code: PrintTable( GNLib.TableShuffle( { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 } ) )
 --- 	#output: https://cdn.discordapp.com/attachments/638822462431166495/678566089411788820/unknown.png
 function GNLib.TableShuffle( tbl )
+    math.randomseed( os.time() )
+
     --  > set tempory sorting order and value
     local new_tbl = {}
     for i, v in ipairs( tbl ) do
@@ -341,4 +343,10 @@ function GNLib.TableShuffle( tbl )
     end
 
     return tbl
+end
+
+function GNLib.TableInsert( tab, value )
+    tab[ #tab + 1 ] = value
+
+    return tab
 end

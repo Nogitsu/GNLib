@@ -392,7 +392,7 @@ function GNLib.DrawOutlinedCircle( x, y, radius, thick, angle_start, angle_end, 
 
 	local min_ang = math.min( angle_start or 0, angle_end or 360 )
 
-	for t = 0, thick - 1 do
+	for t = 0, thick - 1, .5 do
 		local times = 0
 		local last_x, last_y = x + math.cos( math.rad( min_ang ) ) + radius, y + math.sin( math.rad( min_ang ) ) + radius
 		for i = min_ang, math.max( angle_start or 0, angle_end or 360 ) do
@@ -494,9 +494,9 @@ function GNLib.DrawRotated( x, y, w, h, rot, draw_func )
 	cam.PushModelMatrix( m )
 		draw_func( 0, 0, w, h )
 	cam.PopModelMatrix()
-	end
+end
 
-	function GNLib.DrawRectRotated( x, y, w, h, rot )
+function GNLib.DrawRectRotated( x, y, w, h, rot )
 	GNLib.DrawRotated( x, y, w, h, rot, surface.DrawRect )
 end
 

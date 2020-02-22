@@ -41,5 +41,5 @@ function GNLib.CreateFonts( name, font, sizes, options, noscale )
     return names
 end
 
-GNLib.CreateFonts( "GNLFont", "Caviar Dreams", { 10, 15, 20 } )
+GNLib.CreateFonts( "GNLFont", "Caviar Dreams", { 10, 12, 15, 20 } )
 GNLib.CreateFonts( "GNLFontB", "Caviar Dreams Bold", { 10, 13, 15, 17, 20, 40 } )
