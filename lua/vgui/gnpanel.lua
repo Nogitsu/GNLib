@@ -17,6 +17,7 @@ function PANEL:Init()
 
     self.enabled = true
     self.clicking = false
+    self.hovered = false
 
     self.last_click_x = 0
     self.last_click_y = 0
@@ -29,6 +30,10 @@ end
 
 function PANEL:IsClicking()
     return self.clicking
+end
+
+function PANEL:IsHovered()
+    return self.hovered
 end
 
 function PANEL:GetLastClickPos()
@@ -57,23 +62,25 @@ end
 
 function PANEL:OnMousePressed( key_code )
     if not self.enabled then return end
-    self:OnPressed()
     if MOUSE_LEFT == key_code then
-        self.clicking = true
         self.last_click_x, self.last_click_y = self:ScreenToLocal( gui.MousePos() )
+        
+        self.clicking = true
+        self:OnPressed()
     end
 end
 
 function PANEL:OnMouseReleased( key_code )
-    self:OnReleased()
     if self.clicking then
         self:DoClick()
-
+        
         self.clicking = false
+        self:OnReleased()
     end
 end
 
 function PANEL:OnMousePassed( hovered )
+    self.hovered = hovered
 end
 
 function PANEL:OnCursorExited()

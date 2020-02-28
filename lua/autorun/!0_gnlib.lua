@@ -1,5 +1,5 @@
 GNLib = GNLib or {}
-GNLib.Version = "v0.7.4"
+GNLib.Version = "v0.8.0"
 GNLib.Author = "Guthen & Nogitsu"
 GNLib.Desc = "Shared library for frequent uses."
 
@@ -16,7 +16,7 @@ function GNLib.Error( ... )
 	return error( "[GNLib] " .. ..., 2 )
 end
 
-local function IncludeSH( path )
+local function include_sh( path )
 	local search = path .. "/"
 	local files, folders = file.Find( search .. "*", "LUA" )
 
@@ -26,12 +26,12 @@ local function IncludeSH( path )
 	end
 
 	for k, v in pairs( folders ) do
-		IncludeSH( search .. v )
+		include_sh( search .. v )
 	end
 end
 
 
-local function IncludeSV( path )
+local function include_sv( path )
 	local search = path .. "/"
 	local files, folders = file.Find( search .. "*", "LUA" )
 
@@ -40,12 +40,12 @@ local function IncludeSV( path )
 	end
 
 	for k, v in pairs( folders ) do
-		IncludeSV( search .. v )
+		include_sv( search .. v )
 	end
 end
 
 
-local function IncludeCL( path )
+local function include_cl( path )
 	local search = path .. "/"
 	local files, folders = file.Find( search .. "*", "LUA" )
 
@@ -58,7 +58,7 @@ local function IncludeCL( path )
 	end
 
 	for k, v in pairs( folders ) do
-		IncludeCL( search .. v )
+		include_cl( search .. v )
 	end
 end
 
@@ -66,10 +66,10 @@ end
 
 local function load()
 	if SERVER then
-		IncludeSV( "gnlib/server" )
+		include_sv( "gnlib/server" )
 	end
-    IncludeCL( "gnlib/client" )
-    IncludeSH( "gnlib/shared" )
+    include_cl( "gnlib/client" )
+    include_sh( "gnlib/shared" )
 end
 
 concommand.Add( "gnlib_reload", load )
