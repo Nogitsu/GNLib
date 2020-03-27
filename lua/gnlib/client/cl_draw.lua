@@ -228,22 +228,28 @@ function GNLib.DrawShadowedIcon( x, y, mat_w, mat_h, mat, color, shadow_x, shado
 end
 
 --   > Drawing icons + text
-function GNLib.DrawIconText( text, font, x, y, color, mat, mat_w, mat_h, mat_color )
-	GNLib.DrawMaterial( mat, x, y, mat_w, mat_h, mat_color )
+function GNLib.DrawIconText( text, font, x, y, color, mat, mat_w, mat_h, mat_color, other_side )
+	local text_w = GNLib.GetTextSize( text, font )
 
-	draw.SimpleText( text, font, x + mat_w + 5, y + mat_h / 2, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
+	GNLib.DrawMaterial( mat, x + ( other_side and (text_w + 5) or 0 ), y, mat_w, mat_h, mat_color )
+
+	draw.SimpleText( text, font, x + ( other_side and 0 or (mat_w + 5) ), y + mat_h / 2, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER )
 end
 
-function GNLib.DrawIconTextOutlined( text, font, x, y, color, mat, mat_w, mat_h, mat_color, outline_color, outline_w )
-GNLib.DrawMaterial( mat, x, y, mat_w, mat_h, mat_color )
+function GNLib.DrawIconTextOutlined( text, font, x, y, color, mat, mat_w, mat_h, mat_color, outline_color, outline_w, other_side )
+	local text_w = GNLib.GetTextSize( text, font )
 
-  draw.SimpleTextOutlined( text, font, x + mat_w + 5, y + mat_h / 2, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, outline_w or .5, outline_color or Color( 0, 0, 0 ) )
+	GNLib.DrawMaterial( mat, x + ( other_side and (text_w + 5) or 0 ), y, mat_w, mat_h, mat_color )
+
+	draw.SimpleTextOutlined( text, font, x + ( other_side and 0 or (mat_w + 5) ), y + mat_h / 2, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, outline_w or .5, outline_color or Color( 0, 0, 0 ) )
 end
 
-function GNLib.DrawIconTextShadowed( text, font, x, y, color, mat, mat_w, mat_h, shadow_x, shadow_y, shadow_color )
-	GNLib.DrawShadowedIcon( x, y, mat_w, mat_h, mat, color_white, shadow_x, shadow_y, shadow_color )
+function GNLib.DrawIconTextShadowed( text, font, x, y, color, mat, mat_w, mat_h, shadow_x, shadow_y, shadow_color, other_side )
+	local text_w = GNLib.GetTextSize( text, font )
 
-	GNLib.SimpleTextShadowed( text, font, x + mat_w + 5, y + mat_h / 2, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, shadow_x, shadow_y, shadow_color )
+	GNLib.DrawShadowedIcon( x + ( other_side and (text_w + 5) or 0 ), y, mat_w, mat_h, mat, color_white, shadow_x, shadow_y, shadow_color )
+
+	GNLib.SimpleTextShadowed( text, font, x + ( other_side and 0 or (mat_w + 5) ), y + mat_h / 2, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, shadow_x, shadow_y, shadow_color )
 end
 
 --  > Draw filled circle
@@ -297,10 +303,14 @@ end
 --- 	#code: local W, H = 100, 25\n\nhook.Add( "HUDPaint", "GNLib:DrawCircle", function()\n\tGNLib.DrawElipse( ScrW() / 2 - W / 2, ScrH() / 2 - H / 2, W, H, GNLib.Colors.Alizarin )\nend )
 --- 	#output: 
 function GNLib.DrawElipse( x, y, w, h, color, hide_left, hide_right )
-	if not hide_left then
+	if hide_left then
+		draw.RoundedBox( 0, x, y, h / 2, h, color or color_white )
+	else
 		GNLib.DrawCircle( x + h / 2, y + h / 2, h / 2, 90, -90, color )
 	end
-	if not hide_right then
+	if hide_right then
+		draw.RoundedBox( 0, x + w - h / 2, y, h / 2, h, color or color_white )
+	else
 		GNLib.DrawCircle( x + w - h / 2, y + h / 2, h / 2, -90, 90, color )
 	end
 
