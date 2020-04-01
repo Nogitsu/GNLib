@@ -350,3 +350,7 @@ function GNLib.TableInsert( tab, value )
 
     return tab
 end
+
+function GNLib.TableToColor( tab )
+    return Color( tab.r or 255, tab.g or 255, tab.b or 255, tab.a or 255 )
+end
