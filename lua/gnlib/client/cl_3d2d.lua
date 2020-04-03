@@ -1,5 +1,5 @@
 local _origin, _ang, _scale
-local _key, _dist = KEY_E, 2.9 ^ 10
+local _key, _mouse_input, _dist = KEY_E, false, 2.9 ^ 10
 local panel_list = {}
 
 --  > Overwrite hovered function
@@ -127,7 +127,7 @@ local function check_click( panel )
 
     if not panel.DoClick or not panel.Hovered then return end
 
-    local is_click = input.IsKeyDown( _key )
+    local is_click = _mouse_input and input.IsMouseDown( _key ) or input.IsKeyDown( _key )
     if is_click then
         if not panel.Clicked then
             panel.Clicked = true
@@ -162,6 +162,11 @@ function GNLib.Is3D2DCursorInPanel( panel, cursor_x, cursor_y )
     --  > Collision check
     local x, y, w, h = get_absolute_bounds( panel )
     return x < cursor_x and y < cursor_y and cursor_x < x + w and cursor_y < y + h
+end
+
+function GNLib.Set3D2DInput( enum, mouse_input )
+    _key = enum
+    _mouse_input = mouse_input
 end
 
 function GNLib.Render3D2D( pos, ang, scale, func, key, dist )

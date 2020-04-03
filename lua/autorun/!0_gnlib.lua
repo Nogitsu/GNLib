@@ -1,5 +1,5 @@
 GNLib = GNLib or {}
-GNLib.Version = "v0.8.2"
+GNLib.Version = "v0.8.3"
 GNLib.Author = "Guthen & Nogitsu"
 GNLib.Desc = "Shared library for frequent uses."
 
@@ -68,8 +68,8 @@ local function load()
 	if SERVER then
 		include_sv( "gnlib/server" )
 	end
+	include_sh( "gnlib/shared" )
     include_cl( "gnlib/client" )
-    include_sh( "gnlib/shared" )
 end
 
 concommand.Add( "gnlib_reload", load )

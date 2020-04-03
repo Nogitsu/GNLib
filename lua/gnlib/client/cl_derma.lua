@@ -145,3 +145,11 @@ function GNLib.OpenURL( url )
 
     controller:SetHTML( browser )
 end
+
+concommand.Add( "gnlib_resetpanels", function() 
+    for i, v in ipairs( vgui.GetWorldPanel():GetChildren() ) do
+        if v:IsVisible() then
+            v:Remove()
+        end
+    end
+end )

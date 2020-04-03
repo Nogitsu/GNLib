@@ -1,4 +1,4 @@
-local gn_addons = gn_addons or {}
+local gn_addons = {}
 
 --  > Setter Functions
 http.Fetch( "https://raw.githubusercontent.com/Nogitsu/GNLib/master/certified_addons.json", function( data )
