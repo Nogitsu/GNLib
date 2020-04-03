@@ -16,3 +16,20 @@ function GNLib.SendHook( ply, name, ... )
         GNLib.WriteTable( {...} )
     net.Send( ply or player.GetAll() )
 end
+
+function GNLib.SpawnCar( car_class, pos, ang )
+    local car = list.Get( "Vehicles" )[ car_class ]
+    if not car then return end
+
+    local ent = ents.Create( "prop_vehicle_jeep" )
+
+    ent:SetModel( car.Model )
+    ent:SetKeyValue( "vehiclescript", car.KeyValues.vehiclescript )
+    ent:SetVehicleClass( car_class )
+
+    ent:SetPos( pos or Vector( 0, 0, 0 ) )
+    ent:SetAngles( ang or Angle( 0, 0, 0) )
+    ent:Spawn()
+
+    return ent
+end

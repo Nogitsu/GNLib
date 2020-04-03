@@ -31,6 +31,11 @@ function GNLib.PlaySoundCloud( url, callback )
     end )
 end
 
+function GNLib.GetTextSize( text, font )
+    surface.SetFont( font )
+    return surface.GetTextSize( text )
+end
+
 --  > Net receive for GNLib.SendHook server-side function
 net.Receive( "GNLib:NetHooks", function( len )
     local name = net.ReadString()
