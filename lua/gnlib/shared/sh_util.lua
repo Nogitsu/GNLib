@@ -360,7 +360,7 @@ end
 --- @note:
 --- 	Similary to Array.prototype.reduce in JavaScript
 --- @params:
---- 	tbl: <table> Array to reduce : should be an numeracly indexed table
+--- 	tbl: <table> Array to reduce : should be a numeracly indexed table
 --- 	reducer: <function> Reducer function, called on each element with arguments : (accumulator: <number> Initial value or last computed value; value: <number> Current value; index: <number> Current value index
 --- 	start_value=0: <number> Optional, start value of the accumulator
 --- @return:
@@ -377,4 +377,19 @@ function GNLib.ArrayReduce( tbl, reducer, start_value )
     end
 
     return accumulator
+end
+
+function GNLib.ArrayRandomValues( tbl, n_values )
+    local values = {}
+
+    local max_iterations, iterations = n_values * #tbl, 0
+    while #values < n_values do
+        local value = table.Random( tbl )
+        if not table.HasValue( values, value ) then values[#values + 1] = value end
+
+        iterations = iterations + 1
+        if iterations > max_iterations then break end
+    end
+
+    return values
 end
