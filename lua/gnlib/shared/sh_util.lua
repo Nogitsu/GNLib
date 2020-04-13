@@ -355,12 +355,26 @@ function GNLib.TableToColor( tab )
     return Color( tab.r or 255, tab.g or 255, tab.b or 255, tab.a or 255 )
 end
 
+--- @title:
+--- 	GNLib.ArrayReduce: <function> Reduces an array to a number
+--- @note:
+--- 	Similary to Array.prototype.reduce in JavaScript
+--- @params:
+--- 	tbl: <table> Array to reduce : should be an numeracly indexed table
+--- 	reducer: <function> Reducer function, called on each element with arguments : (accumulator: <number> Initial value or last computed value; value: <number> Current value; index: <number> Current value index
+--- 	start_value=0: <number> Optional, start value of the accumulator
+--- @return:
+--- 	accumulator: <number> Last computed value from the reducer
+--- @example:
+--- 	#prompt: Compute sum of elements in an array
+--- 	#code: local array = { 1, 2, 3, 4, 5, 6, 7, 8, 9 }\n\nlocal sum = GNLib.ArrayReduce( array, function( acc, value ) \n\treturn acc + value\nend )\n\nprint( "Sum of elements in the array : " .. sum )
+--- 	#output: Sum of elements in the array : 45
 function GNLib.ArrayReduce( tbl, reducer, start_value )
-    local value = start_value or 0
+    local accumulator = start_value or 0
 
-    for i, v in ipairs( tbl ) do
-        value = reducer( value, v, k )
+    for index, value in ipairs( tbl ) do
+        accumulator = reducer( accumulator, value, index )
     end
 
-    return value
+    return accumulator
 end
