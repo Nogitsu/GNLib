@@ -354,3 +354,13 @@ end
 function GNLib.TableToColor( tab )
     return Color( tab.r or 255, tab.g or 255, tab.b or 255, tab.a or 255 )
 end
+
+function GNLib.ArrayReduce( tbl, reducer, start_value )
+    local value = start_value or 0
+
+    for i, v in ipairs( tbl ) do
+        value = reducer( value, v, k )
+    end
+
+    return value
+end
