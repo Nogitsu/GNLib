@@ -173,5 +173,51 @@ function GNLib.OpenVGUIPanel()
         circle_image:SetOutline( true )
         circle_image:SetOutlineColor( GNLib.Colors.PeterRiver )
 
+    --  > gngrid
+    local grid = main:Add( "GNGrid" )
+        grid:SetPos( 100, 500 )
+        grid:SetSize( 300, 200 )
+        grid:SetGridSizes( 2, 6, 2 )
+
+    local function panel_paint_color( color )
+        return function( self, w, h )
+            draw.RoundedBox( 0, 0, 0, w, h, color )
+        end
+    end
+
+    local first_column = grid:AddColumn()
+        first_column.Paint = panel_paint_color( GNLib.Colors.Carrot )
+        first_column:SetPadding( 5 )
+        first_column:SetGridSizes( .5, 3, 1, 2 )
+        first_column:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.Alizarin )
+        first_column:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.Amethyst )
+        first_column:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.Emerald )
+        first_column:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.BelizeHole )
+
+    local second_column = grid:AddColumn()
+        second_column.Paint = panel_paint_color( GNLib.Colors.Concrete )
+        second_column:SetGridSizes( 2, 8 )
+        local first_row = second_column:AddRow()
+            first_row:SetGridSizes( 1, 5, 1 )
+            first_row.Paint = panel_paint_color( GNLib.Colors.Carrot )
+            first_row:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.Alizarin )
+            first_row:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.Amethyst )
+            first_row:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.BelizeHole )
+
+        local second_row = second_column:AddRow()
+            second_row.Paint = panel_paint_color( GNLib.Colors.BelizeHole )
+            second_row:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.Amethyst )
+
+            local second_row_column = second_row:AddColumn()
+                second_row_column:SetGridSizes( 8, 2 )
+                second_row_column.Paint = panel_paint_color( GNLib.Colors.Emerald )
+                second_row_column:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.MidnightBlue )
+                second_row_column:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.Alizarin )
+
+    local third_column = grid:AddColumn()
+        third_column:SetGridSizes( 3, 1 )
+        third_column.Paint = panel_paint_color( GNLib.Colors.Carrot )
+        third_column:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.Alizarin )
+        third_column:Add( "DPanel" ).Paint = panel_paint_color( GNLib.Colors.Amethyst )
 end
 concommand.Add( "gnlib_vgui", GNLib.OpenVGUIPanel )
