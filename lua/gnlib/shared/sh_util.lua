@@ -361,7 +361,7 @@ end
 --- 	Similary to Array.prototype.reduce in JavaScript
 --- @params:
 --- 	tbl: <table> Array to reduce : should be a numeracly indexed table
---- 	reducer: <function> Reducer function, called on each element with arguments : (accumulator: <number> Initial value or last computed value; value: <number> Current value; index: <number> Current value index
+--- 	reducer: <function> Reducer function, called on each element with arguments : accumulator (number) Initial value or last computed value; value (number) Current value; index (number) Current value index
 --- 	start_value=0: <number> Optional, start value of the accumulator
 --- @return:
 --- 	accumulator: <number> Last computed value from the reducer
