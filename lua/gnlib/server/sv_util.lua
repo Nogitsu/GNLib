@@ -21,7 +21,7 @@ function GNLib.SpawnCar( car_class, pos, ang )
     local car = list.Get( "Vehicles" )[ car_class ]
     if not car then return end
 
-    local ent = ents.Create( "prop_vehicle_jeep" )
+    local ent = ents.Create( car.Class )
 
     ent:SetModel( car.Model )
     ent:SetKeyValue( "vehiclescript", car.KeyValues.vehiclescript )
