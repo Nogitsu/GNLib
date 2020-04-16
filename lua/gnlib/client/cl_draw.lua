@@ -10,6 +10,10 @@ local color_black = Color( 0, 0, 0 )
 ---		h: <number> Height
 ---		vertical: <bool> Whenever the gradient is vertical or horizontal
 ---		colors: <varargs> Colors of the gradient
+--- @example:
+--- 	#prompt: Draw a rectangular gradient of white, red and orange colors at the center of your screen.
+--- 	#code: hook.Add( "HUDPaint", "GNLib:Test", function()\n\tGNLib.DrawRectGradient( ScrW() / 2, ScrH() / 2, 200, 50, false, color_white, GNLib.Colors.Alizarin, GNLib.Colors.Carrot )\nend )
+--- 	#output: https://media.discordapp.net/attachments/615186050423324674/700382809876856862/unknown.png
 function GNLib.DrawRectGradient( x, y, w, h, vertical, ... )
 	vertical = vertical or false
 
