@@ -25,6 +25,7 @@ function GNLib.SpawnCar( car_class, pos, ang )
 
     ent:SetModel( car.Model )
     ent:SetKeyValue( "vehiclescript", car.KeyValues.vehiclescript )
+    ent:SetKeyValue( "limitview", 0 )
     ent:SetVehicleClass( car_class )
 
     ent:SetPos( pos or Vector( 0, 0, 0 ) )
