@@ -17,47 +17,6 @@ end ]]
 PANEL.IsHovered = panel_is_hovered
 
 --  > locals functions
-local function get_absolute_bounds( panel )
-    --  > get absolute bounds (cause of Dock)
-    --[[ local dock = panel:GetDock()
-    if not ( dock == NODOCK ) then
-        local parent = panel:GetParent()
-
-        --  > calculate space with dock margin and padding
-        local space_left, space_top, space_right, space_bottom
-        do
-            local margin_left, margin_top, margin_right, margin_bottom = panel:GetDockMargin()
-            local padding_left, padding_top, padding_right, padding_bottom = parent:GetDockPadding() 
-            space_left, space_top, space_right, space_bottom = margin_left + padding_left, margin_top + padding_top, margin_right + padding_right, margin_bottom + padding_bottom
-        end
-
-        --  > calculate position and size
-        --  > TODO: fix x and width for LEFT and RIGHT docks
-        local parent_x, parent_y, parent_w, parent_h = get_absolute_bounds( parent )
-        local x, y, w, h
-
-        w = parent:GetWide() - space_left - space_right
-        h = ( dock == FILL and parent:GetTall() - space_top - space_bottom or panel:GetTall() )
-        x = parent_x + space_left
-        y = parent_y + ( dock == BOTTOM and parent_h - space_bottom - h or space_top )
-
-        return x, y, w, h
-    else
-        return panel:GetBounds()
-    end ]]
-    --  > add bounds from parents
-    local x, y, w, h = panel:GetBounds()
-
-    local parent = panel:GetParent()
-    while parent do
-        parent_x, parent_y = parent:GetPos()
-        x, y = x + parent_x, y + parent_y
-        parent = parent:GetParent()
-    end
-
-    return x, y, w, h
-end
-
 local function get_children( panel, add_self )
     local children = {}
     
@@ -160,7 +119,7 @@ function GNLib.Is3D2DCursorInPanel( panel, cursor_x, cursor_y )
     if not cursor_x or not cursor_y then return end
     
     --  > Collision check
-    local x, y, w, h = get_absolute_bounds( panel )
+    local x, y, w, h = GNLib.GetPanelAbsoluteBounds( panel )
     return x < cursor_x and y < cursor_y and cursor_x < x + w and cursor_y < y + h
 end
 
@@ -200,7 +159,7 @@ function GNLib.Draw3D2DPanel( panel )
         for i, v in ipairs( get_children( panel ) ) do
             print( v )
             print( "\tParent:", v:GetParent():GetName() )
-            print( "\tAbs Bounds:", get_absolute_bounds( v ) )
+            print( "\tAbs Bounds:", GNLib.GetPanelAbsoluteBounds( v ) )
             print( "\tBounds:", v:GetBounds() )
         end
     end ]]

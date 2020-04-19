@@ -28,35 +28,84 @@ function GNLib.CreateFrame( title, W, H, main_color, second_color )
     return frame, frame.header, frame.close
 end
 
-function GNLib.DermaMessage( title, text, button_text, callback )
+function GNLib.GetPanelAbsoluteBounds( panel )
+    --  > add bounds from parents
+    local x, y, w, h = panel:GetBounds()
+
+    local parent = panel:GetParent()
+    while parent do
+        parent_x, parent_y = parent:GetPos()
+        x, y = x + parent_x, y + parent_y
+        parent = parent:GetParent()
+    end
+
+    return x, y, w, h
+end
+
+function GNLib.DermaMessage( title, text, affirmative_text, callback, negative_text )
     title = title or "Title"
     text = text or "Text"
-    button_text = button_text or "OK"
+    affirmative_text = affirmative_text or "OK"
 
-    local frame, close = GNLib.CreateFrame( title )
-    frame:SetSize( ScrW() / 7, ScrH() / 7 )
-    frame:Center()
+    local frame, close = GNLib.CreateFrame( title, ScrW() * .2, ScrH() * .2 )
 
     local W, H = frame:GetSize()
     close:SetPos( W - 30, 5 )
 
     local label = vgui.Create( "DLabel", frame )
-    label:SetSize( W - 30, H - H / 4 )
-    label:SetPos( 15, 30 )
-    label:SetText( text )
-    label:SetFont( "GNLFontB15" )
-    label:SetAutoStretchVertical( true )
-    label:SetWrap( true )
+        label:Dock( TOP )
+        label:DockMargin( 10, 10, 10, 10 )
+        label:SetText( text )
+        label:SetFont( "GNLFontB15" )
+        label:SetAutoStretchVertical( true )
+        label:SetWrap( true )
 
-    local button = vgui.Create( "GNButton", frame )
-    button:SetPos( W / 2 - button:GetWide() / 2, H / 2 - button:GetTall() / 2 + H / 2.8 )
-    button:SetText( button_text )
-    button:SetColor( GNLib.Colors.Clouds )
-    button:SetHoveredColor( GNLib.Colors.Silver )
-    function button:DoClick()
-        frame:Remove()
-        if callback then callback() end
+    --  > buttons
+    local container = frame:Add( "DPanel" )
+        container:Dock( TOP )
+        container:DockMargin( 10, 0, 10, 0 )
+        container.Paint = function() end
+
+    local affirmative_button = container:Add( "GNButton" )
+        affirmative_button:Dock( LEFT )
+        --affirmative_button:DockMargin( 10, 10, 10, 10 )
+        affirmative_button:SetText( affirmative_text )
+        affirmative_button:SetColor( GNLib.Colors.Emerald )
+        affirmative_button:SetHoveredColor( GNLib.Colors.Nephritis )
+        affirmative_button:SetTextColor( GNLib.Colors.Clouds )
+        affirmative_button:SetHoveredTextColor( GNLib.Colors.Silver )
+        function affirmative_button:DoClick()
+            frame:Remove()
+            if callback then callback( true ) end
+        end
+
+    local negative_button
+    if negative_text then
+        negative_button = container:Add( "GNButton" )
+            negative_button:Dock( LEFT )
+            negative_button:DockMargin( 10, 0, 0, 0 )
+            negative_button:SetText( negative_text )
+            negative_button:SetColor( GNLib.Colors.Alizarin )
+            negative_button:SetHoveredColor( GNLib.Colors.Pomegranate )
+            negative_button:SetTextColor( GNLib.Colors.Clouds )
+            negative_button:SetHoveredTextColor( GNLib.Colors.Silver )
+            function negative_button:DoClick()
+                frame:Remove()
+                if callback then callback( false ) end
+            end
     end
+
+    timer.Simple( 0, function()
+        frame:SizeToChildren( false, true )
+        frame:SetTall( frame:GetTall() + 10 )
+
+        if negative_button then
+            affirmative_button:SetWide( container:GetWide() / 2 - 5 )
+            negative_button:SetWide( affirmative_button:GetWide() )
+        else
+            affirmative_button:SetWide( container:GetWide() )
+        end
+    end )
 
     return frame
 end
@@ -153,3 +202,26 @@ concommand.Add( "gnlib_resetpanels", function()
         end
     end
 end )
+
+--  > Make VGUI functions chaining
+
+--[[ local function chaining( tbl )
+    for k, v in pairs( tbl ) do
+        if k:StartWith( "Get" ) then return end
+        if isfunction( v ) then return end 
+
+        tbl[k] = function( self, ... )
+            v( ... )
+            return self
+        end
+    end
+end ]]
+
+--[[ local PANEL = FindMetaTable( "Panel" )
+GNLib.AddChaining( PANEL ) ]]
+
+--[[ local vgui_Register = vgui.Register
+function vgui.Register( class, tbl, base )
+    GNLib.AddChaining( tbl )
+    return vgui_Register( class, tbl, base )
+end  ]]
