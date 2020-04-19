@@ -76,7 +76,7 @@ function PANEL:Paint( w, h )
         draw.SimpleText( "OFF", self.font, right_pos, h / 2, self.text_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
     end
 
-    GNLib.DrawCircle( self.circle_x, h / 2, self.circle_r, _, _, self.color )
+    GNLib.DrawCircle( self.circle_x, h / 2, self.circle_r, nil, nil, self.color )
 
     return true
 end
