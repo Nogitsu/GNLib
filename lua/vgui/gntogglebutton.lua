@@ -83,17 +83,17 @@ end
 
 function PANEL:DoClick()
     self.toggle = not self.toggle
-    self:OnToggle( self.toggle )
+    self:OnToggled( self.toggle )
 end
 
 function PANEL:SetToggle( toggle )
     if not ( self.toggle == toggle ) then
         self.toggle = toggle
-        self:OnToggle( toggle )
+        self:OnToggled( toggle )
     end
 end
 
-function PANEL:OnToggle( toggle )
+function PANEL:OnToggled( toggle )
     --  > For overwrite
 end
 
