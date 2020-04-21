@@ -8,7 +8,7 @@ AccessorFunc( PANEL, "color_back_off", "ColorBackOff" )
 
 AccessorFunc( PANEL, "text_color", "TextColor" )
 
-AccessorFunc( PANEL, "toggled", "Toggled", FORCE_BOOL )
+AccessorFunc( PANEL, "toggle", "Toggle" )
 AccessorFunc( PANEL, "speed", "Speed", FORCE_NUMBER )
 
 AccessorFunc( PANEL, "circle_r", "CircleRadius", FORCE_NUMBER )
@@ -22,7 +22,7 @@ function PANEL:Init()
     --self:SetCursor( "hand" )
     self.first_time = true
 
-    self.toggled = false
+    self.toggle = false
     self.speed = 5
 
     self.show_text = false
@@ -48,14 +48,14 @@ function PANEL:Paint( w, h )
     local left_pos, right_pos = self:GetWide() * 0.25, self:GetWide() * 0.75
     
     local spd = FrameTime() * self.speed
-    if self.toggled and self.circle_x < right_pos then
+    if self.toggle and self.circle_x < right_pos then
 
         self.circle_x = Lerp( spd, self.circle_x, right_pos )
         self.color = GNLib.LerpColor( spd, self.color, self.color_on )
         self.color_back = GNLib.LerpColor( spd, self.color_back, self.color_back_on )
 
         self.first_time = false
-    elseif not self.toggled and self.circle_x > left_pos then
+    elseif not self.toggle and self.circle_x > left_pos then
 
         self.circle_x = Lerp( spd, self.circle_x, left_pos )
         self.color = GNLib.LerpColor( spd, self.color, self.color_off )
@@ -82,11 +82,18 @@ function PANEL:Paint( w, h )
 end
 
 function PANEL:DoClick()
-    self.toggled = not self.toggled
-    self:OnToggled( self.toggled )
+    self.toggle = not self.toggle
+    self:OnToggle( self.toggle )
 end
 
-function PANEL:OnToggled()
+function PANEL:SetToggle( toggle )
+    if not ( self.toggle == toggle ) then
+        self.toggle = toggle
+        self:OnToggle( toggle )
+    end
+end
+
+function PANEL:OnToggle( toggle )
     --  > For overwrite
 end
 
