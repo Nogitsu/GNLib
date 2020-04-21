@@ -2,7 +2,7 @@ local gn_addons = {}
 
 --  > Setter Functions
 http.Fetch( "https://raw.githubusercontent.com/Nogitsu/GNLib/master/certified_addons.json", function( data )
-    local certified = util.JSONToTable( data )
+    local certified = util.JSONToTable( data ) or {}
     for k, v in pairs( certified ) do
         v.certified = true
         gn_addons[ k ] = v
@@ -57,7 +57,7 @@ if SERVER then
         end
 
         http.Fetch( "https://raw.githubusercontent.com/Nogitsu/GNLib/master/certified_addons.json", function( data )
-            local certified = util.JSONToTable( data )
+            local certified = util.JSONToTable( data ) or {}
             for k, v in pairs( certified ) do
                 v.certified = true
                 gn_addons[ k ] = v
