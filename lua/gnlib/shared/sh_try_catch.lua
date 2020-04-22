@@ -52,7 +52,7 @@ end
 --- 	#output: https://cdn.discordapp.com/attachments/638822462431166495/702491514445496360/unknown.png
 local func
 function try( tbl )
-    func = isfunction( tbl[1] ) and tbl[1]
+    func = ( istable( tbl ) and ( isfunction( tbl[1] ) and tbl[1] ) ) or isfunction( tbl ) and tbl
 end
 
 --- @title:
@@ -68,8 +68,10 @@ end
 function catch( tbl )
     if not func then return error( "you must call 'try' before calling 'catch'", 2 ) end
 
+    local callback = ( istable( tbl ) and ( isfunction( tbl[1] ) and tbl[1] ) ) or isfunction( tbl ) and tbl
+
     local suc, err = pcall( func )
-    if not suc then tbl[1]( create_error_object( err ) ) end
+    if not suc then callback( create_error_object( err ) ) end
 
     func = nil
 end
