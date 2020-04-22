@@ -48,7 +48,7 @@ end
 --- 	tbl: <table> Should contain a function in the first index which will be called
 --- @example:
 --- 	#prompt: Try to perform arithmetic on a string value and catch the error.
---- 	#code: try {\n\tfunction()\n\t\tlocal lol = "hello mek" + 5\n\t\tprint( "lol = " .. lol )\n\tend\n}\ncatch {\n\tfunction( e )\n\t\tprint( "Error at line " .. e.line .. " : " .. e.message .. "\n" )\n\n\t\tprint( "Error structure :" )\n\t\tPrintTable( e )\n\tend\n}
+--- 	#code: try {\n\tfunction()\n\t\tlocal lol = "hello mek" + 5\n\t\tprint( "lol = " .. lol )\n\tend\n}\ncatch {\n\tfunction( e )\n\t\tprint( "Error at line " .. e.line .. " : " .. e.message .. "\\n" )\n\n\t\tprint( "Error structure :" )\n\t\tPrintTable( e )\n\tend\n}
 --- 	#output: https://cdn.discordapp.com/attachments/638822462431166495/702491514445496360/unknown.png
 local func
 function try( tbl )
