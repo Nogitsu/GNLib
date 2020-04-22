@@ -69,7 +69,7 @@ local function load()
 		include_sv( "gnlib/server" )
 	end
 	include_sh( "gnlib/shared" )
-    include_cl( "gnlib/client" )
+	include_cl( "gnlib/client" )
 end
 concommand.Add( "gnlib_reload", load )
 
@@ -85,4 +85,4 @@ http.Fetch( "https://raw.githubusercontent.com/Nogitsu/GNLib/master/lua/autorun/
 	else
 		print( ( "GNLib: Everything is okay, GNLib is at the last version (%s)" ):format( version ) )
 	end
-end ) 
+end )

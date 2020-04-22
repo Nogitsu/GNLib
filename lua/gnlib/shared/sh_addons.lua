@@ -87,7 +87,7 @@ function GNLib.CheckVersion( id, callback )
     if not GNLib.GetAddon( id ).version_check then
         GNLib.GetAddon( id ).last_version = GNLib.GetAddon( id ).version
     end
-  
+
     http.Fetch( GNLib.GetAddon( id ).version_check, function( data )
         GNLib.GetAddon( id ).last_version = data
 
