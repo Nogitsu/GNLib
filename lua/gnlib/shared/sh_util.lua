@@ -393,3 +393,42 @@ function GNLib.ArrayRandomValues( tbl, n_values )
 
     return values
 end
+
+--- @title:
+--- 	GNLib.GetPlayersByName: <function> Find all players who match with a specific name.
+--- @params:
+--- 	name: <string> Name to match
+--- 	exact_match=false: <bool> Whenever we get only the players who have the exact name
+--- @return:
+--- 	players: <table> All matched players
+--- @example:
+--- 	#prompt: Send a message to players who have the name "Guthen"
+--- 	#code: local name = "Guthen"\nlocal players = GNLib.GetPlayersByName( name, true )\n\nfor i, v in ipairs( players ) do\n\tv:ChatPrint( ( "You are '%s', welcome !" ):format( name ) )\nend
+--- 	#output: https://cdn.discordapp.com/attachments/638822462431166495/704015775890931722/unknown.png
+function GNLib.GetPlayersByName( name, exact_match )
+    local players = {}
+
+    for i, v in ipairs( player.GetAll() ) do
+        if exact_match and v:GetName() == name or not exact_match and v:GetName():StartWith( name ) then 
+            players[#players + 1] = v 
+        end
+    end
+
+    return players
+end
+
+--- @title:
+--- 	GNLib.IsValidSteamID: <function> Check if specified SteamID is a valid one
+--- @note:
+--- 	More informations about how SteamIDs work here : https://developer.valvesoftware.com/wiki/SteamID
+--- @params:
+--- 	steamid: <string> SteamID to check
+--- @return:
+--- 	valid_steamid: <bool> Whenever the SteamID is valid
+--- @example:
+--- 	#prompt: Check if a SteamID is valid, return false because of '6' which is not a valid 'universe' (belong to SteamID documentation)
+--- 	#code: print( GNLib.IsValidSteamID( "STEAM_6:1:1444444444" ) )
+--- 	#output: https://cdn.discordapp.com/attachments/638822462431166495/704017043447349308/unknown.png
+function GNLib.IsValidSteamID( steamid )
+    return steamid:find( "STEAM_[0-5]:[01]:%d+" ) and true or false
+end
