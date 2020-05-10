@@ -1,3 +1,24 @@
+--- @title:
+--- 	GNButton: <VGUI> Create a button
+--- @note:
+--- 	Parent: GNPanel
+--- @params:
+--- 	GNButton/SetPos( Position ): <function> Set the position of the button
+--- 	GNButton/SetSize( Size ): <function> Set the size of the button
+--- 	GNButton/SetText( Text ): <function> Set the text of the button
+--- 	GNButton/SetFont( Font name ): <function> Add the font name of the button
+--- 	GNButton/SetTextColor( Color ): <function> Add the text color of the button
+--- 	GNButton/SetColor( Color ): <function> Set the color of the button
+--- 	GNButton/SetHoveredColor( Color ): <function> Set the color of the button hovered
+--- 	GNButton/SetClickedColor( Color ): <function> Set the color of the button clicked
+--- 	GNButton/SetHoveredTextColor( Color ): <function> Set the color of the button text hovered
+--- 	GNButton/SetClickedTextColor( Color ): <function> Set the color of the button text clicked
+--- 	GNButton/SetHideLeft( Bool ): <function> Add the hide left of the button
+--- 	GNButton/SetHideRight( Bool ): <function> Add the hide right of the button
+--- @example:
+--- 	#prompt: Code from ...
+--- 	#code:  local join = vgui.Create("GNButton", main)\n	join:SetSize(ScrW()*0.1, ScrH()*0.05)\n	join:SetPos(ScrW()*0.04,ScrH()*0.07)\n	join:SetText("Yes")\n	join:SetFont("GNLFontB17")\n	join:SetTextColor(Color(255, 255, 255))\n	join:SetColor(GNLib.Colors.GreenSea)\n	join:SetHoveredColor(GNLib.Colors.GreenSea)\n	join:SetClickedColor(GNLib.Colors.GreenSea)\n	join:SetHoveredTextColor(GNLib.Colors.Clouds)\n	join:SetClickedTextColor(GNLib.Colors.Clouds)\n	join:SetHideLeft(true)\n	join:SetHideRight(false)
+--- 	#output: https://cdn.discordapp.com/attachments/644279406176501770/709065392152379462/unknown.png
 local PANEL = {}
 
 AccessorFunc( PANEL, "hovered_color", "HoveredColor" )
