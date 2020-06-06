@@ -45,19 +45,17 @@ GNLib.CreateFonts( "GNLFont", "Caviar Dreams", { 10, 12, 15, 20 } )
 GNLib.CreateFonts( "GNLFontB", "Caviar Dreams Bold", { 10, 13, 15, 17, 20, 40 } )
 
 GNLib.registered_fonts = GNLib.registered_fonts or {}
-function GNLib.RegisterFont( font, settings )
-    if GNLib.registered_fonts[ font ] then return end
-
+function GNLib.RegisterFont( font, name, settings )
     settings = settings or {}
     settings.size = 255
     settings.font = font
 
-    surface.CreateFont( "GNLib:Scale:" .. font, settings )
+    surface.CreateFont( "GNLib:Scale:" .. name, settings )
 
-    GNLib.registered_fonts[ font ] = true
+    GNLib.registered_fonts[ name ] = true
 end
 
-function GNLib.DrawScaledText( text, font, x, y, scale, color )
+function GNLib.DrawScaledText( text, font, x, y, scale, color, in3d2d )
     if not GNLib.registered_fonts[ font ] then GNLib.Error( "Trying to use unregistered font '" .. font .. "'" ) return end
 
     local mat = Matrix()
@@ -66,17 +64,29 @@ function GNLib.DrawScaledText( text, font, x, y, scale, color )
 
 	mat:Translate( Vector( x, y ) )
     mat:Scale( Vector( scale, scale, scale ) )
-    
-    render.PushFilterMag( TEXFILTER.ANISOTROPIC )
-	render.PushFilterMin( TEXFILTER.ANISOTROPIC )
 
-	cam.PushModelMatrix( mat )
-		surface.SetFont( "GNLib:Scale:" .. font )
-		surface.SetTextColor( color or color_white )
-		surface.SetTextPos( 0, 0 )
-		surface.DrawText( text or "" )
+	cam.PushModelMatrix( mat, in3d2d )
+        draw.SimpleText( text or "", "GNLib:Scale:" .. font, 0, 0, color or color_white )
     cam.PopModelMatrix()
-    
-    render.PopFilterMag()
-	render.PopFilterMin()
+end
+
+function GNLib.DrawOutlinedScaledText( text, font, x, y, scale, color, in3d2d, outline_thick, outline_color )
+    if not GNLib.registered_fonts[ font ] then GNLib.Error( "Trying to use unregistered font '" .. font .. "'" ) return end
+
+    local mat = Matrix()
+
+    scale = scale / 255
+
+	mat:Translate( Vector( x, y ) )
+    mat:Scale( Vector( scale, scale, scale ) )
+
+    cam.PushModelMatrix( mat, in3d2d )
+        for ox = -1, 1 do
+            for oy = -1, 1 do
+                draw.SimpleText( text or "", "GNLib:Scale:" .. font, ox * outline_thick * scale, oy * outline_thick * scale, outline_color or color_black )
+            end
+        end
+
+        draw.SimpleText( text or "", "GNLib:Scale:" .. font, 0, 0, color or color_white )
+    cam.PopModelMatrix()
 end
