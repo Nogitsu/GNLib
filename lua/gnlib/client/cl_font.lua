@@ -43,3 +43,40 @@ end
 
 GNLib.CreateFonts( "GNLFont", "Caviar Dreams", { 10, 12, 15, 20 } )
 GNLib.CreateFonts( "GNLFontB", "Caviar Dreams Bold", { 10, 13, 15, 17, 20, 40 } )
+
+GNLib.registered_fonts = GNLib.registered_fonts or {}
+function GNLib.RegisterFont( font, settings )
+    if GNLib.registered_fonts[ font ] then return end
+
+    settings = settings or {}
+    settings.size = 255
+    settings.font = font
+
+    surface.CreateFont( "GNLib:Scale:" .. font, settings )
+
+    GNLib.registered_fonts[ font ] = true
+end
+
+function GNLib.DrawScaledText( text, font, x, y, scale, color )
+    if not GNLib.registered_fonts[ font ] then GNLib.Error( "Trying to use unregistered font '" .. font .. "'" ) return end
+
+    local mat = Matrix()
+
+    scale = scale / 255
+
+	mat:Translate( Vector( x, y ) )
+    mat:Scale( Vector( scale, scale, scale ) )
+    
+    render.PushFilterMag( TEXFILTER.ANISOTROPIC )
+	render.PushFilterMin( TEXFILTER.ANISOTROPIC )
+
+	cam.PushModelMatrix( mat )
+		surface.SetFont( "GNLib:Scale:" .. font )
+		surface.SetTextColor( color or color_white )
+		surface.SetTextPos( 0, 0 )
+		surface.DrawText( text or "" )
+    cam.PopModelMatrix()
+    
+    render.PopFilterMag()
+	render.PopFilterMin()
+end
