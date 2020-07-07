@@ -472,9 +472,10 @@ function GNLib.DrawRoundedRect( corner_radius, x, y, w, h, color )
 end
 
 local blur = Material( "pp/blurscreen" )
-function GNLib.DrawBlur( x, y, w, h, amount )
+function GNLib.DrawBlur( x, y, w, h, amount, off_x, off_y )
 	amount = amount or 6
-
+   off_x = off_x or 0
+   off_y = off_y or 0
 	surface.SetDrawColor( color_white )
 	surface.SetMaterial( blur )
 
@@ -484,7 +485,7 @@ function GNLib.DrawBlur( x, y, w, h, amount )
 
 		render.UpdateScreenEffectTexture()
 		render.SetScissorRect( x, y, x + w, y + h, true )
-		surface.DrawTexturedRect( 0, 0, ScrW(), ScrH() )
+		surface.DrawTexturedRect( off_x, off_y, ScrW(), ScrH() )
 		render.SetScissorRect( 0, 0, 0, 0, false )
 	end
 end
