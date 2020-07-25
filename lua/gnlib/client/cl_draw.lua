@@ -272,17 +272,19 @@ end
 --- 	#output: 
 function GNLib.DrawCircle( x, y, radius, angle_start, angle_end, color )
 	local poly = {}
-	table.insert( poly, { x = x, y = y } )
-
-	for i = math.min( angle_start or 0, angle_end or 360 ), math.max( angle_start or 0, angle_end or 360 ) do
+	angle_start = angle_start or 0
+	angle_end   = angle_end   or 360
+	
+	poly[1] = { x = x, y = y }
+	for i = math.min( angle_start, angle_end ), math.max( angle_start, angle_end ) do
 		local a = math.rad( i )
-		if ( angle_start or 0 ) < 0 then
-			table.insert( poly, { x = x + math.cos( a ) * radius, y = y + math.sin( a ) * radius } )
+		if angle_start < 0 then
+			poly[#poly + 1] = { x = x + math.cos( a ) * radius, y = y + math.sin( a ) * radius }
 		else
-			table.insert( poly, { x = x - math.cos( a ) * radius, y = y - math.sin( a ) * radius } )
+			poly[#poly + 1] = { x = x - math.cos( a ) * radius, y = y - math.sin( a ) * radius }
 		end
 	end
-	table.insert( poly, { x = x, y = y } )
+	poly[#poly + 1] = { x = x, y = y }
 
 	draw.NoTexture()
 	surface.SetDrawColor( color or color_white )
