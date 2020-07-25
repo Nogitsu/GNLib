@@ -291,45 +291,6 @@ function GNLib.DrawCircle( x, y, radius, angle_start, angle_end, color )
 	return poly
 end
 
---- @title:
---- 	GNLib.DrawOutlinedCircle: <function> Draw an outlined circle with given coordinates, radius, thickness and angles
---- @params:
---- 	x: <number> Origin's X
---- 	y: <number> Origin's Y
---- 	radius: <number> Radius of the circle
---- 	thick: <number> Thickness of the circle
---- 	angle_start: <number> (optional) Start angle of the circle
---- 	angle_end: <number> (optional) End angle of the circle
---- 	color: <Color> (optional) Color of the circle
---- @example:
---- 	#prompt: Draw a white half-circle of radius 100px and thickness 10px on middle of the screen
---- 	#code: hook.Add( "HUDPaint", "GNLib:DrawOutlinedCircle", function()\n\tGNLib.DrawCircle( ScrW() / 2, ScrH() / 2, 100, 0, 180 )\nend )\n
---- 	#output: 
-function GNLib.DrawOutlinedCircle( x, y, radius, thick, angle_start, angle_end, color )    
-    local start = math.rad( angle_start )
-    local last_ox, last_oy = x - math.cos( start ) * radius, y - math.sin( start ) * radius
-    local last_ix, last_iy = x - math.cos( start ) * ( radius - thick ), y - math.sin( start ) * ( radius - thick )
-
-    for i = math.min( angle_start or 0, angle_end or 360 ), math.max( angle_start or 0, angle_end or 360 ) do
-        local a = math.rad( i )
-
-        local ox, oy = x - math.cos( a ) * radius, y - math.sin( a ) * radius
-        local ix, iy = x - math.cos( a ) * ( radius - thick ), y - math.sin( a ) * ( radius - thick )
-        
-        draw.NoTexture()
-        surface.SetDrawColor( color or color_white )
-        surface.DrawPoly( {
-            { x = last_ox, y = last_oy },
-            { x = ox, y = oy },
-            { x = ix, y = iy },
-            { x = last_ix, y = last_iy },
-        } )
-
-        last_ox, last_oy = ox, oy
-        last_ix, last_iy = ix, iy
-    end
-end
-
 --  > Draw ellipse with half-circle
 --- @title:
 --- 	GNLib.DrawElipse: <function> Draw an elipse with given coordinates
@@ -438,33 +399,44 @@ function GNLib.DrawOutlinedBox( x, y, w, h, thick, color )
 	end
 end
 
-function GNLib.DrawOutlinedCircle( x, y, radius, thick, angle_start, angle_end, color )
-	surface.SetDrawColor( color or color_white )
 
-	local corrector = 0
+--- @title:
+--- 	GNLib.DrawOutlinedCircle: <function> Draw an outlined circle with given coordinates, radius, thickness and angles
+--- @params:
+--- 	x: <number> Origin's X
+--- 	y: <number> Origin's Y
+--- 	radius: <number> Radius of the circle
+--- 	thick: <number> Thickness of the circle
+--- 	angle_start: <number> (optional) Start angle of the circle
+--- 	angle_end: <number> (optional) End angle of the circle
+--- 	color: <Color> (optional) Color of the circle
+--- @example:
+--- 	#prompt: Draw a white half-circle of radius 100px and thickness 10px on middle of the screen
+--- 	#code: hook.Add( "HUDPaint", "GNLib:DrawOutlinedCircle", function()\n\tGNLib.DrawCircle( ScrW() / 2, ScrH() / 2, 100, 0, 180 )\nend )\n
+--- 	#output: 
+function GNLib.DrawOutlinedCircle( x, y, radius, thick, angle_start, angle_end, color )    
+    local start = math.rad( angle_start )
+    local last_ox, last_oy = x - math.cos( start ) * radius, y - math.sin( start ) * radius
+    local last_ix, last_iy = x - math.cos( start ) * ( radius - thick ), y - math.sin( start ) * ( radius - thick )
 
-	local min_ang = math.min( angle_start or 0, angle_end or 360 )
+    for i = math.min( angle_start or 0, angle_end or 360 ), math.max( angle_start or 0, angle_end or 360 ) do
+        local a = math.rad( i )
 
-	for t = 0, thick - 1, .5 do
-		local times = 0
-		local last_x, last_y = x + math.cos( math.rad( min_ang ) ) + radius, y + math.sin( math.rad( min_ang ) ) + radius
-		for i = min_ang, math.max( angle_start or 0, angle_end or 360 ) do
-			local a = math.rad( i )
-			local cur_x, cur_y = 0, 0
-			if ( angle_start or 0 ) < 0 then
-				cur_x = x + math.cos( a ) * ( radius + t )
-				cur_y = y + math.sin( a ) * ( radius + t )
-			else
-				cur_x = x - math.cos( a ) * ( radius + t )
-				cur_y = y - math.sin( a ) * ( radius + t )
-			end
-			surface.DrawLine( ( times > 0 and last_x or cur_x ), ( times > 0 and last_y or cur_y ), cur_x, cur_y )
+        local ox, oy = x - math.cos( a ) * radius, y - math.sin( a ) * radius
+        local ix, iy = x - math.cos( a ) * ( radius - thick ), y - math.sin( a ) * ( radius - thick )
+        
+        draw.NoTexture()
+        surface.SetDrawColor( color or color_white )
+        surface.DrawPoly( {
+            { x = last_ox, y = last_oy },
+            { x = ox, y = oy },
+            { x = ix, y = iy },
+            { x = last_ix, y = last_iy },
+        } )
 
-			last_x = cur_x
-			last_y = cur_y
-			times = times + 1
-		end
-	end
+        last_ox, last_oy = ox, oy
+        last_ix, last_iy = ix, iy
+    end
 end
 
 function GNLib.DrawLine( x, y, target_x, target_y, color )
