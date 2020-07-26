@@ -441,6 +441,34 @@ function GNLib.DrawOutlinedCircle( x, y, radius, thick, angle_start, angle_end, 
     end
 end
 
+function GNLib.DrawGradientOutlinedCircle( x, y, radius, thick, angle_start, angle_end, color1, color2 )
+	color1 = color1 or GNLib.Colors.MidnightBlue
+	color2 = color2 or GNLib.Colors.WetAsphalt
+
+    local start = math.rad( angle_start )
+    local last_ox, last_oy = x - math.cos( start ) * radius, y - math.sin( start ) * radius
+    local last_ix, last_iy = x - math.cos( start ) * ( radius - thick ), y - math.sin( start ) * ( radius - thick )
+
+    for i = math.min( angle_start or 0, angle_end or 360 ), math.max( angle_start or 0, angle_end or 360 ) do
+        local a = math.rad( i )
+
+        local ox, oy = x - math.cos( a ) * radius, y - math.sin( a ) * radius
+        local ix, iy = x - math.cos( a ) * ( radius - thick ), y - math.sin( a ) * ( radius - thick )
+        
+        draw.NoTexture()
+        surface.SetDrawColor( GNLib.LerpColor( i / angle_end, color1, color2 ) )
+        surface.DrawPoly( {
+            { x = last_ox, y = last_oy },
+            { x = ox, y = oy },
+            { x = ix, y = iy },
+            { x = last_ix, y = last_iy },
+        } )
+
+        last_ox, last_oy = ox, oy
+        last_ix, last_iy = ix, iy
+    end
+end
+
 function GNLib.DrawLine( x, y, target_x, target_y, color )
 	surface.SetDrawColor( color or color_white )
 	surface.DrawLine( x, y, target_x, target_y )
