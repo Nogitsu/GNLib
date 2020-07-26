@@ -456,7 +456,7 @@ function GNLib.DrawGradientOutlinedCircle( x, y, radius, thick, angle_start, ang
         local ix, iy = x - math.cos( a ) * ( radius - thick ), y - math.sin( a ) * ( radius - thick )
         
         draw.NoTexture()
-        surface.SetDrawColor( GNLib.LerpColor( i / angle_end, color1, color2 ) )
+        surface.SetDrawColor( GNLib.LerpColor( ( i - angle_start ) / ( angle_end - angle_start ), color1, color2 ) )
         surface.DrawPoly( {
             { x = last_ox, y = last_oy },
             { x = ox, y = oy },
