@@ -2,6 +2,12 @@ function GNLib.IsInCircle( x, y, circle_x, circle_y, circle_radius )
     return math.Distance( x, y, circle_x, circle_y ) <= circle_radius
 end
 
+function GNLib.GetAroundCircle( x, y, radius, ang )
+    local rad = math.rad( ang )
+    
+    return x + math.cos( rad ) * radius, y + math.sin( rad ) * radius
+end
+
 function GNLib.CalculateF( f, x )
   local fx = string.Replace( f, "x", x )
   local result = CompileString( "return " .. fx, "CalculatingF(x)" )
