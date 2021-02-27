@@ -1,3 +1,20 @@
+--- @title:
+--- 	GNPanel: <Panel> Base GNLib panel used as a parent for other VGUIs such as GNButton.
+--- @note:
+--- 	Parent: DFrame
+--- @params:
+--- 	GNPanel/SetColor( Color color ): <function> Set panel color
+--- 	GNPanel/GetColor(): <function> Get panel color
+--- 	GNPanel/SetDefaultCursor( string cursor ): <function> Set panel cursor (https://wiki.facepunch.com/gmod/Cursors) 
+--- 	GNPanel/GetDefaultCursor(): <function> Get panel cursor
+--- 	GNPanel/IsClicking(): <function> Return if the panel is clicked
+--- 	GNPanel/IsHovered(): <function> Return if the panel is hovered
+--- 	GNPanel/GetLastClickPos(): <function> Return the X and Y-position of the last click
+--- 	GNPanel/SetEnabled( boolean bool ): <function> Set if the panel is enabled or disabled (it mainly change the cursor) 
+--- 	GNPanel/IsEnabled(): <function> Return if the panel is enabled
+--- 	GNPanel/DoClick(): <function/event> Called on click
+--- 	GNPanel/OnPressed(): <function/event> Called on left mouse button press
+--- 	GNPanel/OnReleased(): <function/event> Called on left mouse button release
 local PANEL = {}
 
 AccessorFunc( PANEL, "color", "Color" )
