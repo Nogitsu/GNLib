@@ -1,24 +1,7 @@
---  > create an enum table
---[[ local function enum( ... )
-    local tbl = {}
 
-    for i, v in ipairs( { ... } ) do
-        tbl[v] = i
-    end
-
-    return tbl
-end
-
-local Exception = enum( "BAD_ARGUMENT", "NULL_ENTITY", "ARITHMETIC", "CONCATENATE" ) ]]
 local function create_error_object( err )
     --  > match error path, line and message
     local path, line, message = err:match( "^([%w/_-]+.lua):(%d+):%s?(.+)" )
-
-    --  > get error type from enum (if exists of course)
-    --[[ local tpe
-    for k, v in pairs( Exception ) do
-        if err:lower():find( k:lower():gsub( "_", " " ) ) then tpe = v end
-    end ]]
     
     --  > sometimes, the error is different from what we waited, so :
     local tip
@@ -41,32 +24,32 @@ end
 
 --  > try-catch functions
 --- @title:
---- 	try: <function> Must be called before a call to the 'catch' function. Allow to execute code with error handling. See 'catch' function for more details.
+--- 	GNLib.Try: <function> Must be called before a call to the 'catch' function. Allow to execute code with error handling. See 'GNLib.Catch' function for more details.
 --- @note:
 --- 	Similar to 'try-catch' blocks from other languages like C#, JavaScript, etc.
 --- @params:
 --- 	tbl: <table> Should contain a function in the first index which will be called
 --- @example:
 --- 	#prompt: Try to perform arithmetic on a string value and catch the error.
---- 	#code: try {\n\tfunction()\n\t\tlocal lol = "hello mek" + 5\n\t\tprint( "lol = " .. lol )\n\tend\n}\ncatch {\n\tfunction( e )\n\t\tprint( "Error at line " .. e.line .. " : " .. e.message .. "\\n" )\n\n\t\tprint( "Error structure :" )\n\t\tPrintTable( e )\n\tend\n}
+--- 	#code: GNLib.Try {\n\tfunction()\n\t\tlocal lol = "hello mek" + 5\n\t\tprint( "lol = " .. lol )\n\tend\n}\nGNLib.Catch {\n\tfunction( e )\n\t\tprint( "Error at line " .. e.line .. " : " .. e.message .. "\\n" )\n\n\t\tprint( "Error structure :" )\n\t\tPrintTable( e )\n\tend\n}
 --- 	#output: https://cdn.discordapp.com/attachments/638822462431166495/702491514445496360/unknown.png
 local func
-function try( tbl )
+function GNLib.Try( tbl )
     func = ( istable( tbl ) and ( isfunction( tbl[1] ) and tbl[1] ) ) or isfunction( tbl ) and tbl
 end
 
 --- @title:
---- 	catch: <function> Must be called after a call to the 'try' function. Allow to handle error from the given function in the 'try' in a function.
+--- 	GNLib.Catch: <function> Must be called after a call to the 'GNLib.Try' function. Allow to handle error from the given function in the 'GNLib.Try' in a function.
 --- @note:
---- 	Similar to 'try-catch' blocks from other languages like C#, JavaScript, etc. Errors from a 'return' statement from the given function in 'try' can return a weird error object.
+--- 	Similar to 'try-catch' blocks from other languages like C#, JavaScript, etc. Errors from a 'return' statement from the given function in 'GNLib.Try' can return a weird error object.
 --- @params:
 --- 	tbl: <table> Should contain a function in the first index which will be called with the error object.
 --- @example:
---- 	#prompt: See example from 'try' function.
+--- 	#prompt: See example from 'GNLib.Try' function.
 --- 	#code:
 --- 	#output:
-function catch( tbl )
-    if not func then return error( "you must call 'try' before calling 'catch'", 2 ) end
+function GNLib.Catch( tbl )
+    if not func then return error( "you must call 'GNLib.Try' before calling 'GNLib.Catch'", 2 ) end
 
     local callback = ( istable( tbl ) and ( isfunction( tbl[1] ) and tbl[1] ) ) or isfunction( tbl ) and tbl
 
