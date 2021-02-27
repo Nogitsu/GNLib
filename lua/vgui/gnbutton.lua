@@ -1,3 +1,30 @@
+--- @title:
+--- 	GNButton: <Panel> Standard GNLib button in a rounded rectangle shape and animated on click. It also has an auto-size update on text and font change. 
+--- @note:
+--- 	Parent: GNPanel
+--- @params:
+--- 	GNButton/SetText( string text ): <function> Set button's text
+--- 	GNButton/GetText(): <function> Get button's text
+--- 	GNButton/SetFont( string font ): <function> Set button's font
+--- 	GNButton/GetFont(): <function> Get button's font
+--- 	GNButton/SetHoveredColor( Color color ): <function> Set color when hovered
+--- 	GNButton/GetHoveredColor(): <function> Get color when hovered 
+--- 	GNButton/SetClickedColor( Color color ): <function> Set color when clicked
+--- 	GNButton/GetClickedColor(): <function> Get color when clicked
+--- 	GNButton/SetTextColor( Color color ): <function> Set text color
+--- 	GNButton/GetTextColor(): <function> Get text color
+--- 	GNButton/SetHoveredTextColor( Color color ): <function> Set text color when hovered
+--- 	GNButton/GetHoveredTextColor(): <function> Get text color when hovered
+--- 	GNButton/SetClickedTextColor( Color color ): <function> Set text color when clicked
+--- 	GNButton/GetClickedTextColor( Color color ): <function> Get text color when clicked
+--- 	GNButton/SetHideLeft( boolean hide ): <function> Set if the left rounded part is to be shown.
+--- 	GNButton/GetHideLeft(): <function> Get if the left rounded part is to be shown.
+--- 	GNButton/SetHideRight( boolean hide ): <function> Set if the right rounded part is to be shown.
+--- 	GNButton/GetHideRight(): <function> Get if the right rounded part is to be shown.
+--- @example:
+--- 	#prompt: Code from gngames/matchmaking/cl_matchmaking.lua
+--- 	#code: local open = panel:Add( "GNButton" )\nopen:SetText( "Friends" )\nopen:SetTextColor( color_white )\nopen:SetHoveredTextColor( color_white )\nopen:SetColor( GNLib.Colors.Turquoise )\nopen:SetHoveredColor( GNLib.Colors.GreenSea )\nopen:SetHideLeft( true )\nfunction open:DoClick()\n\t-- some code here\nend
+--- 	#output: https://media.discordapp.net/attachments/638822462431166495/815226165555101756/unknown.png
 local PANEL = {}
 
 AccessorFunc( PANEL, "hovered_color", "HoveredColor" )
@@ -7,8 +34,8 @@ AccessorFunc( PANEL, "default_textcolor", "TextColor" )
 AccessorFunc( PANEL, "hovered_textcolor", "HoveredTextColor" )
 AccessorFunc( PANEL, "clicked_textcolor", "ClickedTextColor" )
 
-AccessorFunc( PANEL, "hide_left", "HideLeft" )
-AccessorFunc( PANEL, "hide_right", "HideRight" )
+AccessorFunc( PANEL, "hide_left", "HideLeft", FORCE_BOOL )
+AccessorFunc( PANEL, "hide_right", "HideRight", FORCE_BOOL )
 
 function PANEL:Init()
     self:SetSize( 100, 25 )
@@ -36,8 +63,8 @@ function PANEL:UpdateSize()
     local tw, th = surface.GetTextSize( self.text or "" )
     self:SetSize( math.max( self:GetWide(), tw + 25 ), math.max( self:GetTall(), th + 4 ) )
 end    
---  > Change size on font and text update
 
+--  > Change size on font and text update
 function PANEL:SetText( text )
     self.text = text
 
