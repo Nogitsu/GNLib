@@ -66,17 +66,19 @@ function PANEL:Paint( w, h )
         surface.DrawLine( x_pos, y_pos - 8, x_pos, y_pos + 8 )
     end
 
-    --  > Style    
-    surface.DrawLine( 4, title_height / 2, 8, title_height / 2 )
-    surface.DrawLine( title_width + 14, title_height / 2, w - 4, title_height / 2 )
-    surface.DrawLine( 3, h - 1, w - 4, h - 1 )
-    surface.DrawLine( 0, title_height / 2 + 4, 0, h - 4 )
-    surface.DrawLine( w - 1, title_height / 2 + 4, w - 1, h - 4 )
+    --  > Style
+    --  > Title
+    surface.DrawLine( 3, title_height / 2, 8, title_height / 2 ) --  > Left
+    surface.DrawLine( title_width + 14, title_height / 2, w - 4, title_height / 2 ) --  > Right
 
-    GNLib.DrawOutlinedCircle( 4, title_height / 2 + 4, 4, 1, -90, -180, color )
-    GNLib.DrawOutlinedCircle( 4, h - 4, 4, 1, -270, -180, color )
-    GNLib.DrawOutlinedCircle( w - 4, title_height / 2 + 4, 4, 1, -90, 0, color )
-    GNLib.DrawOutlinedCircle( w - 4, h - 4, 4, 1, 180, 270, color )
+    surface.DrawLine( 3, h - 1, w - 4, h - 1 ) --  > Bottom
+    surface.DrawLine( 0, title_height / 2 + 3, 0, h - 4 ) --  > Left
+    surface.DrawLine( w - 1, title_height / 2 + 3, w - 1, h - 4 ) --  > Right
+
+    GNLib.DrawOutlinedCircle( 4, title_height / 2 + 4, 4, 1, 0, 90, color ) --  > Top-Left
+    GNLib.DrawOutlinedCircle( 4, h - 4, 4, 1, -90, 0, color )  --  > Bottom-Left
+    GNLib.DrawOutlinedCircle( w - 4, title_height / 2 + 4, 4, 1, -270, -180, color ) --  > Top-Right
+    GNLib.DrawOutlinedCircle( w - 4, h - 4, 4, 1, 180, 270, color ) --  > Bottom-Right
 
     return true
 end
