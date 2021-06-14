@@ -80,7 +80,7 @@ end
 function PANEL:OnMousePressed( key_code )
     if not self.enabled then return end
     if MOUSE_LEFT == key_code then
-        self.last_click_x, self.last_click_y = self:ScreenToLocal( gui.MousePos() )
+        self.last_click_x, self.last_click_y = self:LocalCursorPos()
         
         self.clicking = true
         self:OnPressed()
