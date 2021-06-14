@@ -45,10 +45,9 @@ function PANEL:Paint( w, h )
         end, function() 
             drawMat( self, w, h )
             if self.outline then
-                GNLib.DrawOutlinedCircle( w / 2, h / 2, h / 2 - self.outline_thick, self.outline_thick * 2, 0, 360, self.outline_color )
+                GNLib.DrawOutlinedCircle( w / 2, h / 2, h / 2, self.outline_thick, 0, 360, self.outline_color )
             end
         end )
-        return
     elseif self.rounded then
         GNLib.DrawStencil( function()
             GNLib.DrawRoundedRect( self.rounded, 0, 0, w, h, color_white )
@@ -58,12 +57,11 @@ function PANEL:Paint( w, h )
                 GNLib.DrawOutlinedRoundedRect( self.rounded, 0, 0, w, h, self.outline_thick, self.outline_color )
             end
         end )
-        return
-    end
-
-    drawMat( self, w, h )           
-    if self.outline then
-        GNLib.DrawOutlinedBox( 0, 0, w, h, self.outline_thick, self.outline_color )
+    else
+        drawMat( self, w, h )           
+        if self.outline then
+            GNLib.DrawOutlinedBox( 0, 0, w, h, self.outline_thick, self.outline_color )
+        end
     end
 end
 

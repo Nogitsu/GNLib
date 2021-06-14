@@ -144,8 +144,8 @@ function GNLib.OpenVGUIPanel()
         box_image:SetPos( 750, 335 )
         box_image:SetImage( "../data/minimap_gm_fork.png" )
         --box_image:SetAvatar( LocalPlayer() )
-        box_image.Think = function()
-            box_image:SetOutline( math.floor( CurTime() ) % 3 == 0 )
+        box_image.Think = function( self )
+            self:SetOutline( math.floor( CurTime() ) % 2 == 0 )
             --box_image:SetAngle( ( CurTime() * 50 ) % 360 )
         end
         box_image:SetOutline( true )
@@ -155,9 +155,7 @@ function GNLib.OpenVGUIPanel()
         rounded_image:SetPos( 900, 335 )
         --rounded_image:SetImage( "../data/minimap_gm_fork.png" )
         rounded_image:SetAvatar( LocalPlayer() )
-        rounded_image.Think = function()
-            rounded_image:SetOutline( math.floor( CurTime() ) % 3 == 0 )
-        end
+        rounded_image.Think = box_image.Think
         rounded_image:SetRounded( 16 )
         rounded_image:SetOutline( true )
         rounded_image:SetOutlineColor( GNLib.Colors.Alizarin )
@@ -167,9 +165,7 @@ function GNLib.OpenVGUIPanel()
        -- circle_image:SetImage( "../data/minimap_gm_fork.png" )
         circle_image:SetAvatar( LocalPlayer() )
         circle_image:SetCircle( true )
-        circle_image.Think = function()
-            circle_image:SetOutline( math.floor( CurTime() ) % 3 == 0 )
-        end
+        circle_image.Think = box_image.Think
         circle_image:SetOutline( true )
         circle_image:SetOutlineColor( GNLib.Colors.PeterRiver )
 
