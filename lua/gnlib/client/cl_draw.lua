@@ -156,6 +156,8 @@ end
 ---     shape_draw_func: <function> Shape of the mask drawing function (limit of the drawing function)
 ---     draw_func: <function> Draw function
 function GNLib.DrawStencil( shape_draw_func, draw_func )
+    if IsValid( halo.RenderedEntity() ) then return end
+
 	render.ClearStencil()
 	render.SetStencilEnable( true )
 
