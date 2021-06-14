@@ -2,27 +2,35 @@ local PANEL = {}
 
 AccessorFunc( PANEL, "hovered_color", "HoveredColor" )
 AccessorFunc( PANEL, "clicked_color", "ClickedColor" )
+AccessorFunc( PANEL, "default_circle_color", "DefaultCircleColor" )
 AccessorFunc( PANEL, "circle_color", "CircleColor" )
 
 function PANEL:Init()
     self:SetBarTall( 7 )
     self:SetCursor( "sizewe" )
-    self:SetFillColor( GNLib.Colors.Silver )
+    self:SetFillColor( GNLib.Colors.Asbestos )
 
-    self.circle_color = GNLib.Colors.Silver
-    self.hovered_color = GNLib.Colors.Concrete
-    self.clicked_color = GNLib.Colors.Asbestos
+    self:SetDefaultCircleColor( GNLib.Colors.Silver )
+    self:SetHoveredColor( GNLib.Colors.Concrete )
+    self:SetClickedColor( GNLib.Colors.Concrete )
 
     self.circle_hover = false
-    
-    self.max_value = 1
+    self.clicking = false
     
     self.value = 0
+    self.max_value = 1
 
     self:SetPercentage( self.value / self.max_value )
 end
 
 --  > Value functions
+function PANEL:SetDefaultCircleColor( color )
+    self.default_circle_color = color
+    if not self.circle_hover and not self.clicking then
+        self:SetCircleColor( self.default_circle_color )
+    end
+end
+
 function PANEL:SetValue( value )
     self:SetPercentage( math.Clamp( value, 0, self.max_value) / self.max_value )
 end
@@ -37,10 +45,17 @@ end
 
 --  > PANEL Base
 function PANEL:Think()
-    local x, y = self:GetParent():LocalToScreen( self:GetPos() )
-    local last_hover = self.circle_hover
-    self.circle_hover = GNLib.IsInCircle( gui.MouseX(), gui.MouseY(), x + self.shown_percentage * self:GetWide() - self.circle_radius, y + self:GetTall() / 2, self.circle_radius )
+    local x, y = self:LocalCursorPos()
 
+    --  > Hover
+    local circle_x, circle_y = self:GetCirclePos()
+    local last_hover = self.circle_hover
+    self.circle_hover = GNLib.IsInCircle( x, y, circle_x, circle_y, self.circle_radius )
+
+    --  > Color
+    self:SetCircleColor( self.clicking and self.clicked_color or self.circle_hover and self.hovered_color or self.default_circle_color )
+
+    --  > Events
     if not ( self.circle_hover == last_hover ) then
         if last_hover == false then
             self:OnCircleEntered()
@@ -48,28 +63,33 @@ function PANEL:Think()
             self:OnCircleExited()
         end
     end
-    self:SetCircleColor( (self.circle_hover and self.clicking) and self.clicked_color or self.circle_hover and self.hovered_color or self.circle_color )
-end
 
-function PANEL:OnValueChanged( value, percent )
-end
+    if self.clicking then
+        --  > Release
+        if not input.IsMouseDown( MOUSE_LEFT ) then
+            self.clicking = false
+            self.circle_hover = false
+            return
+        end
 
-function PANEL:OnCursorMoved( x )
-    if self.clicking and self.circle_hover then
-        self:SetPercentage( ( x + self:GetTall() / 2 ) / self:GetWide() )
+        --  > Slider Move
+        self:SetPercentage( math.Clamp( x + self.circle_radius, 0, self:GetWide() ) / self:GetWide() )
         self.shown_percentage = self:GetPercentage()
 
         self:OnValueChanged( self.shown_percentage * self.max_value, self.shown_percentage )
     end
 end
 
+function PANEL:OnValueChanged( value, percent )
+end
+
 function PANEL:OnMousePressed( key_code )
-    local x, y = self:GetParent():LocalToScreen( self:GetPos() )
+    local x, y = self:LocalCursorPos()
     if key_code == MOUSE_LEFT then
         if self.circle_hover then
             self.clicking = true
         else
-            self:SetPercentage( self.shown_percentage + (gui.MouseX() - x - self:GetWide() * self.shown_percentage + self.circle_radius) / self:GetWide() )
+            self:SetPercentage( math.Clamp( x, 0, self:GetWide() ) / self:GetWide() )
             self:OnValueChanged( self.percentage * self.max_value, self.percentage )
         end
     end

@@ -1,5 +1,3 @@
-local color_black = Color( 0, 0, 0 )
-
 --  > Gradient functions
 --- @title:
 ---     GNLib.DrawRectGradient: <function> Draw a rectangle gradient from multiple colors vertically or horizontally
@@ -309,18 +307,20 @@ end
 --- 	#code: local W, H = 100, 25\n\nhook.Add( "HUDPaint", "GNLib:DrawCircle", function()\n\tGNLib.DrawElipse( ScrW() / 2 - W / 2, ScrH() / 2 - H / 2, W, H, GNLib.Colors.Alizarin )\nend )
 --- 	#output: 
 function GNLib.DrawElipse( x, y, w, h, color, hide_left, hide_right )
+	surface.SetDrawColor( color or color_white )
+
 	if hide_left then
-		draw.RoundedBox( 0, x, y, h / 2, h, color or color_white )
+		surface.DrawRect( x, y, h / 2, h )
 	else
 		GNLib.DrawCircle( x + h / 2, y + h / 2, h / 2, 90, -90, color )
 	end
 	if hide_right then
-		draw.RoundedBox( 0, x + w - h / 2, y, h / 2, h, color or color_white )
+		surface.DrawRect( x + w - h / 2, y, h / 2, h )
 	else
 		GNLib.DrawCircle( x + w - h / 2, y + h / 2, h / 2, -90, 90, color )
 	end
 
-	draw.RoundedBox( 0, x + h / 2, y, w - h + ( y == 0 and 2 or 0 ), h, color or color_white )
+	surface.DrawRect( x + h / 2, y, w - h + 1, h )
 end
 
 --  > Shears
