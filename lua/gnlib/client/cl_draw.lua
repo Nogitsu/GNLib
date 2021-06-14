@@ -320,7 +320,7 @@ function GNLib.DrawElipse( x, y, w, h, color, hide_left, hide_right )
 		GNLib.DrawCircle( x + w - h / 2, y + h / 2, h / 2, -90, 90, color )
 	end
 
-	surface.DrawRect( x + h / 2, y, w - h + 1, h )
+	surface.DrawRect( x + h / 2, y, w - h + 2, h )
 end
 
 --  > Shears
