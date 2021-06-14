@@ -416,7 +416,7 @@ end
 --- 	#prompt: Draw a white half-circle of radius 100px and thickness 10px on middle of the screen
 --- 	#code: hook.Add( "HUDPaint", "GNLib:DrawOutlinedCircle", function()\n\tGNLib.DrawCircle( ScrW() / 2, ScrH() / 2, 100, 0, 180 )\nend )\n
 --- 	#output: 
-function GNLib.DrawOutlinedCircle( x, y, radius, thick, angle_start, angle_end, color )    
+function GNLib.DrawOutlinedCircle( x, y, radius, thick, angle_start, angle_end, color )
     local start = math.rad( angle_start )
     local last_ox, last_oy = x - math.cos( start ) * radius, y - math.sin( start ) * radius
     local last_ix, last_iy = x - math.cos( start ) * ( radius - thick ), y - math.sin( start ) * ( radius - thick )
@@ -493,10 +493,10 @@ function GNLib.DrawOutlinedRoundedRect( corner_radius, x, y, w, h, thick, color 
 	surface.DrawRect( x + pos_thick / 2, y + corner_radius, thick, h - corner_radius * 2 )
 	surface.DrawRect( x + w - pos_thick * 2, y + corner_radius, thick, h - corner_radius * 2 )
 
-	GNLib.DrawOutlinedCircle( x + corner_radius + pos_thick, y + corner_radius + pos_thick, corner_radius, thick, -180, -90, color )
-	GNLib.DrawOutlinedCircle( x + w - corner_radius - pos_thick, y + corner_radius + pos_thick, corner_radius, thick, -90, 0, color )
-	GNLib.DrawOutlinedCircle( x + corner_radius + pos_thick, y + h - 1 - corner_radius, corner_radius, thick, -270, -180, color )
-	GNLib.DrawOutlinedCircle( x + w - corner_radius - pos_thick, y + h - 1 - corner_radius, corner_radius, thick, 270, 180, color )
+	GNLib.DrawOutlinedCircle( x + corner_radius + pos_thick, y + corner_radius + pos_thick, corner_radius + thick / 2, thick, 0, 90, color ) --  > Top-Left
+	GNLib.DrawOutlinedCircle( x + w - corner_radius - pos_thick, y + corner_radius + pos_thick, corner_radius + thick / 2, thick, -270, -180, color ) --  > Top-Right
+	GNLib.DrawOutlinedCircle( x + corner_radius + pos_thick, y + h - 1 - corner_radius, corner_radius + thick / 2, thick, -90, 0, color ) --  > Bottom-Left
+	GNLib.DrawOutlinedCircle( x + w - corner_radius - pos_thick, y + h - 1 - corner_radius, corner_radius + thick / 2, thick, 270, 180, color ) --  > Bottom-Right
 end
 
 function GNLib.DrawRoundedRect( corner_radius, x, y, w, h, color )
