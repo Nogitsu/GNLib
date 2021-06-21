@@ -514,16 +514,33 @@ function GNLib.DrawRoundedRect( corner_radius, x, y, w, h, color )
 	GNLib.DrawCircle( x + w - corner_radius, y + h - corner_radius, corner_radius, 270, 180, color )
 end
 
+--- @title:
+--- 	GNLib.DrawBlur: <function> Draw a blured rectangle at given coordinates and blur amount.
+--- @params:
+--- 	x: <number> X position
+--- 	y: <number> Y position
+--- 	w: <number> Width
+--- 	h: <number> Height
+--- 	amount=6: <number> Blur amount of intensity
+--- 	off_x=0: <number> X blur's offset
+--- 	off_y=0: <number> Y blur's offset
+--- 	layers=3: <number> Number of blur's layers, impact on blur's intensity aswell
+--- @example:
+--- 	#prompt: Draw a centered blured rectangle with moving offset and custom blur amount and number of layers
+--- 	#code: local amount, layers = 10, 5\nlocal size = ScrW() / 5\nlocal x, y = ScrW() / 2 - size / 2, ScrH() / 2 - size / 2\n\nhook.Add( "HUDPaint", "GNLib:Test", function()\n\tlocal offset_x, offset_y = ( CurTime() * 50 ) % 200, ( CurTime() * 50 ) % 200\n\tGNLib.DrawBlur( x, y, size, size, amount, offset_x, offset_y, layers )\nend )
+--- 	#output: https://media.discordapp.net/attachments/638822462431166495/856503891037388800/gnlib_blur.gif
 local blur = Material( "pp/blurscreen" )
-function GNLib.DrawBlur( x, y, w, h, amount, off_x, off_y )
+function GNLib.DrawBlur( x, y, w, h, amount, off_x, off_y, layers )
 	amount = amount or 6
-   off_x = off_x or 0
-   off_y = off_y or 0
+	off_x = off_x or 0
+	off_y = off_y or 0
+	layers = layers or 3
+
 	surface.SetDrawColor( color_white )
 	surface.SetMaterial( blur )
 
-	for i = 1, 3 do
-		blur:SetFloat( "$blur", i / 3 * amount )
+	for i = 1, layers do
+		blur:SetFloat( "$blur", i / layers * amount )
 		blur:Recompute()
 
 		render.UpdateScreenEffectTexture()
