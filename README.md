@@ -2,7 +2,7 @@
 Guthen's & Nogitsu's Library
 
 ## Website
-GNLib has his own [website](https://gnlib.mtxserv.com/) with his own [wiki](https://gnlib.mtxserv.com/wiki/). 
+GNLib has his own [website](https://gnlib.nogitsu.eu/) with his own [wiki](https://gnlib.nogitsu.eu/wiki/). 
 
 ## Discord 
 Join our [Discord](https://discord.gg/pKA55Ak) for more informations and to get access to the wiki.
