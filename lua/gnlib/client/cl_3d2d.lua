@@ -100,7 +100,8 @@ local function check_click( panel )
 end
 
 function GNLib.Get3D2DCursorPos()
-    local pos = util.IntersectRayWithPlane( LocalPlayer():EyePos(), LocalPlayer():GetAimVector(), _origin, _ang:Up() )
+    local aim = util.AimVector( EyeAngles(), LocalPlayer():GetFOV() or 75, gui.MouseX(), gui.MouseY(), ScrW(), ScrH() )
+    local pos = util.IntersectRayWithPlane( EyePos(), vgui.CursorVisible() and aim or LocalPlayer():GetAimVector(), _origin, _ang:Up() )
     if not pos then return end
 
     --  > get pos
